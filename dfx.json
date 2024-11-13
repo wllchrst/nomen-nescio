@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "nomennescio_backend": {
+      "candid": "src/nomennescio_backend/nomennescio_backend.did",
+      "package": "nomennescio_backend",
+      "type": "rust",
+      "wasm": "target/wasm32-unknown-unknown/release/nomennescio_backend.wasm",
+      "postbuild": "candid-extractor target/wasm32-unknown-unknown/release/nomennescio_backend.wasm > src/nomennescio_backend/nomennescio_backend.did"
+    },
+    "nomennescio_frontend": {
+      "dependencies": [
+        "nomennescio_backend"
+      ],
+      "source": [
+        "src/nomennescio_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "nomennescio_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

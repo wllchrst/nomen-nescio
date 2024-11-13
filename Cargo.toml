@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/nomennescio_backend"
+]
+resolver = "2"

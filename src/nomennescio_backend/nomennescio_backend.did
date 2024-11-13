@@ -1,0 +1,1 @@
+service : { eek : (text) -> (text) query; greet : (text) -> (text) query }
