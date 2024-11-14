@@ -1,5 +1,3 @@
 [workspace]
-members = [
-    "src/nomennescio_backend"
-]
+members = [ "data_backend","src/nomennescio_backend", "data_backend/migration"]
 resolver = "2"
