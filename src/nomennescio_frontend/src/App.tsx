@@ -1,34 +1,19 @@
-import { useState } from "react";
-import { ChakraProvider, Box } from "@chakra-ui/react";
-import { nomennescio_backend } from "../../declarations/nomennescio_backend";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/authentication/Login';
+import Register from './pages/authentication/Register';
 
-function App() {
-  const [greeting, setGreeting] = useState("");
-
-  function handleSubmit(event: any) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    nomennescio_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
-
+const App: React.FC = () => {
   return (
-    <Box p={6} textAlign="center" bg="gray.50" borderRadius="md" boxShadow="md">
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit" className="bg-blue-500">
-          Click Me!
-        </button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </Box>
+    <Router>
+      <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

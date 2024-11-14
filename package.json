@@ -14,5 +14,8 @@
   "type": "module",
   "workspaces": [
     "src/nomennescio_frontend"
-  ]
+  ],
+  "dependencies": {
+    "react-router-dom": "^6.28.0"
+  }
 }
