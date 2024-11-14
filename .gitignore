@@ -26,3 +26,5 @@ dist/
 .dfx/
 
 package-lock.json
+/ai/service/__pycache__
+/ai/__pycache__
