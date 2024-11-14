@@ -4,6 +4,8 @@ import useDrawableCanvas from '../../../hooks/use-drawable-canvas';
 
 interface DrawableCanvasProps {
     text: string;
+    // width: number;
+    // height: number;
 }
 
 const DrawableCanvas: React.FC<DrawableCanvasProps> = ({ text }) => {
