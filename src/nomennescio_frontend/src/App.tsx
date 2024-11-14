@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ChakraProvider, Box } from "@chakra-ui/react";
 // import { nomennescio_backend } from "../../declarations/nomennescio_backend";
 import Authentication from './pages/Authentication';
+import Sidebar from "./pages/Sidebar";
+import Alert from "./components/elements/alerts/alert";
 
 function App() {
   // const [greeting, setGreeting] = useState("");
@@ -16,7 +18,7 @@ function App() {
   // }
 
   return (
-    <Box className='w-screen h-screen bg-green-300'>
+    <Box className='w-screen h-screen bg-[#0d1117]'>
       <Authentication />
       {/* <Sidebar />  */}
       {/* <TextField placeholder="input your username"></TextField> */}

@@ -14,11 +14,11 @@ const SelectOption: React.FC<SelectOptionProps> = ({ label, onChange, value, chi
                 className="w-full text-sm p-4 border border-gray-600 rounded-md p-4 bg-[#0d1117] text-white focus:border-blue-500 focus:outline-none"
                 onChange={(e) => onChange(e.target.value)}
             >
-                {children}
                 // nanti disini harus pakai Option
             </select>
         </div>
     );
 };
 
+                {children}
 export default SelectOption;

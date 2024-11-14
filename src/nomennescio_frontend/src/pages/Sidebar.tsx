@@ -53,8 +53,8 @@ const Sidebar: React.FC = () => {
                 </GridItem>
                 <GridItem>
                     <IconButton
-                        icon={FaTimes} 
-                        onClick={toggleSidebar} 
+                        icon={FaTimes}
+                        onClick={toggleSidebar}
                     />
                 </GridItem>
             </Grid>

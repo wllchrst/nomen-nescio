@@ -4,6 +4,7 @@ const useDrawableCanvas = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const isDrawing = useRef(false);
     const [history, setHistory] = useState<ImageData[]>([]);
+    const [isValid, setIsValid] = useState<boolean | null>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -21,6 +22,7 @@ const useDrawableCanvas = () => {
         isDrawing.current = true;
         saveCanvasState();
         draw(e);
+        validateCanvas();
     };
 
     const stopDrawing = () => {
@@ -61,6 +63,7 @@ const useDrawableCanvas = () => {
                 const lastState = history[history.length - 1];
                 ctx.putImageData(lastState, 0, 0);
                 setHistory((prev) => prev.slice(0, -1));
+                validateCanvas();
             }
         }
     };
@@ -71,11 +74,35 @@ const useDrawableCanvas = () => {
             if (ctx) {
                 ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
                 setHistory([]);
+                validateCanvas();
             }
         }
     };
 
-    return { canvasRef, startDrawing, stopDrawing, draw, undo, resetCanvas };
+    const isCanvasEmpty = () => {
+        if (canvasRef.current) {
+            const ctx = canvasRef.current.getContext('2d');
+            if (ctx) {
+                const imageData = ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i + 3] !== 0) {
+                        return false; 
+                    }
+                }
+            }
+        }
+        return true;
+    };
+
+    const validateCanvas = () => {
+        if (isCanvasEmpty()) {
+            setIsValid(false);
+        } else {
+            setIsValid(true);
+        }
+    };
+
+    return { canvasRef, startDrawing, stopDrawing, draw, undo, resetCanvas, isValid };
 };
 
 export default useDrawableCanvas;

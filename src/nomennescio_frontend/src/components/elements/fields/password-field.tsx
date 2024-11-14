@@ -6,39 +6,54 @@ import Label from './label';
 interface PasswordFieldProps {
     title: string;
     placeholder?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    showError?: boolean;
 }
 
-const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder }) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError }) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isFocused, setIsFocused] = useState(false); // State to track input focus/hover
+    const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => setIsFocused(false);
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const password = e.target.value;
+        onChange?.(e);
+
+        if (password.length < 6) {
+            setPasswordStrength("weak");
+        } else if (password.length < 10) {
+            setPasswordStrength("medium");
+        } else {
+            setPasswordStrength("strong");
+        }
+    };
 
     return (
         <div>
-            <Label text={title} />
-
+            <Label text={title} className='text-sm'/>
             <div
                 className="relative"
-                onMouseEnter={() => setIsFocused(true)}
-                onMouseLeave={() => setIsFocused(false)}
+                onMouseEnter={() => setPasswordStrength(passwordStrength)}
+                onMouseLeave={() => setPasswordStrength(passwordStrength)}
             >
                 <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder={placeholder}
-                    className="text-base w-full border border-gray-600 rounded-md p-4 bg-[#0d1117] text-white focus:border-blue-500 focus:outline-none"
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
+                    onChange={handlePasswordChange}
+                    className={`text-sm w-full border rounded-md p-2 bg-[#0d1117] text-white focus:outline-none ${passwordStrength === "weak"
+                            ? "border-red-500"
+                            : passwordStrength === "medium"
+                                ? "border-yellow-500"
+                                : passwordStrength === "strong"
+                                    ? "border-green-500"
+                                    : "border-gray-600"
+                        }`}
                 />
-
-                {/* AnimatePresence and motion.div for animation */}
                 <AnimatePresence>
-                    {(isFocused || showPassword) && (
+                    {(passwordStrength || showPassword) && (
                         <motion.button
                             type="button"
                             onClick={togglePasswordVisibility}
@@ -53,6 +68,9 @@ const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder }) => 
                     )}
                 </AnimatePresence>
             </div>
+            {showError && passwordStrength === "weak" && (
+                <p className="text-red-500 text-sm mt-2">Password is too weak</p>
+            )}
         </div>
     );
 };
