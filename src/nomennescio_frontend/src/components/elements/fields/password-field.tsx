@@ -22,14 +22,22 @@ const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onCha
         const password = e.target.value;
         onChange?.(e);
 
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
         if (password.length < 6) {
             setPasswordStrength("weak");
-        } else if (password.length < 10) {
+        } else if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
             setPasswordStrength("medium");
-        } else {
+        } else if (password.length >= 10) {
             setPasswordStrength("strong");
+        } else {
+            setPasswordStrength("medium");
         }
     };
+
 
     return (
         <div>

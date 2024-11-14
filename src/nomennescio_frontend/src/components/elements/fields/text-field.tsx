@@ -4,7 +4,7 @@ import Label from './label';
 interface TextFieldProps {
     title: string;
     placeholder?: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     variant: "email" | "username";
 }
 

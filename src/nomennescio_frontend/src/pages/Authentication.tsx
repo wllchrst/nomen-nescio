@@ -44,7 +44,7 @@ const Authentication: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className={`flex max-w-6xl bg-[#161b22] rounded-lg shadow-md overflow-hidden ${isRegister ? 'w-full' : 'w-2/5'}`}
+                className={`flex max-w-6xl bg-[#161b22] rounded-lg shadow-md overflow-hidden ${isRegister ? 'w-2/5' : 'w-2/5'}`}
             >
                 <div className="flex-1 p-8 text-white">
                     <motion.div
@@ -79,7 +79,7 @@ const Authentication: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <DrawableCanvas text="Draw Your Signature" />
+                                    <DrawableCanvas width={350} height={200} text="Draw Your Signature" />
                                 </div>
                             </div>
                         ) : (
@@ -89,11 +89,11 @@ const Authentication: React.FC = () => {
                             </div>
                         )}
 
-                        <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200">
+                        <button className="w-full mt-4 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200">
                             {isRegister ? 'Register' : 'Login'}
                         </button>
 
-                        <p className="mt-4 text-gray-400 text-center text-base">
+                        <p className="mt-4 text-gray-400 text-center text-sm">
                             {isRegister ? "Already have an account?" : "Don't have an account?"}{' '}
                             <button
                                 onClick={toggleForm}
