@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = [".", "entity", "migration", "service"]
+members = [".", "api", "entity", "migration", "service"]
 
 [dependencies]
 entity = { path = "entity" }
