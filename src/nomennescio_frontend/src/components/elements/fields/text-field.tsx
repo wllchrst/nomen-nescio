@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import Label from './label';
+import clsx from 'clsx';
 
 interface TextFieldProps {
     title: string;
     placeholder?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     variant: "email" | "username";
+    className?: string;
+    labelSize: string;
 }
 
-const TextField: React.FC<TextFieldProps> = ({ title, placeholder, onChange, variant }) => {
+const TextField: React.FC<TextFieldProps> = ({ title, placeholder, onChange, variant, className, labelSizes }) => {
     const [isValid, setIsValid] = useState<boolean | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +28,7 @@ const TextField: React.FC<TextFieldProps> = ({ title, placeholder, onChange, var
 
     return (
         <div className="relative">
-            <Label text={title} className="text-sm" />
+            <Label text={title} className={clsx("text-sm", $labelSize)} />
             <input
                 type="text"
                 placeholder={placeholder}
@@ -35,7 +38,7 @@ const TextField: React.FC<TextFieldProps> = ({ title, placeholder, onChange, var
                         : isValid
                             ? 'border-green-500'
                             : 'border-red-500'
-                    }`}
+                    } ${className}`}
             />
         </div>
     );

@@ -37,7 +37,7 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="space-y-4">
-                        <DrawableCanvas width={350} height={200} text="Draw Your Signature" />
+                        <DrawableCanvas width={350} height={250} text="Draw Your Signature" />
                     </div>
                 </div>
 

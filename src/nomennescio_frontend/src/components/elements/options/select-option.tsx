@@ -20,5 +20,4 @@ const SelectOption: React.FC<SelectOptionProps> = ({ label, onChange, value, chi
     );
 };
 
-                {children}
 export default SelectOption;

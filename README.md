@@ -4,3 +4,7 @@ Documentation
 
 dfx build
 candid-extractor target/wasm32-unknown-unknown/release/nomennescio_backend.wasm > src/nomennescio_backend/nomennescio_backend.did
+
+Cara setup frontend
+npm i
+npm start
