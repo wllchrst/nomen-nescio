@@ -44,6 +44,46 @@ const Navbar: React.FC = () => {
         },
     ];
 
+    const filesDropdown = [
+        { id: 6, name: 'My Files', icon: <FaFolderOpen />, link: '/storage' },
+        { id: 7, name: 'Shared with Me', icon: <FaShareAlt />, link: '#' },
+        { id: 8, name: 'Recent Files', icon: <FaFolderOpen />, link: '#' },
+    ];
+
+    const groupsDropdown = [
+        { id: 9, name: 'My Groups', icon: <FaUsers />, link: '#' },
+        { id: 10, name: 'Create New Group', icon: <FaPlus />, link: '#' },
+        { id: 11, name: 'Join a Group', icon: <FaUsers />, link: '#' },
+    ];
+
+    const uploadDropdown = [
+        { id: 12, name: 'Upload File', icon: <FaCloudUploadAlt />, link: '#' },
+        { id: 13, name: 'Upload Folder', icon: <FaCloudUploadAlt />, link: '#' },
+        { id: 14, name: 'Upload Settings', icon: <FaCog />, link: '#' },
+    ];
+
+    const messagesDropdown = [
+        { id: 15, name: 'Inbox', icon: <FaEnvelope />, link: '#' },
+        { id: 16, name: 'Sent Messages', icon: <FaEnvelope />, link: '#' },
+        { id: 17, name: 'Archived', icon: <FaClipboardList />, link: '#' },
+    ];
+
+    const settingsDropdown = [
+        { id: 18, name: 'Account Settings', icon: <FaCog />, link: '#' },
+        { id: 19, name: 'Privacy Settings', icon: <FaCog />, link: '#' },
+        { id: 20, name: 'Notification Settings', icon: <FaBell />, link: '#' },
+    ];
+
+    const dropdownData = [
+        ...filesDropdown,
+        ...groupsDropdown,
+        ...uploadDropdown,
+        ...messagesDropdown,
+        ...settingsDropdown,
+    ];
+
+    const searchData = [...dummyData, ...dropdownData.map((item) => ({ ...item, email: '' }))];
+
     return (
         <nav className="bg-[#0d1117] border-gray-800 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -53,40 +93,40 @@ const Navbar: React.FC = () => {
 
                 <div className="flex items-center space-x-4">
                     <Dropdown text="FILES">
-                        <DropdownValue text="My Files" icon={<FaFolderOpen />} />
-                        <DropdownValue text="Shared with Me" icon={<FaShareAlt />} />
-                        <DropdownValue text="Recent Files" icon={<FaFolderOpen />} />
+                        {filesDropdown.map((item) => (
+                            <DropdownValue key={item.id} text={item.name} icon={item.icon} to={item.link} />
+                        ))}
                     </Dropdown>
 
                     <Dropdown text="GROUPS">
-                        <DropdownValue text="My Groups" icon={<FaUsers />} />
-                        <DropdownValue text="Create New Group" icon={<FaPlus />} />
-                        <DropdownValue text="Join a Group" icon={<FaUsers />} />
+                        {groupsDropdown.map((item) => (
+                            <DropdownValue key={item.id} text={item.name} icon={item.icon} />
+                        ))}
                     </Dropdown>
 
                     <Dropdown text="UPLOAD">
-                        <DropdownValue text="Upload File" icon={<FaCloudUploadAlt />} />
-                        <DropdownValue text="Upload Folder" icon={<FaCloudUploadAlt />} />
-                        <DropdownValue text="Upload Settings" icon={<FaCog />} />
+                        {uploadDropdown.map((item) => (
+                            <DropdownValue key={item.id} text={item.name} icon={item.icon} />
+                        ))}
                     </Dropdown>
 
                     <Dropdown text="MESSAGES">
-                        <DropdownValue text="Inbox" icon={<FaEnvelope />} />
-                        <DropdownValue text="Sent Messages" icon={<FaEnvelope />} />
-                        <DropdownValue text="Archived" icon={<FaClipboardList />} />
+                        {messagesDropdown.map((item) => (
+                            <DropdownValue key={item.id} text={item.name} icon={item.icon} />
+                        ))}
                     </Dropdown>
 
                     <Dropdown text="SETTINGS">
-                        <DropdownValue text="Account Settings" icon={<FaCog />} />
-                        <DropdownValue text="Privacy Settings" icon={<FaCog />} />
-                        <DropdownValue text="Notification Settings" icon={<FaBell />} />
+                        {settingsDropdown.map((item) => (
+                            <DropdownValue key={item.id} text={item.name} icon={item.icon} />
+                        ))}
                     </Dropdown>
                 </div>
             </div>
 
             <div className="flex items-center space-x-3">
                 <div className="">
-                    <SearchDropdown data={dummyData} />
+                    <SearchDropdown data={searchData} />
                 </div>
 
                 <div className="flex items-center space-x-2">

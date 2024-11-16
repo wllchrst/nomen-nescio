@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 
 interface SearchItem {
     id: number;
-    image: string;
-    name: string;
-    email: string;
+    image?: string;
+    name?: string;
+    email?: string;
+    icon?: React.ReactNode;
+    title?: string;
     link: string;
 }
 
@@ -25,8 +27,9 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
         setQuery(value);
         const results = data.filter(
             (item) =>
-                item.name.toLowerCase().includes(value.toLowerCase()) ||
-                item.email.toLowerCase().includes(value.toLowerCase())
+                (item.name && item.name.toLowerCase().includes(value.toLowerCase())) ||
+                (item.email && item.email.toLowerCase().includes(value.toLowerCase())) ||
+                (item.title && item.title.toLowerCase().includes(value.toLowerCase()))
         );
         setFilteredResults(results);
     };
@@ -55,7 +58,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
         <div className="relative w-80 m-2 flex justify-items-center">
             <input
                 type="text"
-                ref={searchInputRef} 
+                ref={searchInputRef}
                 value={query}
                 onChange={handleSearch}
                 placeholder="(ctrl + k) to search..."
@@ -77,15 +80,29 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                                     key={item.id}
                                     onClick={() => handleItemClick(item)}
                                 >
-                                    <div className="flex w-full items-start p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer">
-                                        <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="w-12 m-0 mr-2 h-12 rounded-full mr-2 flex-shrink-0"
-                                        />
-                                        <div className="text-left">
-                                            <p className="font-medium text-white">{item.name}</p>
-                                            <p className="text-sm text-gray-400">{item.email}</p>
+                                    <div className="flex w-full justify-center items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer">
+                                        {item.icon && (
+                                            <div className="flex w-8 h-8 invert items-center justify-center mr-2">
+                                                {React.cloneElement(item.icon as React.ReactElement, { size: 20 })}
+                                            </div>
+
+                                        )}
+                                        {item.image && !item.icon && (
+                                            <img
+                                                src={item.image}
+                                                alt={item.name || ''}
+                                                className="w-12 h-12 rounded-full mr-2 flex-shrink-0"
+                                            />
+                                        )}
+                                        <div className="text-left flex-grow">
+                                            {item.title ? (
+                                                <p className="font-bold text-white text-center text-lg">{item.title}</p>
+                                            ) : (
+                                                <>
+                                                    <p className="font-medium text-white">{item.name}</p>
+                                                    <p className="text-sm text-gray-400">{item.email}</p>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>

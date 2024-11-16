@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid, GridItem } from '@chakra-ui/react';
 import { FaBars, FaTimes, FaHome, FaBook, FaExclamationCircle, FaCodeBranch } from 'react-icons/fa';
-import IconButton from '../components/elements/buttons/icon-button';
+import IconButton from '../elements/buttons/icon-button';
 import { CloseIcon } from '@chakra-ui/icons';
-import PrimaryButton from '../components/elements/buttons/primary-button';
+import PrimaryButton from '../elements/buttons/primary-button';
 
 const Sidebar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
