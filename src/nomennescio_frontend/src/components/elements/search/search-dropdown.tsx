@@ -1,31 +1,40 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 interface SearchItem {
     id: number;
     image: string;
     name: string;
     email: string;
+    link: string;
 }
 
+// jadi dia bisa link atau jalanin function
 interface SearchDropdownProps {
     data: SearchItem[];
+    onItemClick?: (item: SearchItem) => void;
 }
 
-const SearchDropdown: React.FC<SearchDropdownProps> = ({ data }) => {
+const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) => {
     const [query, setQuery] = useState('');
     const [filteredResults, setFilteredResults] = useState<SearchItem[]>(data);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
-
         const results = data.filter(
             (item) =>
                 item.name.toLowerCase().includes(value.toLowerCase()) ||
                 item.email.toLowerCase().includes(value.toLowerCase())
         );
         setFilteredResults(results);
+    };
+
+    const handleItemClick = (item: SearchItem) => {
+        if (onItemClick) {
+            onItemClick(item); 
+        }
     };
 
     return (
@@ -48,20 +57,23 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data }) => {
                     >
                         {filteredResults.length > 0 ? (
                             filteredResults.map((item) => (
-                                <div
+                                <Link
+                                    to={item.link}
                                     key={item.id}
-                                    className="flex w-full justify-items-start items-start p-3 hover:bg-[#0d1117] transition-all duration-200"
+                                    onClick={() => handleItemClick(item)}
                                 >
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-12 h-12 rounded-full mr-2 m-0 flex-shrink-0"
-                                    />
-                                    <div className="text-left">
-                                        <p className="font-medium text-white">{item.name}</p>
-                                        <p className="text-sm text-gray-400">{item.email}</p>
+                                    <div className="flex w-full items-start p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="w-12 h-12 m-0 mr-2 rounded-full mr-2 flex-shrink-0"
+                                        />
+                                        <div className="text-left">
+                                            <p className="font-medium text-white">{item.name}</p>
+                                            <p className="text-sm text-gray-400">{item.email}</p>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))
                         ) : (
                             <p className="p-3 text-gray-500">No results found</p>

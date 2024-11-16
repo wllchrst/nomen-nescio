@@ -11,24 +11,28 @@ const dummyData = [
         image: 'https://via.placeholder.com/50',
         name: 'John Doe',
         email: 'john.doe@example.com',
+        link: 'profile/johndoe'
     },
     {
         id: 2,
         image: 'https://via.placeholder.com/50',
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
+        link: 'profile/johnsmith'
     },
     {
         id: 3,
         image: 'https://via.placeholder.com/50',
         name: 'Michael Brown',
         email: 'michael.brown@example.com',
+        link: 'profile/michael'
     },
     {
         id: 4,
         image: 'https://via.placeholder.com/50',
         name: 'Emily Davis',
         email: 'emily.davis@example.com',
+        link: 'profile/emily'
     },
 ];
 
