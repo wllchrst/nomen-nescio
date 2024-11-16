@@ -38,7 +38,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
     };
 
     return (
-        <div className="relative w-80 mx-auto mt-10">
+        <div className="relative w-80 m-2 flex justify-items-center ">
             <input
                 type="text"
                 value={query}

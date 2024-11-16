@@ -9,9 +9,9 @@ const App: React.FC = () => {
     <Router>
       <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
         <Routes>
-          {/* <Route path="/" element={<Login/>} /> */}
-          <Route path="/" element={<Home/>} />
-          {/* <Route path="/register" element={<Register />} /> */}
+          <Route path="/" element={<Login/>} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>
