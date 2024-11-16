@@ -1,3 +1,5 @@
+mod models;
+
 #[macro_use]
 extern crate rocket;
 
@@ -14,6 +16,8 @@ use rocket::tokio::io::AsyncWriteExt;
 use rocket::routes;
 use std::path::{Path, PathBuf};
 use tokio::fs;
+
+use models::Encryptor;
 
 #[derive(FromForm)]
 struct Upload<'f> {
