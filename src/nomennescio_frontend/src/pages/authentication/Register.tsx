@@ -32,7 +32,7 @@ const Register: React.FC = () => {
                     <div className="space-y-4">
                         <TextField variant="username" title="Full Name*" />
                         <TextField variant="email" title="Email*" />
-                        <PasswordField title="Password*"  />
+                        <PasswordField variant='password' title="Password*"  />
                         <Checkbox text="I agree to" link="Terms & Conditions" />
                     </div>
 

@@ -1,4 +1,3 @@
-// pages/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TextField from '../../components/elements/fields/text-field';
@@ -16,7 +15,7 @@ const Login: React.FC = () => {
 
                 <div className="space-y-4">
                     <TextField title="Email" variant="username"  />
-                    <PasswordField title="Password"/>
+                    <PasswordField variant='normal' title="Password"/>
                 </div>
 
                 <button className="w-full mt-4 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200">

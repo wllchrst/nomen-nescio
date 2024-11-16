@@ -2,62 +2,46 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import Label from './label';
+import usePasswordStrength from '../../../hooks/use-password-strength';
+import usePasswordVisibility from '../../../hooks/use-password-visibility';
 
 interface PasswordFieldProps {
     title: string;
     placeholder?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     showError?: boolean;
+    variant: 'password' | 'normal';
 }
 
-const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError }) => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError, variant }) => {
+    const { showPassword, togglePasswordVisibility } = usePasswordVisibility();
+    const { passwordStrength, evaluatePasswordStrength } = usePasswordStrength();
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (variant === 'normal') return; 
+
         const password = e.target.value;
         onChange?.(e);
-
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-        if (password.length < 6) {
-            setPasswordStrength("weak");
-        } else if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
-            setPasswordStrength("medium");
-        } else if (password.length >= 10) {
-            setPasswordStrength("strong");
-        } else {
-            setPasswordStrength("medium");
-        }
+        evaluatePasswordStrength(password);
     };
-
 
     return (
         <div>
-            <Label text={title} className='text-sm'/>
-            <div
-                className="relative"
-                onMouseEnter={() => setPasswordStrength(passwordStrength)}
-                onMouseLeave={() => setPasswordStrength(passwordStrength)}
-            >
+            <Label text={title} className="text-sm" />
+            <div className="relative">
                 <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder={placeholder}
                     onChange={handlePasswordChange}
-                    className={`text-sm w-full border rounded-md p-2 bg-[#0d1117] text-white focus:outline-none ${passwordStrength === "weak"
-                            ? "border-red-500"
-                            : passwordStrength === "medium"
-                                ? "border-yellow-500"
-                                : passwordStrength === "strong"
-                                    ? "border-green-500"
-                                    : "border-gray-600"
+                    className={`text-sm w-full border rounded-md p-2 bg-[#0d1117] text-white focus:outline-none ${variant === 'password' ? (
+                            passwordStrength === "weak"
+                                ? "border-red-500"
+                                : passwordStrength === "medium"
+                                    ? "border-yellow-500"
+                                    : passwordStrength === "strong"
+                                        ? "border-green-500"
+                                        : "border-gray-600"
+                        ) : "border-gray-600" 
                         }`}
                 />
                 <AnimatePresence>
