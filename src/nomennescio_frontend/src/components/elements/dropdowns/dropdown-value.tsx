@@ -7,7 +7,7 @@ interface DropdownValueProps {
     icon?: ReactNode;
 }
 
-const DropdownValue: React.FC<DropdownValueProps> = ({ to = "/", text, icon }) => {
+const DropdownValue: React.FC<DropdownValueProps> = ({ to = "#", text, icon }) => {
     return (
         <Link
             to={to}

@@ -26,7 +26,7 @@ const dummyData = [
         image: 'https://via.placeholder.com/50',
         name: 'Michael Brown',
         email: 'michael.brown@example.com',
-        link: 'profile/michael'
+        link: 'profile/mic  ael'
     },
     {
         id: 4,

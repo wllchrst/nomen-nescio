@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ interface SearchItem {
     link: string;
 }
 
-// jadi dia bisa link atau jalanin function
 interface SearchDropdownProps {
     data: SearchItem[];
     onItemClick?: (item: SearchItem) => void;
@@ -19,6 +18,7 @@ interface SearchDropdownProps {
 const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) => {
     const [query, setQuery] = useState('');
     const [filteredResults, setFilteredResults] = useState<SearchItem[]>(data);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -33,17 +33,32 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
 
     const handleItemClick = (item: SearchItem) => {
         if (onItemClick) {
-            onItemClick(item); 
+            onItemClick(item);
         }
     };
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                searchInputRef.current?.focus();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     return (
-        <div className="relative w-80 m-2 flex justify-items-center ">
+        <div className="relative w-80 m-2 flex justify-items-center">
             <input
                 type="text"
+                ref={searchInputRef} 
                 value={query}
                 onChange={handleSearch}
-                placeholder="Search..."
+                placeholder="(ctrl + k) to search..."
                 className="w-full p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <AnimatePresence>
@@ -66,7 +81,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                                         <img
                                             src={item.image}
                                             alt={item.name}
-                                            className="w-12 h-12 m-0 mr-2 rounded-full mr-2 flex-shrink-0"
+                                            className="w-12 m-0 mr-2 h-12 rounded-full mr-2 flex-shrink-0"
                                         />
                                         <div className="text-left">
                                             <p className="font-medium text-white">{item.name}</p>
