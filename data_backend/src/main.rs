@@ -6,7 +6,7 @@ use entity::user::{self, ActiveModel};
 use sea_orm::{sqlx::types::chrono::Utc, Database, DatabaseConnection, Set};
 use tokio;
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    api::main();
 }
