@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 rocket = "0.5.1"
 tokio = "1.29.0"
+orion = "0.17.7"
+rand_core = { version = "0.6.4", features = ["getrandom"] }

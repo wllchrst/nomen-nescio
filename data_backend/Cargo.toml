@@ -17,7 +17,5 @@ sea-orm = { version = "1.1.0", features = [
 ] }
 tokio = { version = "1", features = ["full"] }
 dotenv = "0.15"
-orion = "0.17.7"
-rand_core = { version = "0.6.4", features = ["getrandom"] }
 api = { path="api" }
 

@@ -80,9 +80,9 @@ pub struct Encryptor {
 }
 
 impl Encryptor {
-    pub fn new(password: String) -> Self {
+    pub fn new(password: &str) -> Self {
         Self {
-            password: password
+            password: String::from(password)
         }
     }
 
@@ -110,7 +110,7 @@ impl Encryptor {
         Ok(())
     }
     
-    pub fn decrypt_large_file(
+    pub fn decrypt_file(
         &self,
         file_path: &str, 
         output_path: &str,
