@@ -5,6 +5,7 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import FileUpload from '../components/elements/files/file-upload';
 import SearchDropdown from '../components/elements/search/search-dropdown';
 import Navbar from '../components/global/navbar';
+import FileDownload from '../components/elements/files/file-download';
 
 const dummyData = [
     {
@@ -24,7 +25,7 @@ const dummyData = [
     {
         id: 3,
         image: 'https://via.placeholder.com/50',
-        name: 'Michael Brown',
+    name: 'Michael Brown',
         email: 'michael.brown@example.com',
         link: 'profile/mic  ael'
     },
@@ -50,10 +51,14 @@ const Home = () => {
             <SearchDropdown data={dummyData}></SearchDropdown> */}
             <Navbar></Navbar>
             <FileUpload></FileUpload>
-        </div>  
+            <FileDownload fileUrl='src/uploads/C.cpp' uploadedDate='22-33-112'></FileDownload>
+            <FileDownload fileUrl='src/uploads/nomen_nescio_logo.png' uploadedDate='22-33-112'></FileDownload>
+            <FileDownload fileUrl='src/uploads/Cheatsheet AI.pdf' uploadedDate='22-33-112'></FileDownload>
+            <FileDownload fileUrl='src/uploads/coordinates.txt' uploadedDate='22-33-11233'></FileDownload>
+        </div>   
 
     );
 };
-
+`   `
 export default Home;
     

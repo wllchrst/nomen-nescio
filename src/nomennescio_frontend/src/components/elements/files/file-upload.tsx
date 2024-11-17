@@ -71,12 +71,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56'
                                     : 'Uploaded'}
                             </span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                            <div
-                                className="bg-green-500 h-1.5 rounded-full"
-                                style={{ width: `${fileObj.progress}%` }}
-                            ></div>
-                        </div>
+                        {fileObj.status === 'uploading' && (
+                            <div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                                <div
+                                    className="bg-green-500 h-1.5 rounded-full"
+                                    style={{ width: `${fileObj.progress}%` }}
+                                ></div>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
