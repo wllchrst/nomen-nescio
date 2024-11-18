@@ -1,4 +1,4 @@
-use ::entity::{user, user::ActiveModel as User};
+use ::entity::{user, user::Entity as User};
 use sea_orm::*;
 
 pub struct UserMutation {}
