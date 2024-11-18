@@ -129,6 +129,8 @@ dependencies = [
 name = "api"
 version = "0.1.0"
 dependencies = [
+ "orion",
+ "rand_core",
  "rocket",
  "tokio",
 ]
@@ -711,8 +713,6 @@ dependencies = [
  "dotenv",
  "entity",
  "migration",
- "orion",
- "rand_core",
  "sea-orm",
  "service",
  "tokio",
