@@ -13,52 +13,50 @@ const Register: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="relative flex justify-center items-center bg-[#161b22] text-white">
+        <div className="relative flex justify-center items-center bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white">
             <ParticleBackground />
 
-            <div className="relative  max-w-6xl bg-[#161b22] rounded-lg shadow-md overflow-hidden p-8">
-                <div className="flex-1">
-                    <h2 className="text-4xl font-bold mb-2">
-                        Your&nbsp;
-                        <TypingEffect
-                            text={words}
-                            speed={100}
-                            eraseSpeed={50}
-                            typingDelay={500}
-                            cursor="|"
-                            eraseDelay={1000}
-                            displayTextRenderer={(text: string) => <span>{text}</span>}
-                        />
-                    </h2>
-                    <p className="text-base text-gray-400 mb-6">Create your account.</p>
+            <div className="relative max-w-5xl bg-[#1e293b] rounded-lg shadow-2xl overflow-hidden p-8 md:p-10 space-y-8">
+                <h2 className="text-4xl md:text-5xl font-bold mb-2">
+                    Your&nbsp;
+                    <TypingEffect
+                        text={words}
+                        speed={100}
+                        eraseSpeed={50}
+                        typingDelay={500}
+                        cursor="|"
+                        eraseDelay={1000}
+                        displayTextRenderer={(text: string) => <span>{text}</span>}
+                    />
+                </h2>
+                <p className="text-base text-gray-400 mb-6">Create your account and join us.</p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                            <TextField variant="username" title="Full Name*" />
-                            <TextField variant="email" title="Email*" />
-                            <PasswordField variant="password" title="Password*" />
-                            <Checkbox text="I agree to" link="Terms & Conditions" />
-                        </div>
-
-                        <div className="space-y-4">
-                            <DrawableCanvas width={350} height={250} text="Draw Your Signature" />
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                        <TextField variant="username" title="Full Name*" className="w-full" />
+                        <TextField variant="email" title="Email*" className="w-full" />
+                        <PasswordField variant="password" title="Password*" className="w-full" />
+                        <Checkbox text="I agree to" link="Terms & Conditions" />
                     </div>
 
-                    <button className="w-full mt-4 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200">
-                        Register
-                    </button>
-
-                    <p className="mt-4 text-gray-400 text-center text-sm">
-                        Already have an account?{' '}
-                        <span
-                            onClick={() => navigate('/')}
-                            className="text-blue-400 hover:underline cursor-pointer"
-                        >
-                            Login
-                        </span>
-                    </p>
+                    <div className="space-y-4">
+                        <DrawableCanvas width={350} height={250} text="Draw Your Signature" />
+                    </div>
                 </div>
+
+                <button className="w-full mt-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200 transform hover:scale-105">
+                    Register
+                </button>
+
+                <p className="mt-4 text-gray-400 text-center text-sm">
+                    Already have an account?{' '}
+                    <span
+                        onClick={() => navigate('/')}
+                        className="text-blue-400 hover:underline cursor-pointer"
+                    >
+                        Login
+                    </span>
+                </p>
             </div>
         </div>
     );

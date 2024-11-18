@@ -11,9 +11,10 @@ interface PasswordFieldProps {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     showError?: boolean;
     variant: 'password' | 'normal';
+    className?: string;
 }
 
-const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError, variant }) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError, variant, className }) => {
     const { showPassword, togglePasswordVisibility } = usePasswordVisibility();
     const { passwordStrength, evaluatePasswordStrength } = usePasswordStrength();
 
