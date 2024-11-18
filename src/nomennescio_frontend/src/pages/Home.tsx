@@ -50,7 +50,7 @@ const Home = () => {
                 </Dropdown>
             <SearchDropdown data={dummyData}></SearchDropdown> */}
             <Navbar></Navbar>
-            <FileUpload></FileUpload>
+            {/* <FileUpload></FileUpload> */}
            
         </div>   
 

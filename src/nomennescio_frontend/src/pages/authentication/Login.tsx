@@ -40,7 +40,7 @@ const Login: React.FC = () => {
                     <div className="space-y-5">
                         <div className="flex items-center border-b border-gray-700 py-2">
                             <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-3" />
-                            <TextField title="Email" variant="username" className="flex-1" />
+                            <TextField title="Email" variant="email" className="flex-1" />
                         </div>
                         <div className="flex items-center border-b border-gray-700 py-2">
                             <FontAwesomeIcon icon={faLock} className="text-gray-500 mr-3" />
