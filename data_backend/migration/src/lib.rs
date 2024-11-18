@@ -3,6 +3,9 @@ pub use sea_orm_migration::prelude::*;
 mod m20241114_110446_create_user_table;
 mod m20241115_033847_create_table_group;
 mod m20241115_033855_create_table_group_members;
+mod m20241118_002751_create_table_email;
+mod m20241118_002917_create_table_email_receivers;
+mod m20241118_002922_create_table_files;
 
 pub struct Migrator;
 
@@ -13,6 +16,9 @@ impl MigratorTrait for Migrator {
             Box::new(m20241114_110446_create_user_table::Migration),
             Box::new(m20241115_033847_create_table_group::Migration),
             Box::new(m20241115_033855_create_table_group_members::Migration),
+            Box::new(m20241118_002751_create_table_email::Migration),
+            Box::new(m20241118_002917_create_table_email_receivers::Migration),
+            Box::new(m20241118_002922_create_table_files::Migration),
         ]
     }
 }

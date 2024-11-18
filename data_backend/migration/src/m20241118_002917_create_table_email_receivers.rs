@@ -1,4 +1,4 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -9,27 +9,26 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(GroupMember::Table)
+                    .table(Receiver::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(GroupMember::Id)
+                        ColumnDef::new(Receiver::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(GroupMember::GroupId).integer().not_null())
-                    .col(ColumnDef::new(GroupMember::UserId).integer().not_null())
-                    .col(ColumnDef::new(GroupMember::Role).string().not_null())
+                    .col(ColumnDef::new(Receiver::EmailId).integer().not_null())
+                    .col(ColumnDef::new(Receiver::UserId).integer().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .from(GroupMember::Table, GroupMember::GroupId)
-                            .to(Group::Table, Group::Id),
+                            .from(Receiver::Table, Receiver::UserId)
+                            .to(User::Table, User::Id),
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .from(GroupMember::Table, GroupMember::UserId)
-                            .to(User::Table, User::Id),
+                            .from(Receiver::Table, Receiver::EmailId)
+                            .to(Email::Table, Email::Id),
                     )
                     .to_owned(),
             )
@@ -38,22 +37,21 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(GroupMember::Table).to_owned())
+            .drop_table(Table::drop().table(Receiver::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-enum GroupMember {
+enum Receiver {
     Table,
     Id,
-    GroupId,
+    EmailId,
     UserId,
-    Role,
 }
 
 #[derive(DeriveIden)]
-enum Group {
+enum Email {
     Table,
     Id,
 }
