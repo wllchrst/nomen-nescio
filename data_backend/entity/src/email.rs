@@ -3,28 +3,25 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "user")]
+#[sea_orm(table_name = "email")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
-    #[sea_orm(unique)]
-    pub email: String,
-    pub password: String,
-    pub created_at: DateTime,
+    pub title: String,
+    pub description: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::group_member::Entity")]
-    GroupMember,
+    #[sea_orm(has_many = "super::email_file::Entity")]
+    EmailFile,
     #[sea_orm(has_many = "super::receiver::Entity")]
     Receiver,
 }
 
-impl Related<super::group_member::Entity> for Entity {
+impl Related<super::email_file::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::GroupMember.def()
+        Relation::EmailFile.def()
     }
 }
 
