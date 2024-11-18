@@ -13,7 +13,7 @@ const Sidebar: React.FC = () => {
     };
 
     return (
-        <div className="absolute">
+        <div className="absolute z-50">
             <Button
                 onClick={toggleSidebar}
                 bg="gray.800"
@@ -29,26 +29,30 @@ const Sidebar: React.FC = () => {
                     } w-64 p-4`}
                 templateColumns={'repeat(2, 1fr)'}
             >
-                <GridItem>
+                <GridItem className='w-full'>
                     <IconButton
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
-                    />
+                        className='w-full justify-start'
+                        />
                     <IconButton
                         icon={FaBook}
                         direction="right"
                         innerText="Repositories"
-                    />
+                        className='w-full justify-start'
+                        />
                     <IconButton
                         icon={FaExclamationCircle}
                         direction="right"
                         innerText="Issues"
-                    />
+                        className='w-full justify-start'
+                        />
                     <IconButton
                         icon={FaCodeBranch}
                         direction="right"
                         innerText="Pull Requests"
+                        className='w-full justify-start'
                     />
                 </GridItem>
                 <GridItem>

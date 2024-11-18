@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Box } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
+import clsx from 'clsx';
 
 interface IconButtonProps {
     icon: IconType;
@@ -9,9 +10,10 @@ interface IconButtonProps {
     direction?: 'left' | 'right' | 'top' | 'bottom';
     innerText?: string; // text disebelah button 
     bg?: string;    
+    className?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon: Icon, hoverText, onClick, direction = 'bottom', innerText, bg = 'none' }) => {
+const IconButton: React.FC<IconButtonProps> = ({ className, icon: Icon, hoverText, onClick, direction = 'bottom', innerText, bg = 'none' }) => {
     // ini directionnya kalau misalkan dihovert nanti textnya bakalan sesuai dengan directionnya
     const getTextPositionClasses = () => {
         switch (direction) {
@@ -29,12 +31,12 @@ const IconButton: React.FC<IconButtonProps> = ({ icon: Icon, hoverText, onClick,
     };
 
     return (
-        <div className="relative group flex items-center m-2">
+        <div className="relative group flex justify-items-start m-2 w-full">
             <Button
                 bg={bg}
                 color="white"
                 _hover={{ bg: 'gray.700' }}
-                className="p-2 rounded-md flex items-center"
+                className={clsx("p-2 rounded-md", className)}
                 onClick={onClick}
 
             >
@@ -42,7 +44,7 @@ const IconButton: React.FC<IconButtonProps> = ({ icon: Icon, hoverText, onClick,
             </Button>
             {hoverText && (
                 <Box
-                    className={`absolute ${getTextPositionClasses()} bg-gray-900 text-white px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100`}
+                    className={`absolute ${getTextPositionClasses()}w-full bg-gray-900 text-white px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100`}
                 >
                     {hoverText}
                 </Box>)}

@@ -73,7 +73,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRe
     };
 
     return (
-        <div className="bg-gray-800 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative" onContextMenu={handleRightClick}>
+        <div className="bg-gray-800 z-0 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative" onContextMenu={handleRightClick}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     {getFileIcon()}

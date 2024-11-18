@@ -12,7 +12,7 @@ const DropdownValue: React.FC<DropdownValueProps> = ({ to = "#", text, icon, onC
     return (
         <Link
             to={to}
-            className="flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-150 rounded-md"
+            className="z-50 flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-150 rounded-md"
             onClick={onClick} 
         >
             {icon && <span className="mr-4">{icon}</span>}

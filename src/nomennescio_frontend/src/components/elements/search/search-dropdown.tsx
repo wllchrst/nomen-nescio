@@ -31,7 +31,6 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                 (item.email && item.email.toLowerCase().includes(value.toLowerCase())) ||
                 (item.title && item.title.toLowerCase().includes(value.toLowerCase()))
         );
-        setFilteredResults(results);
     };
 
     const handleItemClick = (item: SearchItem) => {
@@ -55,7 +54,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
     }, []);
 
     return (
-        <div className="relative w-80 m-2 flex justify-items-center">
+        <div className="relative w-80 m-2 flex justify-items-center z-50">
             <input
                 type="text"
                 ref={searchInputRef}
@@ -67,7 +66,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
             <AnimatePresence>
                 {query && (
                     <motion.div
-                        className="absolute top-12 left-0 bg-[#161b22] border border-gray-700 rounded-md shadow-lg w-full"
+                        className="absolute top-12 left-0 bg-[#161b22] border border-gray-700 rounded-md shadow-lg w-full z-50 max-h-60 overflow-y-auto"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -80,12 +79,11 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                                     key={item.id}
                                     onClick={() => handleItemClick(item)}
                                 >
-                                    <div className="flex w-full justify-center items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer">
+                                    <div className="flex w-full items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer">
                                         {item.icon && (
                                             <div className="flex w-8 h-8 invert items-center justify-center mr-2">
                                                 {React.cloneElement(item.icon as React.ReactElement, { size: 20 })}
                                             </div>
-
                                         )}
                                         {item.image && !item.icon && (
                                             <img
@@ -96,7 +94,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                                         )}
                                         <div className="text-left flex-grow">
                                             {item.title ? (
-                                                <p className="font-bold text-white text-center text-lg">{item.title}</p>
+                                                <p className="font-bold text-white">{item.title}</p>
                                             ) : (
                                                 <>
                                                     <p className="font-medium text-white">{item.name}</p>
