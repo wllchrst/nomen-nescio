@@ -20,6 +20,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(GroupMember::GroupId).integer().not_null())
                     .col(ColumnDef::new(GroupMember::UserId).integer().not_null())
+                    .col(ColumnDef::new(GroupMember::Role).string().not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .from(GroupMember::Table, GroupMember::GroupId)
@@ -48,6 +49,7 @@ enum GroupMember {
     Id,
     GroupId,
     UserId,
+    Role
 }
 
 #[derive(DeriveIden)]

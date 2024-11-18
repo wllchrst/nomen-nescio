@@ -53,6 +53,7 @@ impl GroupMutation {
         group_member::ActiveModel {
             user_id: Set(group_member_data.user_id.to_owned()),
             group_id: Set(group_member_data.group_id.to_owned()),
+            role: Set(group_member_data.role.to_owned()),
             ..Default::default()
         }
         .save(db)
