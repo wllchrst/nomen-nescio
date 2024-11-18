@@ -51,10 +51,7 @@ const Home = () => {
             <SearchDropdown data={dummyData}></SearchDropdown> */}
             <Navbar></Navbar>
             <FileUpload></FileUpload>
-            <FileDownload fileUrl='src/uploads/C.cpp' uploadedDate='22-33-112'></FileDownload>
-            <FileDownload fileUrl='src/uploads/nomen_nescio_logo.png' uploadedDate='22-33-112'></FileDownload>
-            <FileDownload fileUrl='src/uploads/Cheatsheet AI.pdf' uploadedDate='22-33-112'></FileDownload>
-            <FileDownload fileUrl='src/uploads/coordinates.txt' uploadedDate='22-33-11233'></FileDownload>
+           
         </div>   
 
     );
