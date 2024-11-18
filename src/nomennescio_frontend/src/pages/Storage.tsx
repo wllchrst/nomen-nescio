@@ -15,7 +15,8 @@ const files = [
     { fileUrl: 'src/uploads/coordinates.txt', uploadedDate: '6 Oct 2012' },
     { fileUrl: 'src/uploads/coordinates.txt', uploadedDate: '6 Oct 2012' },
     { fileUrl: 'src/uploads/coordinates.txt', uploadedDate: '6 Oct 2012' },
-    { fileUrl: 'src/uploads/coordinates.txt', uploadedDate: '6 Oct 2012' }
+    { fileUrl: 'src/uploads/coordinates.txt', uploadedDate: '6 Oct 2012' },
+    { fileUrl: 'src/uploads/example_video.mp4', uploadedDate: '6 Oct 2012' },
 ];
 
 const Storage: React.FC = () => {

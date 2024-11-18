@@ -5,6 +5,7 @@ import {
     faFileVideo,
     faFilePdf,
     faFileWord,
+    faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DropdownValue from '../dropdowns/dropdown-value';
@@ -12,7 +13,6 @@ import DeleteModal from '../modals/delete-modal';
 import RenameModal from '../modals/rename-modal';
 import FilePreview from './file-preview';
 import { useFileActions } from '../../../hooks/use-file-action';
-
 
 interface FileDownloadProps {
     fileUrl: string;
@@ -72,8 +72,45 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRe
         }
     };
 
+    const renderModalContent = () => {
+        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension || '')) {
+            return <img src={fileUrl} alt={fileName} className="w-full h-full object-contain rounded-md" />;
+        } else if (['mp4', 'webm', 'ogg'].includes(fileExtension || '')) {
+            return (
+                <video controls className="w-full h-full rounded-md">
+                    <source src={fileUrl} type={`video/${fileExtension}`} />
+                    webnya gk support
+                </video>
+            );
+        } else if (fileExtension === 'pdf') {
+            return <iframe src={fileUrl} className="w-full h-full rounded-md" title="PDF Preview"></iframe>;
+        } else if (['doc', 'docx'].includes(fileExtension || '')) {
+            return (
+                <iframe
+                    src={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}`}
+                    className="w-full h-full rounded-md"
+                    title="Word Document Preview"
+                ></iframe>
+            );
+        } else if (['txt'].includes(fileExtension || '')) {
+            return (
+                <iframe
+                    src={fileUrl}
+                    className="w-full h-full rounded-md"
+                    title="Text File Preview"
+                ></iframe>
+            );
+        } else {
+            return (
+                <div className="flex items-center justify-center w-full h-full">
+                    <FontAwesomeIcon icon={faEyeSlash} size="3x" color="gray" />
+                </div>
+            );
+        }
+    };
+
     return (
-        <div className="bg-gray-800 z-0 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative" onContextMenu={handleRightClick}>
+        <div className="bg-gray-800 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative" onContextMenu={handleRightClick}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     {getFileIcon()}
@@ -104,8 +141,11 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRe
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setIsModalOpen(false)}>
-                    <button onClick={() => setIsModalOpen(false)} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">×</button>
+                    <button onClick={() => setIsModalOpen(false)} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">
+                        ×
+                    </button>
                     <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative" onClick={(e) => e.stopPropagation()}>
+                        {renderModalContent()}
                     </div>
                 </div>
             )}

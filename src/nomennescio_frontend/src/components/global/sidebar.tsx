@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid, GridItem } from '@chakra-ui/react';
-import { FaBars, FaTimes, FaHome, FaBook, FaExclamationCircle, FaCodeBranch } from 'react-icons/fa';
+import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaFolder, FaUpload, FaTrash } from 'react-icons/fa';
 import IconButton from '../elements/buttons/icon-button';
 import { CloseIcon } from '@chakra-ui/icons';
 import PrimaryButton from '../elements/buttons/primary-button';
@@ -34,25 +34,37 @@ const Sidebar: React.FC = () => {
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
-                        className='w-full justify-start'
-                        />
+                        className="w-full justify-start"
+                    />
                     <IconButton
-                        icon={FaBook}
+                        icon={FaFolder}
                         direction="right"
-                        innerText="Repositories"
-                        className='w-full justify-start'
-                        />
+                        innerText="My Drive"
+                        className="w-full justify-start"
+                    />
                     <IconButton
-                        icon={FaExclamationCircle}
+                        icon={FaUsers}
                         direction="right"
-                        innerText="Issues"
-                        className='w-full justify-start'
-                        />
+                        innerText="Groups"
+                        className="w-full justify-start"
+                    />
                     <IconButton
-                        icon={FaCodeBranch}
+                        icon={FaUpload}
                         direction="right"
-                        innerText="Pull Requests"
-                        className='w-full justify-start'
+                        innerText="Uploads"
+                        className="w-full justify-start"
+                    />
+                    <IconButton
+                        icon={FaTrash}
+                        direction="right"
+                        innerText="Trash"
+                        className="w-full justify-start"
+                    />
+                    <IconButton
+                        icon={FaCog}
+                        direction="right"
+                        innerText="Settings"
+                        className="w-full justify-start"
                     />
                 </GridItem>
                 <GridItem>

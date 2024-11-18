@@ -14,7 +14,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ fileUrl, fileName, fileExtens
         return <img src={fileUrl} alt={fileName} className="rounded-md object-cover w-full h-40" onDoubleClick={onDoubleClick} />;
     } else if (['mp4', 'webm', 'ogg'].includes(fileExtension || '')) {
         return (
-            <video controls className="rounded-md w-full h-40" onDoubleClick={onDoubleClick}>
+            <video className="rounded-md w-full h-40" onDoubleClick={onDoubleClick}>
                 <source src={fileUrl} type={`video/${fileExtension}`} />
             </video>
         );
