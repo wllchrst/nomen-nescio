@@ -1,4 +1,9 @@
-use ::entity::{group, group::Entity as Group};
+use ::entity::{
+    group::{self, Entity as Group},
+    group_member,
+    group_member::Entity as GroupMember,
+    user::{self, Entity as User},
+};
 use sea_orm::*;
 
 pub struct GroupQuery {}
@@ -12,7 +17,18 @@ impl GroupQuery {
         Group::find().all(db).await
     }
 
-    pub async fn get_user_groups(db: &DbConn, user_id: i32) {
-        Group::find().filter(group::Relation::GroupMember)
+    pub async fn get_user_groups(
+        db: &DbConn,
+        user_id: i32,
+    ) -> Result<Vec<(group_member::Model, Option<group::Model>)>, DbErr> {
+        let user: Option<user::Model> = User::find_by_id(user_id).one(db).await?;
+        let user: user::Model = user.unwrap();
+        let members: Vec<(group_member::Model, Option<group::Model>)> = user
+            .find_related(GroupMember)
+            .find_also_related(Group)
+            .all(db)
+            .await?;
+
+        return Ok(members);
     }
 }
