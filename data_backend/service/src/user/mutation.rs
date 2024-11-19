@@ -4,7 +4,10 @@ use sea_orm::*;
 pub struct UserMutation {}
 
 impl UserMutation {
-    async fn create_user(db: &DbConn, user_data: user::Model) -> Result<user::ActiveModel, DbErr> {
+    pub async fn create_user(
+        db: &DbConn,
+        user_data: user::Model,
+    ) -> Result<user::ActiveModel, DbErr> {
         user::ActiveModel {
             email: Set(user_data.email.to_owned()),
             name: Set(user_data.name.to_owned()),
