@@ -5,11 +5,14 @@ use sea_orm::{sqlx::types::Json, DatabaseConnection};
 use serde_json::json;
 use service::user::UserMutation;
 
-use crate::models::request::create_user::CreateUserData;
+use crate::models::{request::create_user::CreateUserData, response::Response};
 use rocket::State;
 
 #[post("/user", data = "<input>")]
-async fn create_user(database: &State<DatabaseConnection>, input: Form<CreateUserData>) -> Json<JsonValue> {
+async fn create_user(
+    database: &State<DatabaseConnection>,
+    input: Form<CreateUserData>,
+) -> Json<JsonValue> {
     let data = input.into_inner();
 
     let user_data = user::Model {
@@ -25,18 +28,16 @@ async fn create_user(database: &State<DatabaseConnection>, input: Form<CreateUse
     match result {
         Ok(active_model) => {
             // Successfully inserted the user
-            Json(json!({
-                "success": true,
-                "message": "User created successfully.",
-                "user": active_model, // Assuming `active_model` implements Serialize
-            }))
+            Json(Response {
+                success: true,
+                message: "Success creating user".to_string(),
+                data: Some(active_model),
+            })
         }
-        Err(error) => {
-            // Handle the error
-            Json(json!({
-                "success": false,
-                "message": format!("Failed to create user: {}", error),
-            }))
-        }
+        Err(error) => Json(Response {
+            success: false,
+            message: "Something went wrong creating the user".to_string(),
+            data: None,
+        }),
     }
 }
