@@ -10,6 +10,7 @@ interface SearchItem {
     icon?: React.ReactNode;
     title?: string;
     link: string;
+    variant?: string;
 }
 
 interface SearchDropdownProps {
@@ -19,7 +20,7 @@ interface SearchDropdownProps {
 
 const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) => {
     const [query, setQuery] = useState('');
-    const [filteredResults, setFilteredResults] = useState<SearchItem[]>(data);
+    const [filteredResults, setFilteredResults] = useState<SearchItem[]>([]); 
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                 (item.email && item.email.toLowerCase().includes(value.toLowerCase())) ||
                 (item.title && item.title.toLowerCase().includes(value.toLowerCase()))
         );
+        setFilteredResults(results);
     };
 
     const handleItemClick = (item: SearchItem) => {

@@ -1,20 +1,42 @@
 import React from 'react';
 import { Button, Box } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
+import { useNavigate } from 'react-router-dom';
+import { ButtonProps } from '@chakra-ui/react';
 import clsx from 'clsx';
 
-interface IconButtonProps {
+interface IconButtonProps extends ButtonProps {
     icon: IconType;
-    hoverText?: string; // text yang bakalan muncul pas buttonnya dihovert
+    hoverText?: string;
     onClick?: () => void;
     direction?: 'left' | 'right' | 'top' | 'bottom';
-    innerText?: string; // text disebelah button 
-    bg?: string;    
+    innerText?: string;
+    bg?: string;
     className?: string;
+    to?: string;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ className, icon: Icon, hoverText, onClick, direction = 'bottom', innerText, bg = 'none' }) => {
-    // ini directionnya kalau misalkan dihovert nanti textnya bakalan sesuai dengan directionnya
+const IconButton: React.FC<IconButtonProps> = ({
+    to,
+    className,
+    icon: Icon,
+    hoverText,
+    onClick,
+    direction = 'bottom',
+    innerText,
+    bg = 'none',
+    ...buttonProps
+}) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (to) {
+            navigate(to);
+        } else if (onClick) {
+            onClick();
+        }
+    };
+
     const getTextPositionClasses = () => {
         switch (direction) {
             case 'left':
@@ -31,23 +53,24 @@ const IconButton: React.FC<IconButtonProps> = ({ className, icon: Icon, hoverTex
     };
 
     return (
-        <div className="relative group flex justify-items-start m-2 w-full">
+        <div className="relative group flex items-center m-2 w-full">
             <Button
                 bg={bg}
                 color="white"
                 _hover={{ bg: 'gray.700' }}
-                className={clsx("p-2 rounded-md", className)}
-                onClick={onClick}
-
+                className={clsx("p-2 rounded-md flex items-center", className)}
+                onClick={handleClick}
+                {...buttonProps}
             >
-                <Icon className="text-white" /> {innerText}
+                <Icon className="text-white mr-2" /> {innerText}
             </Button>
             {hoverText && (
                 <Box
-                    className={`absolute ${getTextPositionClasses()}w-full bg-gray-900 text-white px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100`}
+                    className={`absolute ${getTextPositionClasses()} bg-gray-900 text-white px-2 py-1 rounded opacity-0 transition-opacity duration-200 group-hover:opacity-100`}
                 >
                     {hoverText}
-                </Box>)}
+                </Box>
+            )}
         </div>
     );
 };
