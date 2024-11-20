@@ -1,1 +1,7 @@
-service : { eek : (text) -> (text) query; greet : (text) -> (text) query }
+service : () -> {
+  get_key : () -> (opt text) query;
+  get_user : (text) -> (opt text) query;
+  remove_user : (text) -> (bool);
+  set_key : (text) -> ();
+  set_user : (text, text) -> ();
+}
