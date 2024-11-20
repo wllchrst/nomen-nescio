@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Grid, GridItem } from '@chakra-ui/react';
 import { FaHome, FaUsers, FaCog, FaFolder, FaUpload, FaTrash } from 'react-icons/fa';
+import { AiFillGithub } from 'react-icons/ai';
 import IconButton from '../elements/buttons/icon-button';
 
 const Sidebar: React.FC = () => {
@@ -52,10 +53,13 @@ const Sidebar: React.FC = () => {
             style={{ width: sidebarWidth }}
         >
             <Grid
-                className="h-full  text-white p-4"
-                templateColumns="repeat(2, 1fr)"
+                className="h-full w-full text-white p-4"
             >
                 <GridItem className="w-full">
+                    <a href="/" className="text-white  font-bold flex items-center hover:text-gray-300 mb-4">
+                        <AiFillGithub className="w-8 h-8" />
+                        <span className="ml-4 text-xl">Nomen Nescio</span>
+                    </a>
                     <IconButton
                         icon={FaHome}
                         direction="right"
@@ -80,12 +84,6 @@ const Sidebar: React.FC = () => {
                         icon={FaUpload}
                         direction="right"
                         innerText="Uploads"
-                        className="w-full justify-start"
-                    />
-                    <IconButton
-                        icon={FaTrash}
-                        direction="right"
-                        innerText="Trash"
                         className="w-full justify-start"
                     />
                     <IconButton

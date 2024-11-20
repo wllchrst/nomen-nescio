@@ -14,7 +14,7 @@ const Template = ({ children }: TemplateProps) => {
             </div>
             <div className="container">
                 <Navbar />
-                <div className="container mx-auto px-6 py-8">
+                <div className="container mx-auto px-6 py-8 max-h-96 overflow-y-auto">
                     {children}
                 </div>
             </div>
