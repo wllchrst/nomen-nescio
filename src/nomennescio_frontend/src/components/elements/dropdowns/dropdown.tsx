@@ -8,9 +8,10 @@ interface DropdownProps {
     children: ReactNode;
     className?: string;
     size?: string;
+    image?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ text, icon, children, className, size = "text-xl" }) => {
+const Dropdown: React.FC<DropdownProps> = ({ image, text, icon, children, className, size = "text-xl" }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownStyles, setDropdownStyles] = useState({});
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,9 +46,13 @@ const Dropdown: React.FC<DropdownProps> = ({ text, icon, children, className, si
             onMouseLeave={handleMouseLeave}
         >
             <button className="flex items-center px-4 py-2 text-gray-300 hover:text-white focus:outline-none">
-                {icon && <span className="mr-2">{icon}</span>}
+                {icon ? (
+                    <span className="mr-2">{icon}</span>
+                ) : (
+                    image && <img src={image} alt="" className='mr-4 w-6 h-6 rounded-full' />
+                )}
                 <p className={size}>{text}</p>
-                {!icon && <AiFillCaretDown className="ml-2 text-gray-400" />}
+                {(!icon && !image) && <AiFillCaretDown className="ml-2 text-gray-400" />}
             </button>
             <div
                 ref={dropdownRef}

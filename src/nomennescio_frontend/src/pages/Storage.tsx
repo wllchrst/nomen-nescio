@@ -33,16 +33,8 @@ const Storage: React.FC = () => {
             <div className="flex flex-col flex-grow w-2/3">
                 <Navbar />
 
-                <div className="container mx-auto px-6 py-8"> {/* Adjusted padding */}
-                    <h1 className="text-3xl font-bold mb-6">Nanti ini nama Storage</h1>
-                    <p className="text-gray-400 mb-8">
-                        Manage your files easily by dragging and dropping or uploading them here.
-                    </p>
-
-                    <FileUpload width='w-40' height='h-50' />
-
-                    <div className="mt-10">
-                        <h2 className="text-2xl font-semibold mb-4">Uploaded Files</h2>
+                <div className="container mx-auto px-6 py-8"> 
+                    <div className="mt-2">
                         <input
                             type="text"
                             value={searchQuery}

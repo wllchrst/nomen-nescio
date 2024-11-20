@@ -124,7 +124,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRe
 
             <div className="flex items-center text-sm text-gray-400">
                 <span className="material-icons text-green-500 mr-2">person</span>
-                <p className="truncate">Opened • {uploadedDate}</p>
+                <p className="truncate">Upload on • {uploadedDate}</p>
             </div>
 
             {contextMenu && isContextMenuVisible && (

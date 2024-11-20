@@ -23,46 +23,37 @@ const Navbar: React.FC = () => {
 
     const filesDropdown = [
         { id: 6, name: 'My Files', icon: <FaFolderOpen />, link: '/storage' },
-        { id: 7, name: 'Shared with Me', icon: <FaShareAlt />, link: '#' },
-        { id: 8, name: 'Recent Files', icon: <FaFolderOpen />, link: '#' },
+        { id: 7, name: 'Share File', icon: <FaShareAlt />, link: '#' },
+        { id: 8, name: 'Upload File', icon: <FaCloudUploadAlt />, link: '#' },
     ];
 
     const groupsDropdown = [
-        { id: 9, name: 'My Groups', icon: <FaUsers />, link: '#' },
-        { id: 10, name: 'Create New Group', icon: <FaPlus />, link: '#' },
-        { id: 11, name: 'Join a Group', icon: <FaUsers />, link: '#' },
-    ];
-
-    const uploadDropdown = [
-        { id: 12, name: 'Upload File', icon: <FaCloudUploadAlt />, link: '#' },
-        { id: 13, name: 'Upload Folder', icon: <FaCloudUploadAlt />, link: '#' },
-        { id: 14, name: 'Upload Settings', icon: <FaCog />, link: '#' },
-    ];
-
-    const messagesDropdown = [
-        { id: 15, name: 'Inbox', icon: <FaEnvelope />, link: '#' },
-        { id: 16, name: 'Sent Messages', icon: <FaEnvelope />, link: '#' },
-        { id: 17, name: 'Archived', icon: <FaClipboardList />, link: '#' },
-    ];
-
-    const settingsDropdown = [
-        { id: 18, name: 'Account Settings', icon: <FaCog />, link: '#' },
-        { id: 19, name: 'Privacy Settings', icon: <FaCog />, link: '#' },
-        { id: 20, name: 'Notification Settings', icon: <FaBell />, link: '#' },
+        { id: 10, name: 'My Groups', icon: <FaUsers />, link: '#' },
+        { id: 11, name: 'Create New Group', icon: <FaPlus />, link: '#' },
+        { id: 12, name: 'Join a Group', icon: <FaUsers />, link: '#' },
     ];
 
     const dropdownData = [
         ...filesDropdown,
         ...groupsDropdown,
-        ...uploadDropdown,
-        ...messagesDropdown,
-        ...settingsDropdown,
     ];
 
     const searchData = [...dummyData, ...dropdownData.map((item) => ({ ...item, email: '' }))];
 
-return (
-        <nav className="bg-[#0d1117] w-full border-gray-800 px-4 py-2 flex items-center justify-between">
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setQuery(value);
+        const results = data.filter(
+            (item) =>
+                (item.name && item.name.toLowerCase().includes(value.toLowerCase())) ||
+                (item.email && item.email.toLowerCase().includes(value.toLowerCase())) ||
+                (item.title && item.title.toLowerCase().includes(value.toLowerCase()))
+        );
+        setFilteredResults(results);
+    };
+
+    return (
+        <nav className="bg-[#0d1117] w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center space-x-4">
                 <a href="/" className="text-white text-2xl font-bold flex items-center hover:text-gray-300">
                     <AiFillGithub className="w-8 h-8" />
@@ -111,7 +102,7 @@ return (
                         <DropdownValue text="Notification 3" icon={<FaBell />} />
                     </Dropdown>
 
-                    <Dropdown text="" icon={<AiOutlineUser className="w-5 h-5 text-gray-400 hover:text-white" />}>
+                <Dropdown text="" image="https://via.placeholder.com/50">
                         <DropdownValue text="Profile" icon={<FaUserCircle />} />
                         <DropdownValue text="Settings" icon={<FaCog />} />
                         <DropdownValue text="Log Out" icon={<FaSignOutAlt />} />
