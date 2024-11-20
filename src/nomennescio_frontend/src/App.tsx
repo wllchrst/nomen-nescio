@@ -9,7 +9,7 @@ import Upload from './pages/Upload';
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
+      <div className="min-h-screen overflow-hidden bg-[#0d1117] flex items-center justify-center overflow-y-hidden">
         <Routes>
           <Route path="/" element={<Login/>} />
           <Route path="/home" element={<Home/>} />

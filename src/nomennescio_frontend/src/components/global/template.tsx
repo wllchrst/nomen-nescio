@@ -8,13 +8,11 @@ interface TemplateProps {
 
 const Template = ({ children }: TemplateProps) => {
     return (
-        <div className='flex w-full min-h-screen bg-gradient-to-br from-[#0d1117] to-[#30363d]'>
-            <div className="">
-                <Sidebar />
-            </div>
-            <div className="container">
+        <div className="overflow-hidden hide-scrollbar flex w-full min-h-screen bg-gradient-to-br from-[#0d1117] to-[#30363d]">
+            <Sidebar />
+            <div className="flex flex-col">
                 <Navbar />
-                <div className="container mx-auto px-6 py-8 max-h-96 overflow-y-auto">
+                <div className="">
                     {children}
                 </div>
             </div>

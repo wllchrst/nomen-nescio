@@ -85,6 +85,7 @@ const Sidebar: React.FC = () => {
                         direction="right"
                         innerText="Uploads"
                         className="w-full justify-start"
+                        to="/upload"
                     />
                     <IconButton
                         icon={FaCog}
