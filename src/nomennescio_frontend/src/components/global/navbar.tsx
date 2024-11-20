@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     const filesDropdown = [
         { id: 6, name: 'My Files', icon: <FaFolderOpen />, link: '/storage' },
         { id: 7, name: 'Share File', icon: <FaShareAlt />, link: '#' },
-        { id: 8, name: 'Upload File', icon: <FaCloudUploadAlt />, link: '#' },
+        { id: 8, name: 'Upload File', icon: <FaCloudUploadAlt />, link: '/upload' },
     ];
 
     const groupsDropdown = [
@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className="bg-[#0d1117] w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
+        <nav className="bg-transparent w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center space-x-4">
                 <a href="/" className="text-white text-2xl font-bold flex items-center hover:text-gray-300">
                     <AiFillGithub className="w-8 h-8" />

@@ -41,14 +41,18 @@ const Sidebar: React.FC = () => {
         };
     }, [resize, stopResizing]);
 
+    useEffect(() => {
+        document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);
+    }, [sidebarWidth]);
+
     return (
         <div
             ref={sidebarRef}
-            className="relative h-full"
+            className="relative h-full bg-gray-900"
             style={{ width: sidebarWidth }}
         >
             <Grid
-                className="h-full bg-gray-900 text-white p-4"
+                className="h-full  text-white p-4"
                 templateColumns="repeat(2, 1fr)"
             >
                 <GridItem className="w-full">

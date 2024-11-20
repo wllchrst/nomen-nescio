@@ -4,6 +4,7 @@ import Login from './pages/authentication/Login';
 import Register from './pages/authentication/Register';
 import Home from './pages/Home';
 import Storage from './pages/Storage';
+import Upload from './pages/Upload';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/storage" element={<Storage />} />
+          <Route path="/Upload" element={<Upload />} />
         </Routes>
       </div>
     </Router>

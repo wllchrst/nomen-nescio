@@ -6,6 +6,7 @@ import FileUpload from '../components/elements/files/file-upload';
 import SearchDropdown from '../components/elements/search/search-dropdown';
 import Navbar from '../components/global/navbar';
 import FileDownload from '../components/elements/files/file-download';
+import Template from '../components/global/template';
 
 const dummyData = [
     {
@@ -40,19 +41,9 @@ const dummyData = [
 
 const Home = () => {
     return (
-        <div
-            className="w-full min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700"
-        >
-                {/* <Dropdown text='Product'>
-                    <DropdownValue text='new file' icon={<FaHome/>}></DropdownValue>
-                    <DropdownValue text='new file'></DropdownValue>
-                    <DropdownValue text='new file'></DropdownValue>
-                </Dropdown>
-            <SearchDropdown data={dummyData}></SearchDropdown> */}
-            <Navbar></Navbar>
-            {/* <FileUpload></FileUpload> */}
-           
-        </div>   
+      <Template>
+        <div className=""></div>
+      </Template>
 
     );
 };
