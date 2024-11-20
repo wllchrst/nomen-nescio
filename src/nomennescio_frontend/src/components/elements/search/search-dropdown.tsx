@@ -10,6 +10,7 @@ interface SearchItem {
     icon?: React.ReactNode;
     title?: string;
     link: string;
+    variant?: string;
 }
 
 interface SearchDropdownProps {

@@ -5,9 +5,10 @@ import { useDragAndDrop } from '../../../hooks/use-drag-and-drop';
 interface FileUploadProps {
     width?: string;
     height?: string;
+    fontSize?: string;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56' }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56', fontSize = 'text-sm'}) => {
     const { selectedFiles, startUploading } = useFileUpload();
     const { isDragging } = useDragAndDrop(startUploading);
 

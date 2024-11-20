@@ -1,46 +1,70 @@
-import React, { useState } from 'react';
-import { Box, Button, Grid, GridItem } from '@chakra-ui/react';
-import { FaBars, FaTimes, FaHome, FaUsers, FaCog, FaFolder, FaUpload, FaTrash } from 'react-icons/fa';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Grid, GridItem } from '@chakra-ui/react';
+import { FaHome, FaUsers, FaCog, FaFolder, FaUpload, FaTrash } from 'react-icons/fa';
 import IconButton from '../elements/buttons/icon-button';
-import { CloseIcon } from '@chakra-ui/icons';
-import PrimaryButton from '../elements/buttons/primary-button';
 
 const Sidebar: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const sidebarRef = useRef<HTMLDivElement>(null);
+    const [isResizing, setIsResizing] = useState(false);
+    const [sidebarWidth, setSidebarWidth] = useState(240);
 
-    const toggleSidebar = () => {
-        setIsOpen(!isOpen);
-    };
+    const startResizing = useCallback(() => {
+        setIsResizing(true);
+    }, []);
+
+    const stopResizing = useCallback(() => {
+        setIsResizing(false);
+    }, []); 
+
+    const resize = useCallback(
+        (mouseMoveEvent: MouseEvent) => {
+            if (isResizing && sidebarRef.current) {
+                const newWidth = mouseMoveEvent.clientX - sidebarRef.current.getBoundingClientRect().left;
+
+                const MIN_WIDTH = 160;
+                const MAX_WIDTH = 300;
+
+                if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
+                    setSidebarWidth(newWidth);
+                }
+            }
+        },
+        [isResizing]
+    );
+
+    useEffect(() => {
+        window.addEventListener('mousemove', resize);
+        window.addEventListener('mouseup', stopResizing);
+        return () => {
+            window.removeEventListener('mousemove', resize);
+            window.removeEventListener('mouseup', stopResizing);
+        };
+    }, [resize, stopResizing]);
 
     return (
-        <div className="absolute z-50">
-            <Button
-                onClick={toggleSidebar}
-                bg="gray.800"
-                color="white"
-                _hover={{ bg: 'gray.700' }}
-                className="p-2 m-2"
-            >
-                {isOpen ? <FaTimes /> : <FaBars />}
-            </Button>
-
+        <div
+            ref={sidebarRef}
+            className="relative h-full"
+            style={{ width: sidebarWidth }}
+        >
             <Grid
-                className={`fixed top-0 left-0 h-full bg-gray-900 text-white transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
-                    } w-64 p-4`}
-                templateColumns={'repeat(2, 1fr)'}
+                className="h-full bg-gray-900 text-white p-4"
+                templateColumns="repeat(2, 1fr)"
             >
-                <GridItem className='w-full'>
+                <GridItem className="w-full">
                     <IconButton
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
                         className="w-full justify-start"
+                        to="/home"
                     />
                     <IconButton
                         icon={FaFolder}
                         direction="right"
                         innerText="My Drive"
                         className="w-full justify-start"
+                        to="/storage"
                     />
                     <IconButton
                         icon={FaUsers}
@@ -67,12 +91,11 @@ const Sidebar: React.FC = () => {
                         className="w-full justify-start"
                     />
                 </GridItem>
-                <GridItem>
-                    <IconButton
-                        icon={FaTimes}
-                        onClick={toggleSidebar}
-                    />
-                </GridItem>
+                <div
+                    className="absolute top-0 right-0 h-full w-2"
+                    style={{ cursor: 'ew-resize' }}
+                    onMouseDown={startResizing}
+                ></div>
             </Grid>
         </div>
     );

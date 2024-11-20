@@ -64,11 +64,6 @@ const Navbar: React.FC = () => {
 return (
         <nav className="bg-[#0d1117] w-full border-gray-800 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center space-x-4">
-                <Sidebar />
-
-            </div>
-
-            <div className="flex items-center space-x-4">
                 <a href="/" className="text-white text-2xl font-bold flex items-center hover:text-gray-300">
                     <AiFillGithub className="w-8 h-8" />
                 </a>
@@ -85,7 +80,7 @@ return (
                     ))}
                 </Dropdown>
 
-                <Dropdown text="UPLOAD">
+                {/* <Dropdown text="UPLOAD">
                     {uploadDropdown.map((item) => (
                         <DropdownValue key={item.id} text={item.name} icon={item.icon} />
                     ))}
@@ -101,7 +96,7 @@ return (
                     {settingsDropdown.map((item) => (
                         <DropdownValue key={item.id} text={item.name} icon={item.icon} />
                     ))}
-                </Dropdown>
+                </Dropdown> */}
             </div>
 
             <div className="flex items-center space-x-3">
