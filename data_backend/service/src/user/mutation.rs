@@ -1,5 +1,6 @@
 use ::entity::{user, user::Entity as User};
 use sea_orm::*;
+use sqlx::types::chrono::Utc;
 
 pub struct UserMutation {}
 
@@ -12,6 +13,8 @@ impl UserMutation {
             email: Set(user_data.email.to_owned()),
             name: Set(user_data.name.to_owned()),
             password: Set(user_data.password.to_owned()),
+            created_at: Set(Utc::now().naive_utc()),
+            signature_file_path: Set(user_data.signature_file_path.to_owned()),
             ..Default::default()
         }
         .save(db)
@@ -34,6 +37,7 @@ impl UserMutation {
             email: Set(user_data.email.to_owned()),
             name: Set(user_data.email.to_owned()),
             password: Set(user_data.password.to_owned()),
+            signature_file_path: Set(user_data.signature_file_path.to_owned()),
             created_at: user.created_at,
         }
         .save(db)

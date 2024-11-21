@@ -6,7 +6,8 @@ edition = "2021"
 [dependencies]
 entity = { path = "../entity" }
 service = { path = "../service" }
-rocket = "0.5.1"
+rocket = { version = "0.5.1", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
 tokio = "1.29.0"
 orion = "0.17.7"
 chrono = "0.4.38"
