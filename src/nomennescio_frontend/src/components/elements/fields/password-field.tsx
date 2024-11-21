@@ -4,17 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Label from './label';
 import usePasswordStrength from '../../../hooks/use-password-strength';
 import usePasswordVisibility from '../../../hooks/use-password-visibility';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface PasswordFieldProps {
     title: string;
     placeholder?: string;
+    register?: UseFormRegisterReturn
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     showError?: boolean;
     variant: 'password' | 'normal';
     className?: string;
 }
 
-const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onChange, showError, variant, className }) => {
+const PasswordField: React.FC<PasswordFieldProps> = ({ title, register, placeholder, onChange, showError, variant, className }) => {
     const { showPassword, togglePasswordVisibility } = usePasswordVisibility();
     const { passwordStrength, evaluatePasswordStrength } = usePasswordStrength();
 
@@ -34,6 +36,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({ title, placeholder, onCha
                     type={showPassword ? 'text' : 'password'}
                     placeholder={placeholder}
                     onChange={handlePasswordChange}
+                    {...register}
                     className={`text-sm w-full border rounded-md p-2 bg-[#0d1117] text-white focus:outline-none ${variant === 'password' ? (
                             passwordStrength === "weak"
                                 ? "border-red-500"
