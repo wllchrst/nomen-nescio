@@ -5,5 +5,7 @@ export class UserService extends Service {
     super();
   }
 
-  async registerUser() {}
+  async registerUser(): Promise<boolean> {
+    return true;
+  }
 }
