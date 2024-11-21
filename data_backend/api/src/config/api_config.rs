@@ -3,7 +3,7 @@ use std::env;
 use dotenv::dotenv;
 use sea_orm::{Database, DatabaseConnection};
 
-use crate::routes::{test, user_routes::create_user};
+use crate::routes::{file_routes::upload_file, test, user_routes::create_user};
 
 #[tokio::main]
 pub async fn start() -> Result<(), rocket::Error> {
@@ -17,7 +17,7 @@ pub async fn start() -> Result<(), rocket::Error> {
 
     rocket::build()
         .manage(database)
-        .mount("/", routes![test, create_user])
+        .mount("/", routes![test, create_user, upload_file])
         .launch()
         .await
         .map(|_| ())
