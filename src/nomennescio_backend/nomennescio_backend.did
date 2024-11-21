@@ -1,7 +1,7 @@
 service : () -> {
   get_key : () -> (opt text) query;
-  get_user : (text) -> (opt text) query;
-  remove_user : (text) -> (bool);
+  get_user : (text, text) -> (opt text) query;
+  remove_user : (text, text) -> (bool);
   set_key : (text) -> ();
-  set_user : (text, text) -> ();
+  set_user : (text, text) -> (bool);
 }

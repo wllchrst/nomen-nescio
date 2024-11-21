@@ -11,6 +11,8 @@ crate-type = ["cdylib"]
 [dependencies]
 candid = "0.10"
 ic-cdk = "0.16"
-ic-cdk-timers = "0.10" # Feel free to remove this dependency if you don't need timers
+ic-cdk-timers = "0.10"
 ic-cdk-macros = "0.16"
 cmake = "0.1.51"
+sha2 = "0.10"
+uuid = { version = "1.11", features = ["v5"] }
