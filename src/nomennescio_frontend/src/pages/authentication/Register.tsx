@@ -15,10 +15,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IRegister>();
 
-  const onSubmit: SubmitHandler<IRegister> = (data) => {
-    console.log("here");
-    console.log(data);
-  };
+  const onSubmit: SubmitHandler<IRegister> = (data) => {};
 
   return (
     <div className="relative flex justify-center items-center bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white">
@@ -40,47 +37,43 @@ const Register: React.FC = () => {
         <p className="text-base text-gray-400 mb-6">
           Create your account and join us.
         </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <TextField
+                variant="username"
+                title="Full Name*"
+                className="w-full"
+                register={register("email")}
+              />
+              <TextField
+                variant="email"
+                title="Email*"
+                className="w-full"
+                register={register("email")}
+              />
+              <PasswordField
+                variant="password"
+                title="Password*"
+                className="w-full"
+                register={register("password")}
+              />
+              <Checkbox text="I agree to" link="Terms & Conditions" />
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <TextField
-              variant="username"
-              title="Full Name*"
-              className="w-full"
-              {...register("fullName", {
-                required: "This is required",
-              })}
-            />
-            <TextField
-              variant="email"
-              title="Email*"
-              className="w-full"
-              {...register("email")}
-            />
-            <PasswordField
-              variant="password"
-              title="Password*"
-              className="w-full"
-              {...register("password")}
-            />
-            <Checkbox text="I agree to" link="Terms & Conditions" />
+            <div className="space-y-4">
+              <DrawableCanvas
+                width={350}
+                height={250}
+                text="Draw Your Signature*"
+              />
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <DrawableCanvas
-              width={350}
-              height={250}
-              text="Draw Your Signature*"
-            />
-          </div>
-        </div>
-
-        <button
-          className="w-full mt-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200 transform hover:scale-105"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Register
-        </button>
+          <button className="w-full mt-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200 transform hover:scale-105">
+            Register
+          </button>
+        </form>
 
         <p className="mt-4 text-gray-400 text-center text-sm">
           Already have an account?{" "}
