@@ -1,5 +1,6 @@
 export interface IRegister {
   email: string;
-  fullName: string;
+  name: string;
   password: string;
+  signature_file_path: string;
 }
