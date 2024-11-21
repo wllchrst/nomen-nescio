@@ -30,20 +30,35 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({ text, width, height }) 
                     const data = imageData.data;
 
                     for (let i = 0; i < data.length; i += 4) {
-                        data[i] = 255 - data[i];    
-                        data[i + 1] = 255 - data[i + 1]; 
-                        data[i + 2] = 255 - data[i + 2]; 
+                        data[i] = 255 - data[i];
+                        data[i + 1] = 255 - data[i + 1];
+                        data[i + 2] = 255 - data[i + 2];
                     }
 
                     tempContext.putImageData(imageData, 0, 0);
 
                     const link = document.createElement('a');
                     link.href = tempCanvas.toDataURL('image/png');
-                    link.download = 'inverted_signature.png'; 
+                    link.download = 'inverted_signature.png';
                     link.click();
                 }
             }
         }
+    };
+
+    const getCanvasImage = (): File | null => {
+        if (canvasRef.current) {
+            const canvas = canvasRef.current as HTMLCanvasElement;
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const file = new File([blob], 'canvas_image.png', { type: 'image/png' });
+                    console.log("dapet", file);
+                    return file;
+                }
+            }, 'image/png');
+        }
+        console.log("ga dapet");
+        return null;
     };
 
     return (

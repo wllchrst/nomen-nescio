@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import TypingEffect from 'react-typing-effect';
+
+const words = ["Search...", "Type to find...", "Looking for something?"];
 
 interface SearchItem {
     id: number;
@@ -56,14 +59,24 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
     }, []);
 
     return (
-        <div className="relative w-80 m-2 flex justify-items-center z-50">
-            <input
-                type="text"
-                ref={searchInputRef}
-                value={query}
-                onChange={handleSearch}
-                placeholder="(ctrl + k) to search..."
-                className="w-full p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <div className="relative flex justify-items-center z-50">
+            <TypingEffect
+                text={words}
+                speed={100}
+                eraseSpeed={50}
+                typingDelay={500}
+                cursor="|"
+                eraseDelay={1000}
+                displayTextRenderer={(text: string) => (
+                    <input
+                        type="text"
+                        ref={searchInputRef}
+                        value={query}
+                        onChange={handleSearch}
+                        placeholder={"(ctrl + k).. " + text}
+                        className="w-96 p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                )}
             />
             <AnimatePresence>
                 {query && (

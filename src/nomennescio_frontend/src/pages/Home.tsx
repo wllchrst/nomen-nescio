@@ -1,13 +1,7 @@
-import { Box, Button, Input, Text } from '@chakra-ui/react';
-import Dropdown from '../components/elements/dropdowns/dropdown';
-import DropdownValue from '../components/elements/dropdowns/dropdown-value';
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
-import FileUpload from '../components/elements/files/file-upload';
-import SearchDropdown from '../components/elements/search/search-dropdown';
-import Navbar from '../components/global/navbar';
-import FileDownload from '../components/elements/files/file-download';
 import Template from '../components/global/template';
-    
+import Navbar from '../components/global/navbar';
+
 const dummyData = [
     {
         id: 1,
@@ -26,7 +20,7 @@ const dummyData = [
     {
         id: 3,
         image: 'https://via.placeholder.com/50',
-    name: 'Michael Brown',
+        name: 'Michael Brown',
         email: 'michael.brown@example.com',
         link: 'profile/mic  ael'
     },
@@ -41,12 +35,21 @@ const dummyData = [
 
 const Home = () => {
     return (
-      <Template>
-        <div className=""></div>
-      </Template>
-
+        <div className='w-full bg-gray-900'>
+        <div className="">
+            <Navbar />
+        </div>
+        <div className="w-screen min-h-screen flex flex-col items-center mt-20 text-white">
+            <div className="w-screen m-4 text-center font-bold animate-fade-in">
+                <p className='text-9xl mb-4'>From Hand to Hand</p>
+                <p className='text-7xl mb-8'>Secured by Your Mark.</p>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 transition duration-300">
+                    Get Started.
+                </a>
+            </div>
+        </div>
+    </div>
     );
 };
-`   `
+
 export default Home;
-    

@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 const useWords = () => {
     const[words, setWords] = useState<string[]>([
         "File.",
-        "Way.",
-        "Safety.",
+        "Signature.",
+        "Security.",
         ""
     ]);
 

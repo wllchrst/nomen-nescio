@@ -62,7 +62,7 @@ const Storage: React.FC = () => {
 
     return (
         <Template>
-            <div className="container mx-auto px-6 py-8" > 
+            <div className="container mx-auto px-6 py-8 mt-20" > 
                 <div className="mt-2 flex justify-between items-center">
                     <input
                         type="text"

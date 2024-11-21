@@ -1,5 +1,6 @@
 import React from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
+import FileDownload from '../files/file-download';
 
 interface Member {
     id: number;
@@ -8,14 +9,20 @@ interface Member {
     profilePicture: string;
 }
 
+interface File {
+    fileUrl: string;
+    uploadedDate: string;
+}
+
 interface GroupMembersProps {
     members: Member[];
     showMembers: boolean;
     toggleMembers: () => void;
-    groupTitle: string; 
+    groupTitle: string;
+    files: File[];
 }
 
-const GroupMembers: React.FC<GroupMembersProps> = ({ members, showMembers, toggleMembers, groupTitle }) => {
+const GroupMembers: React.FC<GroupMembersProps> = ({ members, showMembers, toggleMembers, groupTitle, files }) => {
     return (
         <div className="bg-gray-800 p-4 rounded-lg">
             <h2 className="text-xl font-semibold text-white mb-2">{groupTitle}</h2>
@@ -49,6 +56,14 @@ const GroupMembers: React.FC<GroupMembersProps> = ({ members, showMembers, toggl
                                 <span className="font-bold">{member.name}</span> - {member.role}
                             </div>
                         </li>
+                    ))}
+                    {files.map((file, index) => (
+                        <div key={index} className="mb-2">
+                            <FileDownload 
+                                fileUrl={file.fileUrl} 
+                                uploadedDate={file.uploadedDate} 
+                            />
+                        </div>
                     ))}
                 </ul>
             </div>
