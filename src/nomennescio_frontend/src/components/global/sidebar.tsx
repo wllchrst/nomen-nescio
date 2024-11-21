@@ -79,6 +79,7 @@ const Sidebar: React.FC = () => {
                         direction="right"
                         innerText="Groups"
                         className="w-full justify-start"
+                        to='/group'
                     />
                     <IconButton
                         icon={FaUpload}

@@ -17,11 +17,12 @@ import { useFileActions } from '../../../hooks/use-file-action';
 interface FileDownloadProps {
     fileUrl: string;
     uploadedDate: string;
+    profileUrl?: string;
     onRename?: (newName: string) => void;
     onDelete?: () => void;
 }
 
-const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRename, onDelete }) => {
+const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete }) => {
     const {
         isModalOpen,
         setIsModalOpen,
@@ -122,8 +123,12 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, onRe
                 <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
             </div>
 
-            <div className="flex items-center text-sm text-gray-400">
-                <span className="material-icons text-green-500 mr-2">person</span>
+            <div className="flex justify-start text-start items-center text-sm text-gray-400">
+                {profileUrl ? (
+                    <img src={profileUrl} alt="Profile" className="h-7 rounded-full mr-2 m-0" />
+                ) : (
+                        <img src="https://via.placeholder.com/50" alt="Placeholder" className=" h-7  rounded-full mr-2 m-0" />
+                )}
                 <p className="truncate">Upload on • {uploadedDate}</p>
             </div>
 

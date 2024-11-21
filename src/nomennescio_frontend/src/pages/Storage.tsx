@@ -74,7 +74,8 @@ const Storage: React.FC = () => {
                     <Dropdown
                         text={selectedType}
                         onChange={(value) => setSelectedType(value)}
-                        className="w-1/16 p-2 z-50 bg-[#161b22] border mb-2 border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        size='text-base'
+                        className="w-1/16 text-sm z-20 bg-[#161b22] border mb-2 border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         {fileTypes.map((type) => (
                             <DropdownValue key={type} text={type} onClick={() => setSelectedType(type)} />

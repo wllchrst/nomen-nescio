@@ -7,7 +7,7 @@ import SearchDropdown from '../components/elements/search/search-dropdown';
 import Navbar from '../components/global/navbar';
 import FileDownload from '../components/elements/files/file-download';
 import Template from '../components/global/template';
-
+    
 const dummyData = [
     {
         id: 1,
