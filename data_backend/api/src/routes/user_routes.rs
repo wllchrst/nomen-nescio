@@ -1,18 +1,20 @@
+use std::fmt::format;
+
+use crate::models::request::create_user::CreateUserData;
+use crate::models::response::response::Response;
 use chrono::Utc;
 use entity::user;
-use rocket::form::Form;
-use sea_orm::{sqlx::types::Json, DatabaseConnection};
-use serde_json::json;
+use rocket::State;
+use rocket::{form::Form, serde::json::Json};
+use sea_orm::DatabaseConnection;
+use serde_json::{json, Value};
 use service::user::UserMutation;
 
-use crate::models::{request::create_user::CreateUserData, response::Response};
-use rocket::State;
-
 #[post("/user", data = "<input>")]
-async fn create_user(
+pub async fn create_user(
     database: &State<DatabaseConnection>,
-    input: Form<CreateUserData>,
-) -> Json<JsonValue> {
+    input: Json<CreateUserData>,
+) -> Json<Value> {
     let data = input.into_inner();
 
     let user_data = user::Model {
@@ -21,23 +23,23 @@ async fn create_user(
         password: data.password,
         created_at: Utc::now().naive_utc(),
         id: 0,
+        signature_file_path: data.signature_file_path,
     };
 
     let result = UserMutation::create_user(&database, user_data).await;
 
-    match result {
-        Ok(active_model) => {
-            // Successfully inserted the user
-            Json(Response {
-                success: true,
-                message: "Success creating user".to_string(),
-                data: Some(active_model),
-            })
-        }
-        Err(error) => Json(Response {
+    let response = match result {
+        Ok(active_model) => Response {
+            success: true,
+            message: "Success creating user".to_string(),
+            data: Some(true),
+        },
+        Err(error) => Response {
             success: false,
-            message: "Something went wrong creating the user".to_string(),
-            data: None,
-        }),
-    }
+            message: format!("Something went wrong creating the user {}", error),
+            data: Some(false),
+        },
+    };
+
+    Json(json!(response))
 }
