@@ -95,3 +95,40 @@ pub async fn handle_login(
 
     Json(json!(response))
 }
+
+#[get("/user/<id>")]
+pub async fn get_user_information(database: &State<DatabaseConnection>, id: String) -> Json<Value> {
+    let user_id: i32 = match id.parse::<i32>() {
+        Ok(parsed_id) => parsed_id,
+        Err(_) => {
+            return Json(json!(Response::<Option<user::Model>> {
+                data: None,
+                message: "Invalid user ID".to_string(),
+                success: false,
+            }));
+        }
+    };
+
+    let result: Result<Option<user::Model>, DbErr> =
+        UserQuery::get_user_by_id(database, user_id).await;
+
+    let response = match result {
+        Ok(Some(user)) => Response {
+            data: Some(user),
+            message: "User Information".to_string(),
+            success: true,
+        },
+        Ok(None) => Response {
+            data: None,
+            message: "User not found".to_string(),
+            success: false,
+        },
+        Err(e) => Response {
+            data: None,
+            message: format!("Something went wrong: {}", e),
+            success: false,
+        },
+    };
+
+    Json(json!(response))
+}
