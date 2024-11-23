@@ -9,6 +9,7 @@ use rocket::{form::Form, serde::json::Json};
 use sea_orm::DatabaseConnection;
 use serde_json::{json, Value};
 use service::user::UserMutation;
+use uuid::Uuid;
 
 #[post("/user", data = "<input>")]
 pub async fn create_user(
@@ -24,6 +25,7 @@ pub async fn create_user(
         created_at: Utc::now().naive_utc(),
         id: 0,
         signature_file_path: data.signature_file_path,
+        secret_key: Uuid::new_v4().to_string(),
     };
 
     let result = UserMutation::create_user(&database, user_data).await;
