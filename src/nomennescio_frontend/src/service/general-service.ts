@@ -6,6 +6,11 @@ export class GeneralService extends Service {
   }
 
   async uploadFile(file: File): Promise<string> {
-    return "";
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const path = await this.uploadFileToBackend(formData);
+
+    return path;
   }
 }

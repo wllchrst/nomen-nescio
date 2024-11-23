@@ -22,7 +22,7 @@ impl UserMutation {
         .await
     }
 
-    async fn update_user_data(
+    pub async fn update_user_data(
         db: &DbConn,
         user_data: user::Model,
         id: i32,

@@ -5,6 +5,7 @@ use rocket::request::{FromRequest, Outcome, Request};
 use std::path::Path;
 use tokio::fs;
 use crate::models::UserId;
+use uuid::Uuid;
 
 #[derive(FromForm)]
 pub struct Upload<'f> {
@@ -31,6 +32,8 @@ pub async fn upload_file(
 
     // Use the original file name as is
     let original_name = form.file.name().unwrap_or("default");
+
+    let new_name = format!("{}_{}", original_name, Uuid::new_v4());
 
     // Build the destination path
     let destination_dir = "storage/raw";

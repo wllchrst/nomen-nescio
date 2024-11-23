@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "../../components/elements/fields/text-field";
 import PasswordField from "../../components/elements/fields/password-field";
@@ -9,13 +9,40 @@ import useWords from "../../hooks/use-authentication-words";
 import ParticleBackground from "../../components/elements/canvas/particle-background";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IRegister } from "../../interfaces/register-interface";
+import { GeneralService } from "../../service/general-service";
+import { UserService } from "../../service/user-service";
 
 const Register: React.FC = () => {
   const words = useWords();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IRegister>();
+  const [file, setFile] = useState<File | null>(null);
+  const generalService = new GeneralService();
+  const userService = new UserService();
 
-  const onSubmit: SubmitHandler<IRegister> = (data) => {};
+  function changeFile(inputFile: File | null) {
+    setFile(inputFile);
+  }
+
+  const onSubmit: SubmitHandler<IRegister> = async (data) => {
+    if (file == null) {
+      alert("Please make sure that you have done your signature.");
+      return;
+    }
+
+    const path = await generalService.uploadFile(file);
+    console.log(`PATH: ${path}`);
+
+    if (path == "") {
+      console.log("something went wrong");
+      return;
+    }
+
+    data.signature_file_path = path;
+    const result = await userService.registerUser(data);
+
+    if (result) console.log("SUCCESSFUL");
+  };
 
   return (
     <div className="relative flex justify-center items-center bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white">
@@ -44,7 +71,7 @@ const Register: React.FC = () => {
                 variant="username"
                 title="Full Name*"
                 className="w-full"
-                register={register("email")}
+                register={register("name")}
               />
               <TextField
                 variant="email"
@@ -63,6 +90,7 @@ const Register: React.FC = () => {
 
             <div className="space-y-4">
               <DrawableCanvas
+                setFile={changeFile}
                 width={350}
                 height={250}
                 text="Draw Your Signature*"

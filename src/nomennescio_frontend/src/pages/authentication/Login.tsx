@@ -7,13 +7,16 @@ import PasswordField from "../../components/elements/fields/password-field";
 import ParticleBackground from "../../components/elements/canvas/particle-background";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ILogin } from "../../interfaces/login-interface";
+import { UserService } from "../../service/user-service";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<ILogin>();
+  const userService = new UserService();
 
-  const onSubmit: SubmitHandler<ILogin> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<ILogin> = async (data) => {
+    const result = await userService.loginUser(data);
+    if (result) navigate("/home");
   };
 
   return (
