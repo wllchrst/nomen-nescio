@@ -30,4 +30,18 @@ export class UserService extends Service {
 
     return false;
   }
+
+  async getUserInformation(id: string) {
+    
+  }
+
+  async logOut() {
+    try {
+      Cookie.remove("user");
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
 }
