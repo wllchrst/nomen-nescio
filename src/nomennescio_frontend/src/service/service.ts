@@ -1,9 +1,43 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 export class Service {
   // ganti pake .env kalau mau lebih rapih
   backendUrl: string = "http://127.0.0.1:8000/";
 
-  async post(url: string, data: any) {
-    axios.post(`${this.backendUrl}`)
+  async post<T>(url: string, data: any) {
+    try {
+      const response = await axios.post<T>(`${this.backendUrl}${url}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async get<T>(url: string, data: any = null) {
+    try {
+      console.log(data);
+      const response = await axios.get<T>(`${this.backendUrl}${url}`, data);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async uploadFileToBackend(formData: FormData): Promise<string> {
+    try {
+      const url = `${this.backendUrl}upload`;
+      console.log(`URL: ${url}`);
+      const response = await axios.post<string>(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
   }
 }
