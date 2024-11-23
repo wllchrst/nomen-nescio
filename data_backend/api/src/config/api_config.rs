@@ -4,7 +4,11 @@ use dotenv::dotenv;
 use rocket_cors::{AllowedOrigins, CorsOptions};
 use sea_orm::{Database, DatabaseConnection};
 
-use crate::routes::{file_routes::upload_file, test, user_routes::{create_user, handle_login}};
+use crate::routes::{
+    file_routes::upload_file,
+    test,
+    user_routes::{create_user, get_user_information, handle_login},
+};
 
 #[tokio::main]
 pub async fn start() -> Result<(), rocket::Error> {
@@ -24,7 +28,16 @@ pub async fn start() -> Result<(), rocket::Error> {
     rocket::build()
         .attach(cors)
         .manage(database)
-        .mount("/", routes![test, create_user, upload_file, handle_login])
+        .mount(
+            "/",
+            routes![
+                test,
+                create_user,
+                upload_file,
+                handle_login,
+                get_user_information
+            ],
+        )
         .launch()
         .await
         .map(|_| ())
