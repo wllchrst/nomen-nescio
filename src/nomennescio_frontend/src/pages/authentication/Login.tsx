@@ -14,8 +14,9 @@ const Login: React.FC = () => {
   const { register, handleSubmit } = useForm<ILogin>();
   const userService = new UserService();
 
-  const onSubmit: SubmitHandler<ILogin> = (data) => {
-    const result = userService.loginUser(data);
+  const onSubmit: SubmitHandler<ILogin> = async (data) => {
+    const result = await userService.loginUser(data);
+    if (result) navigate("/home");
   };
 
   return (
