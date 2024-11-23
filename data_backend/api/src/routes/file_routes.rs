@@ -36,8 +36,8 @@ pub async fn upload_file(
     let new_name = format!("{}_{}", original_name, Uuid::new_v4());
 
     // Build the destination path
-    let destination_dir = "storage/raw";
-    let destination = Path::new(destination_dir).join(original_name);
+    let destination_dir = format!("storage/raw/{}", user_id.0);
+    let destination = Path::new(&destination_dir).join(original_name);
 
     // Get the temporary file path
     let file_path = form.file.path().ok_or_else(|| {

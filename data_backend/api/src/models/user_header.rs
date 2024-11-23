@@ -3,6 +3,7 @@ use rocket::request::{FromRequest, Outcome, Request};
 
 pub struct UserId(pub String);
 
+
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for UserId {
     type Error = ();
@@ -11,7 +12,7 @@ impl<'r> FromRequest<'r> for UserId {
         if let Some(user_id) = request.headers().get_one("User-Id") {
             Outcome::Success(UserId(user_id.to_string()))
         } else {
-            Outcome::Failure((Status::BadRequest, ()))
+            Outcome::Error((Status::BadRequest, ()))
         }
     }
 }
