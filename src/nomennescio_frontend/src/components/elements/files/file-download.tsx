@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     faFile,
     faFileImage,
@@ -6,6 +6,7 @@ import {
     faFilePdf,
     faFileWord,
     faEyeSlash,
+    faEllipsisV,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DropdownValue from '../dropdowns/dropdown-value';
@@ -20,22 +21,26 @@ interface FileDownloadProps {
     profileUrl?: string;
     onRename?: (newName: string) => void;
     onDelete?: () => void;
+    className?: string;
+    needPreview?: boolean;
 }
 
-const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete }) => {
+const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete, className, needPreview = true }) => {
     const {
         isModalOpen,
         setIsModalOpen,
-        contextMenu,
         isContextMenuVisible,
+        setIsContextMenuVisible, 
         handleDoubleClick,
-        handleRightClick,
         handleCloseContextMenu,
         isDeleteModalOpen,
         setIsDeleteModalOpen,
         isRenameModalOpen,
         setIsRenameModalOpen,
+        handleThreeDotsClick
     } = useFileActions();
+
+    const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
 
     const fileName = fileUrl.split('/').pop() || 'Unnamed File';
     const fileExtension = fileName.split('.').pop()?.toLowerCase();
@@ -110,29 +115,46 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         }
     };
 
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault();
+        const { clientX: x, clientY: y } = event;
+        setIsContextMenuVisible(true);
+        setContextMenu({ x, y });
+    };
+
+    const handlePreviewClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const containerClass = needPreview ? `bg-gray-800 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 ${className}` : `bg-gray-800 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
+
     return (
-        <div className="bg-gray-800 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative" onContextMenu={handleRightClick}>
-            <div className="flex items-center justify-between">
+        <div className={containerClass} onContextMenu={handleContextMenu}>
+            <div className="flex items-center justify-between w-full">
                 <div className="flex items-center">
                     {getFileIcon()}
                     <h3 className="text-sm font-medium truncate">{fileName}</h3>
                 </div>
-            </div>
-
-            <div className="my-4">
-                <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
-            </div>
-
-            <div className="flex justify-start text-start items-center text-sm text-gray-400">
-                {profileUrl ? (
-                    <img src={profileUrl} alt="Profile" className="h-7 rounded-full mr-2 m-0" />
-                ) : (
+                <div className="flex items-center text-sm text-gray-400">
+                    {profileUrl ? (
+                        <img src={profileUrl} alt="Profile" className="h-7 rounded-full mr-2 m-0" />
+                    ) : (
                         <img src="https://via.placeholder.com/50" alt="Placeholder" className=" h-7  rounded-full mr-2 m-0" />
-                )}
-                <p className="truncate">Upload on • {uploadedDate}</p>
+                    )}
+                    <p className="truncate">Upload on • {uploadedDate}</p>
+                </div>
+                <div className="ml-2 text-gray-400 cursor-pointer" onClick={handleThreeDotsClick}>
+                    <FontAwesomeIcon icon={faEllipsisV} />
+                </div>
             </div>
 
-            {contextMenu && isContextMenuVisible && (
+            {needPreview && (
+                <div className="my-4 cursor-pointer" onClick={handlePreviewClick}>
+                    <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
+                </div>
+            )}
+
+            {isContextMenuVisible && (
                 <div className="fixed p-2 z-50" style={{ top: contextMenu.y, left: contextMenu.x }} onMouseLeave={handleCloseContextMenu}>
                     <div className="bg-gray-800 text-white rounded-md shadow-md w-40 p-2">
                         <DropdownValue text="Open File" onClick={() => window.open(fileUrl, '_blank')} />
@@ -149,7 +171,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
                     <button onClick={() => setIsModalOpen(false)} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">
                         ×
                     </button>
-                    <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative overflow-auto" onClick={(e) => e.stopPropagation()}>
                         {renderModalContent()}
                     </div>
                 </div>

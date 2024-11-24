@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import TypingEffect from 'react-typing-effect';
 
-const words = ["Search...", "Type to find...", "Looking for something?"];
+const words = ["William Christian", "Settings", "Just Search Everything !", "Marvel Collin", "Profile", "Felix", "Dave"];
 
 interface SearchItem {
     id: number;
@@ -73,7 +73,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, onItemClick }) =>
                         ref={searchInputRef}
                         value={query}
                         onChange={handleSearch}
-                        placeholder={"(ctrl + k).. " + text}
+                        placeholder={"(ctrl + k)... " + text}
                         className="w-96 p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 )}

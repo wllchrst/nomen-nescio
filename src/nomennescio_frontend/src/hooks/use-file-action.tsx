@@ -31,6 +31,13 @@ export const useFileActions = () => {
         };
     }, []);
 
+    const handleThreeDotsClick = (e: React.MouseEvent) => { 
+        e.preventDefault();
+        setIsContextMenuVisible(true);
+        setContextMenu({ x: e.clientX, y: e.clientY });
+        console.log("asdasd")
+    }
+
     return {
         isModalOpen,
         setIsModalOpen,
@@ -44,5 +51,6 @@ export const useFileActions = () => {
         setIsDeleteModalOpen,
         isRenameModalOpen,
         setIsRenameModalOpen,
+        handleThreeDotsClick
     };
 };

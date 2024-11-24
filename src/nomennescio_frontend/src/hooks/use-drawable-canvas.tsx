@@ -19,7 +19,7 @@ const useDrawableCanvas = (maxWidth: number, maxHeight: number) => {
             }
         }
     }, [maxWidth, maxHeight]);
-
+    
     useEffect(() => {
         updateCanvasSize();
         window.addEventListener('resize', updateCanvasSize);

@@ -5,16 +5,16 @@ import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import TextField from "../../components/elements/fields/text-field";
 import PasswordField from "../../components/elements/fields/password-field";
 import ParticleBackground from "../../components/elements/canvas/particle-background";
-import { SubmitHandler, useForm } from "react-hook-form";
+// import { SubmitHandler, useForm } from "react-hook-form";
 import { ILogin } from "../../interfaces/login-interface";
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<ILogin>();
+  // const navigate = useNavigate();
+  // const { register, handleSubmit } = useForm<ILogin>();
 
-  const onSubmit: SubmitHandler<ILogin> = (data) => {
-    console.log(data);
-  };
+  // const onSubmit: SubmitHandler<ILogin> = (data) => {
+  //   console.log(data);
+  // };
 
   return (
     <div className="relative flex justify-center items-center bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white">
@@ -30,13 +30,13 @@ const Login: React.FC = () => {
           </p>
           <div className="flex space-x-2">
             <button
-              onClick={() => navigate("/home")}
+              // onClick={() => navigate("/home")}
               className="text-base bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 transition duration-200"
             >
               Learn More
             </button>
             <button
-              onClick={() => navigate("/register")}
+              // onClick={() => navigate("/register")}
               className="text-base bg-gray-700 hover:bg-gray-800 text-white rounded-md px-4 py-2 transition duration-200"
             >
               Register
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
             Access your account and manage your data.
           </p>
 
-          <form action="" onSubmit={handleSubmit(onSubmit)}>
+          {/* <form action="" onSubmit={handleSubmit(onSubmit)}> */}
             <div className="space-y-5">
               <div className="flex items-center border-b border-gray-700 py-2">
                 <FontAwesomeIcon
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
                   title="Email"
                   variant="email"
                   className="flex-1"
-                  register={register("email")}
+                  // register={register("email")}
                 />
               </div>
               <div className="flex items-center border-b border-gray-700 py-2">
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
                 <PasswordField
                   variant="normal"
                   title="Password"
-                  register={register("password")}
+                  // register={register("password")}
                 />
               </div>
             </div>
@@ -80,11 +80,11 @@ const Login: React.FC = () => {
             >
               Login
             </button>
-          </form>
+          {/* </form> */}
 
           <p className="mt-4 text-gray-400 text-center text-sm">
             <span
-              onClick={() => navigate("/forgot-password")}
+              // onClick={() => navigate("/forgot-password")}
               className="hover:text-blue-400 cursor-pointer"
             >
               Forgot Password?
@@ -94,7 +94,7 @@ const Login: React.FC = () => {
           <p className="mt-4 text-gray-400 text-center text-sm">
             Don't have an account?{" "}
             <span
-              onClick={() => navigate("/register")}
+              // onClick={() => navigate("/register")}
               className="text-blue-400 hover:underline cursor-pointer"
             >
               Register
