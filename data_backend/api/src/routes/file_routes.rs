@@ -3,6 +3,7 @@ use rocket::fs::TempFile;
 use rocket::response::status;
 use std::path::Path;
 use tokio::fs;
+use uuid::Uuid;
 
 #[derive(FromForm)]
 pub struct Upload<'f> {
@@ -26,8 +27,10 @@ pub async fn upload_file(
     // Use the original file name as is
     let original_name = form.file.name().unwrap_or("default");
 
+    let new_name = format!("{}_{}", original_name, Uuid::new_v4());
+
     // Build the destination path
-    let destination = Path::new("storage").join(original_name);
+    let destination = Path::new("storage").join(new_name);
 
     // Get the temporary file path
     let file_path = form.file.path().ok_or_else(|| {

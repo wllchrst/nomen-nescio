@@ -4,5 +4,5 @@ use serde::Serialize;
 pub struct Response<T> {
     pub success: bool,
     pub message: String,
-    pub data: Option<T>,
+    pub data: T,
 }
