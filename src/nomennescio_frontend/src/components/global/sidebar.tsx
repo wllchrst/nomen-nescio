@@ -93,6 +93,7 @@ const Sidebar: React.FC = () => {
                         direction="right"
                         innerText="Settings"
                         className="w-full justify-start"
+                        to='/setting'
                     />
                 </GridItem>
                 <div

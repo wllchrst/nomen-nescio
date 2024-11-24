@@ -151,7 +151,7 @@ const Storage: React.FC = () => {
                     </Dropdown>
                 </div>
                 <div className="mt-5 mb-6 h-screen overflow-y-auto">
-                    <div className="grid grid-cols- gap-4">
+                    <div class4Name="grid grid-cols- gap-4">
                         {filteredFiles.length > 0 ? (
                             filteredFiles.map((file, index) => (
                                 <div key={index} className="">

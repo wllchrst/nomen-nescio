@@ -7,6 +7,7 @@ import Storage from "./pages/Storage";
 import Upload from "./pages/Upload";
 import Group from "./pages/Group";
 import MainLayout from "./layouts/main-layout";
+import Setting from "./pages/Setting";
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
             <Route path="/storage" element={<Storage />} />
             <Route path="/Upload" element={<Upload />} />
             <Route path="/Group" element={<Group />} />
+            <Route path="/Setting" element={<Setting />} />
           </Routes>
         </div>
       </Router>
