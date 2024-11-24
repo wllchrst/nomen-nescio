@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     faFile,
     faFileImage,
@@ -132,12 +132,39 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         setContextMenu({ x, y });
     };
 
+    const handleModalClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+    };
+
+    const handleModalContainerClick = () => {
+        setIsModalOpen(false);
+    };
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            const modal = document.querySelector('.modal-content');
+            if (modal && !modal.contains(event.target as Node)) {
+                setIsModalOpen(false);
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('click', handleOutsideClick);
+        } else {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, [isModalOpen]);
+
     const containerClass = needPreview 
         ? `bg-gray-900 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 h-full ${className}`
         : `bg-gray-900 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
 
     return (
-        <div className={containerClass} onContextMenu={handleContextMenu}>
+        <div className={containerClass} onContextMenu={handleContextMenu} onClick={handlePreviewClick}>
             <div className={`flex ${needPreview ? 'flex-col' : 'flex-row'} items-center justify-between w-full`}>
                 <div className="flex items-center">
                     {getFileIcon()}
@@ -184,16 +211,15 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
             )}
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={() => setIsModalOpen(false)}>
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={handleModalContainerClick}>
                     <button onClick={() => setIsModalOpen(false)} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">
                         ×
                     </button>
-                    <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative overflow-auto" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative overflow-auto modal-content" onClick={handleModalClick}>
                         {renderModalContent()}
                     </div>
                 </div>
             )}
-
             <DeleteModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onDelete={handleDelete} />
             <RenameModal isOpen={isRenameModalOpen} onClose={() => setIsRenameModalOpen(false)} onRename={handleRename} />
         </div>

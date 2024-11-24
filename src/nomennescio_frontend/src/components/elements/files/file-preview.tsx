@@ -11,7 +11,7 @@ interface FilePreviewProps {
 }
 
 const FilePreview: React.FC<FilePreviewProps> = ({ fileUrl, fileName, fileExtension, onDoubleClick, className }) => {
-    const baseClass = "rounded-md w-full h-full"
+    const baseClass = "rounded-md w-full h-40"
     const combinedClass = `${baseClass} ${className || ''}`;
 
     if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension || '')) {

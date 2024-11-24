@@ -134,9 +134,6 @@ const Group = () => {
                     </div>
                 ))}
             </div>
-            <Modal isOpen={!!selectedFile} onClose={closeModal}>
-                <FilePreview fileUrl={selectedFile || ''} fileName={selectedFile?.split('/').pop() || 'Unnamed File'} fileExtension={selectedFile?.split('.').pop()?.toLowerCase()} onDoubleClick={closeModal} />
-            </Modal>
             <Modal isOpen={isUploadModalOpen} onClose={closeUploadModal}>
                 <div className="p-4 bg-gray-800 rounded-lg shadow-lg">
                     <h2 className="text-xl font-semibold text-white mb-4">Upload Files</h2>
