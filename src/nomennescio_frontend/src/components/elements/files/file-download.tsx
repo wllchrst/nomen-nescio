@@ -15,18 +15,22 @@ import RenameModal from '../modals/rename-modal';
 import FilePreview from './file-preview';
 import { useFileActions } from '../../../hooks/use-file-action';
 import DrawableCanvas from '../canvas/drawable-canvas'; // Import the DrawableCanvas component
+import Modal from '../modals/modal';
+import Search from '../search/search';
+import { AiOutlineClose, AiOutlineUserAdd, AiOutlineFile, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai'; // Import the necessary icons
 
 interface FileDownloadProps {
     fileUrl: string;
     uploadedDate: string;
     profileUrl?: string;
+    needPreview?: boolean;
+    onShare?: (fileUrl: string) => void;
     onRename?: (newName: string) => void;
     onDelete?: () => void;
     className?: string;
-    needPreview?: boolean;
 }
 
-const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete, className, needPreview = true }) => {
+const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete, onShare, className, needPreview = true }) => {
     const {
         isModalOpen,
         setIsModalOpen,
@@ -215,11 +219,11 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
             {isContextMenuVisible && (
                 <div className="fixed p-2 z-50" style={{ top: contextMenu?.y, left: contextMenu?.x }} onMouseLeave={handleCloseContextMenu}>
                     <div className="bg-gray-800 text-white rounded-md shadow-md w-40 p-2">
-                        <DropdownValue text="Open File" onClick={handleOpenFile} />
-                        <DropdownValue text="Download File" onClick={handleDownloadFile} />
-                        <DropdownValue text="Rename File" onClick={() => setIsRenameModalOpen(true)} />
-                        <DropdownValue text="Delete File" onClick={() => setIsDeleteModalOpen(true)} />
-                        <DropdownValue text="Share File" onClick={onDelete} />
+                        <DropdownValue text="Open File" onClick={handleOpenFile} icon={<AiOutlineFile />} />
+                        <DropdownValue text="Download File" onClick={handleDownloadFile} icon={<AiOutlineDownload />} />
+                        <DropdownValue text="Rename File" onClick={() => setIsRenameModalOpen(true)} icon={<AiOutlineEdit />} />
+                        <DropdownValue text="Delete File" onClick={() => setIsDeleteModalOpen(true)} icon={<AiOutlineDelete />} />
+                        <DropdownValue text="Share File" onClick={() => onShare?.(fileUrl)} icon={<AiOutlineShareAlt />} />
                     </div>
                 </div>
             )}
