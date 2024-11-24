@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
-const ParticleBackground: React.FC = () => {
+interface ParticleBackgroundProps {
+    className?: string;
+}
+
+const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ className }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
@@ -48,7 +52,7 @@ const ParticleBackground: React.FC = () => {
         };
     }, []);
 
-    return <canvas ref={canvasRef} className="fixed inset-0 " />;
+    return <canvas ref={canvasRef} className={`fixed inset-0 ${className}`} />;
 };
 
 export default ParticleBackground;

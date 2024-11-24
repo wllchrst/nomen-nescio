@@ -3,6 +3,9 @@ import Template from '../components/global/template';
 import Navbar from '../components/global/navbar';
 import ParticleBackground from '../components/elements/canvas/particle-background';
 import TypingEffect from "react-typing-effect";
+import { useState, useRef, useEffect } from 'react';
+import useDrawableCanvas from '../hooks/use-drawable-canvas';
+import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
 
 const dummyData = [
     {
@@ -36,68 +39,58 @@ const dummyData = [
 ];
 
 const Home = () => {
+    const [showCanvas, setShowCanvas] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [canvasWidth, setCanvasWidth] = useState(1000);
+    const [canvasHeight, setCanvasHeight] = useState(800);
+
+    const handleCanvasToggle = () => {
+        setShowCanvas(!showCanvas);
+    };
+
+    const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCanvasWidth(parseInt(e.target.value, 10));
+    };
+
+    const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCanvasHeight(parseInt(e.target.value, 10));
+    };
+
     return (
         <div className='w-full bg-gray-900'>
             <div className="z-50">
                 <Navbar />
             </div>
-            <div className="w-screen z-30 min-h-screen flex flex-col items-center mt-20 text-white">
+            <div className="w-screen z-30 min-h-screen flex flex-col items-center mt-20 text-white relative">
                 <div className="w-screen m-4 z-40 text-center font-bold animate-fade-in">
                     <p className='text-9xl mb-4'>From Hand to Hand</p>
                     <p className='text-7xl mb-8'>Secured by Your&nbsp;
                         <TypingEffect
                             text={["Mark.", "Signature."]}
                             speed={100}
-                            eraseSpeed={200}
-                            typingDelay={1000}  
+                            eraseSpeed={50}
+                            typingDelay={100}
                             cursor="|"
                             eraseDelay={1000}
                             displayTextRenderer={(text: string) => <span>{text}</span>}
                         />
                     </p>
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 transition duration-300">
-                        Get Started.
-                    </a>
+                    <button onClick={handleCanvasToggle} className="mt-4 text-blue-500 hover:text-blue-700 transition duration-300">
+                        Try finding your signature?
+                    </button>
                 </div>
-                <div className="w-full mt-10 text-center">
-                    <h2 className="text-4xl mb-6">Features</h2>
-                    <div className="flex flex-wrap justify-center">
-                        <div className="w-full md:w-1/3 p-4">
-                            <h3 className="text-2xl font-bold mb-2">Feature One</h3>
-                            <p className="text-gray-400">Description of feature one.</p>
-                        </div>
-                        <div className="w-full md:w-1/3 p-4">
-                            <h3 className="text-2xl font-bold mb-2">Feature Two</h3>
-                            <p className="text-gray-400">Description of feature two.</p>
-                        </div>
-                        <div className="w-full md:w-1/3 p-4">
-                            <h3 className="text-2xl font-bold mb-2">Feature Three</h3>
-                            <p className="text-gray-400">Description of feature three.</p>
-                        </div>
+                {showCanvas && (
+                    <div className="w-full flex flex-col items-center mt-4 z-50">
+                        <DrawableCanvas
+                            width={500}
+                            height={500}
+                            setFile={setFile}
+                            useCustomLine={true}
+                        />
                     </div>
-                </div>
-                <div className="w-full mt-10 text-center">
-                    <h2 className="text-4xl mb-6">Our Users</h2>
-                    <div className="flex flex-col items-center">
-                        {dummyData.map(user => (
-                            <div key={user.id} className="flex items-center mb-4 w-3/4">
-                                <img src={user.image} alt={user.name} className="rounded-full w-16 h-16 mr-4" />
-                                <div>
-                                    <h3 className="text-xl font-bold">{user.name}</h3>
-                                    <p className="text-gray-400">{user.email}</p>
-                                    <a href={user.link} className="text-blue-500 hover:text-blue-700 transition duration-300">
-                                        View Profile
-                                    </a>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                )}
+                <ParticleBackground className="z-10" />
             </div>
-            <ParticleBackground></ParticleBackground>
-            <footer className="w-full bg-gray-800 text-center p-4 mt-10">
-                <p className="text-gray-400">&copy; 2023 Your Company. All rights reserved.</p>
-            </footer>
         </div>
     );
 };

@@ -14,7 +14,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             <button onClick={onClose} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">
                 ×
             </button>
-            <div className="bg-gray-700 rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative flex items-center justify-center overflow-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative flex items-center justify-center overflow-auto" onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>

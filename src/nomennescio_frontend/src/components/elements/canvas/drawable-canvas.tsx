@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaUndo, FaTrash, FaDownload } from "react-icons/fa";
 import useDrawableCanvas from "../../../hooks/use-drawable-canvas";
 
 interface DrawableCanvasProps {
-  text: string;
+  text?: string;
   width: number;
   height: number;
   setFile: (file: File | null) => void;
+  useCustomLine?: boolean;
 }
 
 const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
@@ -14,6 +15,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
   width,
   height,
   setFile,
+  useCustomLine = false,
 }) => {
   const {
     canvasRef,
@@ -23,7 +25,45 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     undo,
     resetCanvas,
     isValid,
+    setLineWidth,
+    setLineColor,
+    saveCanvasState,
   } = useDrawableCanvas(width, height);
+
+  const [lineWidth, setLocalLineWidth] = useState(2);
+  const [lineColor, setLocalLineColor] = useState("#ffffff");
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'z') {
+      undo();
+    }
+  }, [undo]);
+
+  useEffect(() => {
+    if (useCustomLine) {
+      setLineWidth(lineWidth);
+      setLineColor(lineColor);
+    }
+  }, [lineWidth, lineColor, useCustomLine]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
+  const handleLineWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLineWidth = parseInt(e.target.value, 10);
+    setLocalLineWidth(newLineWidth);
+    setLineWidth(newLineWidth);
+  };
+
+  const handleLineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLineColor = e.target.value;
+    setLocalLineColor(newLineColor);
+    setLineColor(newLineColor);
+  };
 
   const downloadInvertedCanvas = () => {
     if (canvasRef.current) {
@@ -81,11 +121,36 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     setFile(null);
   };
 
+  const handleMouseUp = () => {
+    stopDrawing();
+    getCanvasImage();
+    saveCanvasState(); 
+  };
+
   return (
     <div className="relative">
       <label className="text-base font-bold text-gray-300 mb-1 block">
         {text}
       </label>
+      {useCustomLine && (
+        <div className="flex items-center mb-2">
+          <label className="text-gray-300 mr-2">Line Width:</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={lineWidth}
+            onChange={handleLineWidthChange}
+            className="mr-4"
+          />
+          <label className="text-gray-300 mr-2">Line Color:</label>
+          <input
+            type="color"
+            value={lineColor}
+            onChange={handleLineColorChange}
+          />
+        </div>
+      )}
       <div
         className={`relative border rounded-md bg-black ${
           isValid === null
@@ -100,10 +165,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           ref={canvasRef}
           className="w-full h-full cursor-crosshair"
           onMouseDown={startDrawing}
-          onMouseUp={() => {
-            stopDrawing();
-            getCanvasImage();
-          }}
+          onMouseUp={handleMouseUp}
           onMouseMove={draw}
           onMouseLeave={stopDrawing}
         ></canvas>
