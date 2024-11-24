@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { AiOutlineArrowLeft } from 'react-icons/ai'; 
 import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
 import Modal from '../components/elements/modals/modal'; 
 import Cropper from 'react-easy-crop'; 
@@ -29,6 +29,7 @@ const Setting: React.FC = () => {
     };
 
     const handleOpenCropModal = () => {
+        setProfilePic(null);
         setIsProfilePicModalOpen(true);
     };
 
@@ -173,13 +174,6 @@ const Setting: React.FC = () => {
                         />
                     ) : (
                         <>
-                            <div className="mb-4">
-                                <img
-                                    src={URL.createObjectURL(profilePic)}
-                                    alt="Profile"
-                                    className="w-full h-64 object-cover rounded-md"
-                                />
-                            </div>
                             <div className="relative w-full h-64 bg-gray-800">
                                 <Cropper
                                     image={URL.createObjectURL(profilePic)}
