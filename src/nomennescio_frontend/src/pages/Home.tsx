@@ -38,7 +38,7 @@ const dummyData = [
 const Home = () => {
     return (
         <div className='w-full bg-gray-900'>
-            <div className="z-20">
+            <div className="z-50">
                 <Navbar />
             </div>
             <div className="w-screen z-30 min-h-screen flex flex-col items-center mt-20 text-white">

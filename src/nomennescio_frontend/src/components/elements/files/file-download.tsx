@@ -164,7 +164,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         : `bg-gray-900 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
 
     return (
-        <div className={containerClass} onContextMenu={handleContextMenu} onClick={handlePreviewClick}>
+        <div className={containerClass} onContextMenu={handleContextMenu} onDoubleClick={handleDoubleClick}>
             <div className={`flex ${needPreview ? 'flex-col' : 'flex-row'} items-center justify-between w-full`}>
                 <div className="flex items-center">
                     {getFileIcon()}
@@ -182,7 +182,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
             </div>
 
             {needPreview && (
-                <div className="my-4 cursor-pointer h-40" onClick={handlePreviewClick}>
+                <div className="my-4 cursor-pointer h-40" >
                     <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
                 </div>
             )}
