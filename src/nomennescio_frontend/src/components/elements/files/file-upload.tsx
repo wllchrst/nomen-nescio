@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFileUpload } from '../../../hooks/use-file-upload';
 import { useDragAndDrop } from '../../../hooks/use-drag-and-drop';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 interface FileUploadProps {
     width?: string;
@@ -73,10 +74,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56'
                     <div key={index} className="bg-gray-800 p-3 rounded-md shadow-md">
                         <div className="flex justify-between items-center">
                             <span className="text-gray-300 text-base truncate">{fileObj.file.name}</span>
-                            <span className="text-sm text-gray-400">
+                            <span className="text-sm text-gray-400 flex items-center">
                                 {fileObj.status === 'uploading'
                                     ? `Uploading... ${fileObj.progress}%`
-                                    : 'Uploaded'}
+                                    : (
+                                        <AiOutlineCheck className="text-green-500 ml-2 rotate360 .rotate-animation  text-xl font-bold" />
+                                    )}
                             </span>
                         </div>
                         {fileObj.status === 'uploading' && (
