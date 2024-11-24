@@ -37,7 +37,6 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         setIsDeleteModalOpen,
         isRenameModalOpen,
         setIsRenameModalOpen,
-        handleThreeDotsClick
     } = useFileActions();
 
     const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
@@ -126,15 +125,42 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         setIsModalOpen(true);
     };
 
-    const containerClass = needPreview ? `bg-gray-800 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 ${className}` : `bg-gray-800 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
+    const handleThreeDotsClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        const { clientX: x, clientY: y } = event;
+        setIsContextMenuVisible(true);
+        setContextMenu({ x, y });
+    };
+
+    const containerClass = needPreview 
+        ? `bg-gray-900 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 h-full ${className}`
+        : `bg-gray-900 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
 
     return (
         <div className={containerClass} onContextMenu={handleContextMenu}>
-            <div className="flex items-center justify-between w-full">
+            <div className={`flex ${needPreview ? 'flex-col' : 'flex-row'} items-center justify-between w-full`}>
                 <div className="flex items-center">
                     {getFileIcon()}
-                    <h3 className="text-sm font-medium truncate">{fileName}</h3>
+                    <h3 className="text-sm font-medium truncate mr-2">{fileName}</h3>
                 </div>
+                {!needPreview && (
+                    <div className="flex items-center text-sm text-gray-400">
+                        {profileUrl ? (
+                            <img src={profileUrl} alt="Profile" className="h-7 rounded-full mr-2 m-0" />
+                        ) : (
+                            <img src="https://via.placeholder.com/50" alt="Placeholder" className=" h-7  rounded-full mr-2 m-0" />
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {needPreview && (
+                <div className="my-4 cursor-pointer h-40" onClick={handlePreviewClick}>
+                    <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
+                </div>
+            )}
+
+            {needPreview && (
                 <div className="flex items-center text-sm text-gray-400">
                     {profileUrl ? (
                         <img src={profileUrl} alt="Profile" className="h-7 rounded-full mr-2 m-0" />
@@ -143,19 +169,10 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
                     )}
                     <p className="truncate">Upload on • {uploadedDate}</p>
                 </div>
-                <div className="ml-2 text-gray-400 cursor-pointer" onClick={handleThreeDotsClick}>
-                    <FontAwesomeIcon icon={faEllipsisV} />
-                </div>
-            </div>
-
-            {needPreview && (
-                <div className="my-4 cursor-pointer" onClick={handlePreviewClick}>
-                    <FilePreview fileUrl={fileUrl} fileName={fileName} fileExtension={fileExtension} onDoubleClick={handleDoubleClick} />
-                </div>
             )}
 
             {isContextMenuVisible && (
-                <div className="fixed p-2 z-50" style={{ top: contextMenu.y, left: contextMenu.x }} onMouseLeave={handleCloseContextMenu}>
+                <div className="fixed p-2 z-50" style={{ top: contextMenu?.y, left: contextMenu?.x }} onMouseLeave={handleCloseContextMenu}>
                     <div className="bg-gray-800 text-white rounded-md shadow-md w-40 p-2">
                         <DropdownValue text="Open File" onClick={() => window.open(fileUrl, '_blank')} />
                         <DropdownValue text="Download File" onClick={handleDownloadFile} />

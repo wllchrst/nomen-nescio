@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import Template from '../components/global/template';
 import FileDownload from '../components/elements/files/file-download';
 import FilePreview from '../components/elements/files/file-preview';
-import { AiFillCaretDown } from 'react-icons/ai';
+import FileUpload from '../components/elements/files/file-upload';
+import Modal from '../components/elements/modals/modal';
+import { AiFillCaretDown, AiOutlinePlus } from 'react-icons/ai';
 
 const Group = () => {
     const [showMembers, setShowMembers] = useState<{ [key: string]: boolean }>({});
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     const groups = [
         {
             id: 'dev-team',
-            name: 'Development Team',
-            description: 'A group for all development team members.',
+            name: 'Dev Team',
             members: [
                 { id: 1, name: 'William Christian', role: 'Owner', profilePicture: '' },
                 { id: 2, name: 'Pibus', role: 'Admin', profilePicture: '' },
@@ -60,9 +62,20 @@ const Group = () => {
         setSelectedFile(null);
     };
 
+    const openUploadModal = () => {
+        setIsUploadModalOpen(true);
+    };
+
+    const closeUploadModal = () => {
+        setIsUploadModalOpen(false);
+    };
+
     return (
         <Template>
             <div className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-2xl font-semibold text-white">Groups</h1>
+                </div>
                 {groups.map(group => (
                     <div key={group.id} className="mb-4 bg-gray-800 p-4 rounded-lg">
                         <h2 className="text-xl font-semibold text-white mb-2">{group.name}</h2>
@@ -80,6 +93,12 @@ const Group = () => {
                             <div onClick={() => toggleMembers(group.id)} className="text-white">
                                 <AiFillCaretDown className="ml-2 text-gray-400" />
                             </div>
+                            <button
+                                className="bg-gray-700 m-4 p-4 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 flex items-center group"
+                                onClick={openUploadModal}
+                            >
+                                <AiOutlinePlus className="group-hover:rotate-180 transform transition-transform duration-300" />
+                            </button>
                         </div>
                         <div className={`transition-all duration-300 ease-out ${showMembers[group.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                             <ul className="text-white">
@@ -99,12 +118,12 @@ const Group = () => {
                                 ))}
                             </ul>
                         </div>
-                        <div className="mt-4 flex flex-wrap gap-4">
+                        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {group.files.map(file => (
                                 <div key={file.fileUrl} className="flex-grow cursor-pointer" onClick={() => handleFileClick(file.fileUrl)}>
-                                    <FileDownload 
-                                        fileUrl={file.fileUrl} 
-                                        uploadedDate={file.uploadedDate} 
+                                    <FileDownload
+                                        fileUrl={file.fileUrl}
+                                        uploadedDate={file.uploadedDate}
                                         className="w-full"
                                         needPreview={false}
                                         profileUrl={group.members.find(member => member.role === 'Owner')?.profilePicture}
@@ -115,16 +134,15 @@ const Group = () => {
                     </div>
                 ))}
             </div>
-            {selectedFile && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onClick={closeModal}>
-                    <button onClick={closeModal} className="fixed top-4 right-4 text-white font-bold text-3xl z-50">
-                        ×
-                    </button>
-                    <div className="bg-white rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 h-4/5 relative" onClick={(e) => e.stopPropagation()}>
-                        <FilePreview fileUrl={selectedFile} fileName={selectedFile.split('/').pop() || 'Unnamed File'} fileExtension={selectedFile.split('.').pop()?.toLowerCase()} onDoubleClick={closeModal} />
-                    </div>
+            <Modal isOpen={!!selectedFile} onClose={closeModal}>
+                <FilePreview fileUrl={selectedFile || ''} fileName={selectedFile?.split('/').pop() || 'Unnamed File'} fileExtension={selectedFile?.split('.').pop()?.toLowerCase()} onDoubleClick={closeModal} />
+            </Modal>
+            <Modal isOpen={isUploadModalOpen} onClose={closeUploadModal}>
+                <div className="p-4 bg-gray-800 rounded-lg shadow-lg">
+                    <h2 className="text-xl font-semibold text-white mb-4">Upload Files</h2>
+                    <FileUpload />
                 </div>
-            )}
+            </Modal>
         </Template>
     );
 };

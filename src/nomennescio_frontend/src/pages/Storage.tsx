@@ -73,7 +73,6 @@ const Storage: React.FC = () => {
                     />
                     <Dropdown
                         text={selectedType}
-                        onChange={(value) => setSelectedType(value)}
                         size='text-base'
                         className="w-1/16 text-sm z-20 bg-[#161b22] border mb-2 border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -83,10 +82,10 @@ const Storage: React.FC = () => {
                     </Dropdown>
                 </div>
                 <div className="mt-5 mb-6 h-screen overflow-y-auto">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-3 gap-6">
                         {filteredFiles.length > 0 ? (
                             filteredFiles.map((file, index) => (
-                                <div key={index} className="bg-gray-800 rounded-md shadow-md">
+                                <div key={index} className="">
                                     <FileDownload fileUrl={file.fileUrl} uploadedDate={file.uploadedDate} />
                                 </div>
                             ))

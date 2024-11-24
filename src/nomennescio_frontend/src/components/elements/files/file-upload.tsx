@@ -19,8 +19,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56'
         }
     };
 
-    const handleTapClick = () => {
+    const handleTapClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.stopPropagation();
         document.getElementById('fileInput')?.click();
+    };
+
+    const handleSubmit = () => {
+        if (selectedFiles.length > 0) {
+            startUploading(selectedFiles);
+        }
     };
 
     return (
@@ -83,6 +90,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56'
                     </div>
                 ))}
             </div>
+
+            {selectedFiles.length > 0 && (
+                <button
+                    className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </button>
+            )}
         </div>
     );
 };
