@@ -1,6 +1,3 @@
-
-// ...existing code...
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -11,7 +8,7 @@
 }
 
 .animate-fade-in {
-    animation: fadeIn 2s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes bounce {
