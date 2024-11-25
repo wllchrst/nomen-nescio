@@ -7,6 +7,7 @@ mod m20241118_002751_create_table_email;
 mod m20241118_002917_create_table_email_receivers;
 mod m20241118_002922_create_table_files;
 
+
 pub struct Migrator;
 
 #[async_trait::async_trait]
