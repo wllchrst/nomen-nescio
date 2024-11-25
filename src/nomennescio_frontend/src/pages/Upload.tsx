@@ -10,8 +10,8 @@ const Upload = () => {
     };
 
     return (
-        <Template className="p-10">
-            <div className="flex flex-col h-full p-10 text-gray-300 bg-gray-900 rounded-lg shadow-lg">
+        <Template>
+            <div className="flex flex-col h-full p-10 text-gray-300 rounded-lg shadow-lg">
                 <h1 className="text-gray-300 mb-8 text-6xl font-bold">New Mail</h1>
                 <div className="flex flex-col space-y-4">
                     <SearchDropdown

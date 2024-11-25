@@ -82,13 +82,6 @@ const Sidebar: React.FC = () => {
                         to='/group'
                     />
                     <IconButton
-                        icon={FaUpload}
-                        direction="right"
-                        innerText="Uploads"
-                        className="w-full justify-start"
-                        to="/upload"
-                    />
-                    <IconButton
                         icon={FaCog}
                         direction="right"
                         innerText="Settings"

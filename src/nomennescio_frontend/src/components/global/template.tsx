@@ -18,9 +18,6 @@ const Template = ({ children, className }: TemplateProps) => {
                 <div className="flex-grow">
                     {children}
                 </div>
-                <footer className="p-4 bg-gray-800 text-gray-400 text-center">
-                    © 2023 Your Company. All rights reserved.
-                </footer>
             </div>
         </div>
     );

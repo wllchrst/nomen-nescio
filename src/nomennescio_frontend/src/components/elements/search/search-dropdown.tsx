@@ -31,13 +31,16 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
         query,
         filteredResults,
         filteredUsers,
+        chosenUsers,
         searchInputRef,
         handleSearch,
         handleUserClick,
         handleInputClick,
+        handleRemoveUser,
     } = useSearchDropdown(data, searchForUser, onUserClick);
 
     const [isActive, setIsActive] = useState(false);
+    const [hoveredUser, setHoveredUser] = useState<IUser | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const handleItemClick = (item: SearchItem) => {
@@ -64,15 +67,33 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
     return (
         <div className="relative flex justify-items-center z-50" ref={dropdownRef}>
             {searchForUser ? (
-                <input
-                    type="text"
-                    ref={searchInputRef}
-                    value={query}
-                    onChange={handleSearch}
-                    onClick={() => { handleInputClick(); setIsActive(true); }}
-                    placeholder="Search..."
-                    className={clsx("p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500", className)}
-                />
+                <div className={clsx("flex flex-wrap items-center p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full", className)}>
+                    {chosenUsers.map(user => (
+                        <div
+                            key={user.id}
+                            className="relative flex items-center bg-gray-800 rounded-full px-3 mr-2"
+                            onMouseEnter={() => setHoveredUser(user)}
+                            onMouseLeave={() => setHoveredUser(null)}
+                        >
+                            <span>{user.name}</span>
+                            <button onClick={() => handleRemoveUser(user)} className="ml-2 text-red-500">x</button>
+                            {hoveredUser === user && (
+                                <div className="absolute top-full mt-2 p-2 bg-gray-900 text-white rounded shadow-lg">
+                                    <p>{user.email}</p>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    <input
+                        type="text"
+                        ref={searchInputRef}
+                        value={query}
+                        onChange={handleSearch}
+                        onClick={() => { handleInputClick(); setIsActive(true); }}
+                        placeholder="Search..."
+                        className="flex-grow bg-transparent focus:outline-none"
+                    />
+                </div>
             ) : (
                 <TypingEffect
                     text={words}
@@ -89,7 +110,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
                             onChange={handleSearch}
                             onClick={() => { handleInputClick(); setIsActive(true); }}
                             placeholder={"(ctrl + k)... " + text}
-                            className="w-96 p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={clsx("p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full", className)}     
                         />
                     )}
                 />
@@ -143,7 +164,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
                             <div className="mt-4">
                                 <h3 className="text-gray-400 px-3">Users</h3>
                                 {filteredUsers.map((user) => (
-                                    <div key={user.id} className="flex w-full items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer" onClick={() => handleUserClick(user)}>
+                                    <div key={user.id} className="flex w-full items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer" onClick={() => { handleUserClick(user); setIsActive(false); }}>
                                         <img
                                             src={user.signature_file_path}
                                             alt={user.name}
