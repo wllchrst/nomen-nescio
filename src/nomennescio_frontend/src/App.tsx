@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
@@ -11,6 +11,7 @@ import Setting from "./pages/Setting";
 import ProviderLayout from "./layouts/provider-layout";
 
 const App: React.FC = () => {
+
   return (
     <MainLayout>
       <ProviderLayout>
