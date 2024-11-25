@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 import Home from "./pages/Home";
+import MainLayout from "./layouts/main-layout";
 import Storage from "./pages/Storage";
 import Upload from "./pages/Upload";
-import Group from "./pages/Group";
-import MainLayout from "./layouts/main-layout";
 import Setting from "./pages/Setting";
+import Group from "./pages/Group";
+import Mail from "./pages/mail";
 
 const App: React.FC = () => {
 
@@ -19,7 +20,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/storage" element={<Storage />} />
+            <Route path="/mail" element={<Mail />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/group" element={<Group />} />
             <Route path="/setting" element={<Setting />} />

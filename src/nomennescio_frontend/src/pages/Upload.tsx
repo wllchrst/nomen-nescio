@@ -45,11 +45,11 @@ const Upload = () => {
                         placeholder="Message"
                         className="p-4 rounded-lg border border-gray-600 bg-gray-800 text-white h-40"
                     />
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-4 w-full">
                         <div className="w-1/3">
                             <FileUpload startUploading={startUploading} />
                         </div>
-                        <div className="w-2/3">
+                        <div className="">
                             <UploadedFiles selectedFiles={selectedFiles} />
                         </div>
                     </div>
