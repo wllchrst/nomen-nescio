@@ -8,10 +8,12 @@ import Upload from "./pages/Upload";
 import Group from "./pages/Group";
 import MainLayout from "./layouts/main-layout";
 import Setting from "./pages/Setting";
+import ProviderLayout from "./layouts/provider-layout";
 
 const App: React.FC = () => {
   return (
     <MainLayout>
+      <ProviderLayout>
       <Router>
         <div className="min-h-screen overflow-hidden bg-[#0d1117] flex items-center justify-center overflow-y-hidden">
           <Routes>
@@ -25,6 +27,7 @@ const App: React.FC = () => {
           </Routes>
         </div>
       </Router>
+      </ProviderLayout>
     </MainLayout>
   );
 };

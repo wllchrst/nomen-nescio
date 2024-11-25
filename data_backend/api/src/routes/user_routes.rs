@@ -1,7 +1,7 @@
 use std::fmt::format;
 
 use crate::models::request::{create_user::CreateUserData, login_user::LoginUser};
-use crate::models::response::response::Response;
+use crate::models::{response::response::Response, User};
 use chrono::Utc;
 use entity::user;
 use rocket::serde::json::Json;
@@ -58,18 +58,27 @@ pub async fn handle_login(
     let result: Result<Option<user::Model>, DbErr> =
         UserQuery::get_user_by_email(database, login_data.email).await;
 
-    let response: Response<String>;
+    let response: Response<User>;
+
+    let mut data = User {
+        id: "".to_string(),
+        email: "".to_string(),
+        name: "".to_string(),
+    };
 
     match result {
         Ok(Some(user)) => {
             let mut message: String = "".to_string();
             let mut successful: bool = false;
-            let mut data: String = "".to_string();
 
             if user.password == login_data.password {
                 message = "Login Successful".to_string();
                 successful = true;
-                data = user.id.to_string();
+                data = User {
+                    id: user.id.to_string(),
+                    email: user.email,
+                    name: user.name,
+                };
             } else {
                 message = "Incorrect Credentials".to_string();
                 successful = false;
@@ -83,14 +92,14 @@ pub async fn handle_login(
         }
         Ok(None) => {
             response = Response {
-                data: "".to_string(),
+                data: data,
                 message: "Incorrect Credeetials".to_string(),
                 success: false,
             }
         }
         Err(e) => {
             response = Response {
-                data: "".to_string(),
+                data: data,
                 message: format!("Something went wrong {}", e),
                 success: false,
             }

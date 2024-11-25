@@ -10,7 +10,6 @@ const Upload = () => {
                 <p className="text-gray-500 mb-7 text-lg">Please select a file to upload</p>
                 <div className="flex justify-center items-center flex-col space-y-4">
                     <FileUpload />
-                    <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Submit</button>
                 </div>
             </div>
         </Template>
