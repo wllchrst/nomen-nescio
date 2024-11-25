@@ -12,8 +12,8 @@ import Setting from "./pages/Setting";
 const App: React.FC = () => {
 
   return (
-    <MainLayout>
-      <Router>
+    <Router>
+      <MainLayout>
         <div className="min-h-screen overflow-hidden bg-[#0d1117] flex items-center justify-center overflow-y-hidden">
           <Routes>
             <Route path="/" element={<Login />} />
@@ -25,8 +25,8 @@ const App: React.FC = () => {
             <Route path="/Setting" element={<Setting />} />
           </Routes>
         </div>
-      </Router>
-    </MainLayout>
+      </MainLayout>
+    </Router>
   );
 };
 
