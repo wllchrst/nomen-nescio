@@ -25,9 +25,9 @@ export class Service {
     }
   }
 
-  async uploadFileToBackend(formData: FormData): Promise<string> {
+  async uploadFileToBackend(formData: FormData, _url: string): Promise<string> {
     try {
-      const url = `${this.backendUrl}upload`;
+      const url = `${this.backendUrl}${_url}`;
       console.log(`URL: ${url}`);
       const response = await axios.post<string>(url, formData, {
         headers: {

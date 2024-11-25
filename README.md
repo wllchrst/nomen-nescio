@@ -30,7 +30,9 @@ HOW TO RUN
 - cd path/to/nomen-nescio
 - dfx start --clean --background
 - cargo build --target wasm32-unknown-unknown --release -p nomennescio_backend
+- dfx build nomennescio_backend
 - dfx deploy nomennescio_backend
+- dfx generate nomennescio_backend
 
 3 Data Backend
 

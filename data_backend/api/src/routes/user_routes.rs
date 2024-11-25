@@ -6,6 +6,7 @@ use rocket::serde::json::Json;
 use rocket::State;
 use sea_orm::{DatabaseConnection, DbErr};
 use serde_json::{json, Value};
+use uuid::Uuid;
 use service::user::{UserMutation, UserQuery};
 
 #[post("/user", data = "<input>")]
@@ -15,6 +16,8 @@ pub async fn create_user(
 ) -> Json<Value> {
     let data = input.into_inner();
 
+    print!("{} {} {} {}", data.email, data.name, data.password, data.signature_file_path);
+
     let user_data = user::Model {
         email: data.email,
         name: data.name,
@@ -22,6 +25,7 @@ pub async fn create_user(
         created_at: Utc::now().naive_utc(),
         id: 0,
         signature_file_path: data.signature_file_path,
+        secret_key: Uuid::new_v4().to_string(),
     };
 
     let result = UserMutation::create_user(&database, user_data).await;

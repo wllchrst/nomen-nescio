@@ -1,4 +1,8 @@
 pub mod encryptor;
 pub mod request;
-pub use encryptor::Encryptor;
+pub mod user_header;
 pub mod response;
+
+pub use encryptor::Encryptor;
+pub use user_header::UserId;
+
