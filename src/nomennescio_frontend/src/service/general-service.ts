@@ -5,11 +5,11 @@ export class GeneralService extends Service {
     super();
   }
 
-  async uploadFile(file: File): Promise<string> {
+  async uploadFile(file: File, url: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
 
-    const path = await this.uploadFileToBackend(formData);
+    const path = await this.uploadFileToBackend(formData, url);
 
     return path;
   }

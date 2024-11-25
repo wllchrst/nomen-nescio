@@ -15,6 +15,7 @@ impl UserMutation {
             password: Set(user_data.password.to_owned()),
             created_at: Set(Utc::now().naive_utc()),
             signature_file_path: Set(user_data.signature_file_path.to_owned()),
+            secret_key: Set(user_data.secret_key.to_owned()),
             ..Default::default()
         }
         .save(db)
@@ -38,6 +39,7 @@ impl UserMutation {
             name: Set(user_data.email.to_owned()),
             password: Set(user_data.password.to_owned()),
             signature_file_path: Set(user_data.signature_file_path.to_owned()),
+            secret_key: Set(user_data.secret_key.to_owned()),
             created_at: user.created_at,
         }
         .save(db)

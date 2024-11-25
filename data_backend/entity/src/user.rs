@@ -14,6 +14,7 @@ pub struct Model {
     pub password: String,
     pub created_at: DateTime,
     pub signature_file_path: String,
+    pub secret_key: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

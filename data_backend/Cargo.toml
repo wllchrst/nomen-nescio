@@ -17,3 +17,4 @@ sea-orm = { version = "1.1.1", features = [
 ] }
 tokio = { version = "1", features = ["full"] }
 api = { path = "api" }
+rocket_cors = "0.6.0"
