@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
 
     return (
         <nav className="bg-transparent w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 z-50">
                 {/* Removed GitHub logo */}
                 <Dropdown text="FILES">
                     {filesDropdown.map((item) => (
@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
                 </Dropdown> */}
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 z-50">
                 <div>
                     <SearchDropdown data={searchData} />
                 </div>
@@ -102,7 +102,7 @@ const Navbar: React.FC = () => {
 
                 <Dropdown text="" image="https://via.placeholder.com/50">
                         <DropdownValue text="Profile" icon={<FaUserCircle />} />
-                        <DropdownValue text="Settings" icon={<FaCog />} />
+                        <DropdownValue text="Settings" icon={<FaCog />} to='/Setting'/>
                         <DropdownValue text="Log Out" icon={<FaSignOutAlt />} />
                     </Dropdown>
                 </div>

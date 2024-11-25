@@ -18,7 +18,7 @@ const Register: React.FC = () => {
   const { register, handleSubmit } = useForm<IRegister>();
   const [file, setFile] = useState<File | null>(null);
   const generalService = new GeneralService();
-  const userService = new UserService();
+  // const userService = new UserService();
 
   function changeFile(inputFile: File | null) {
     setFile(inputFile);
@@ -50,6 +50,7 @@ const Register: React.FC = () => {
 
       <div className="relative max-w-5xl bg-[#1e293b] rounded-lg shadow-2xl overflow-hidden p-8 md:p-10 space-y-8">
         <h2 className="text-4xl md:text-5xl font-bold mb-2">
+
           Your&nbsp;
           <TypingEffect
             text={words}

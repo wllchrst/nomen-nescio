@@ -1,47 +1,37 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 
-const useDrawableCanvas = (maxWidth: number, maxHeight: number) => {
+const useDrawableCanvas = (width: number, height: number) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const isDrawing = useRef(false);
     const [history, setHistory] = useState<ImageData[]>([]);
     const [isValid, setIsValid] = useState<boolean | null>(null);
-
-    const updateCanvasSize = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (canvas) {
-            const parent = canvas.parentElement;
-            if (parent) {
-                const newWidth = Math.min(maxWidth, parent.clientWidth);
-                const newHeight = Math.min(maxHeight, parent.clientHeight);
-                canvas.width = newWidth;
-                canvas.height = newHeight;
-                validateCanvas();
-            }
-        }
-    }, [maxWidth, maxHeight]);
+    const [lineWidth, setLineWidthState] = useState(2);
+    const [lineColor, setLineColorState] = useState('#ffffff');
 
     useEffect(() => {
-        updateCanvasSize();
-        window.addEventListener('resize', updateCanvasSize);
-        return () => window.removeEventListener('resize', updateCanvasSize);
-    }, [updateCanvasSize]);
+        const canvas = canvasRef.current;
+        if (canvas) {
+            canvas.width = width;
+            canvas.height = height;
+            validateCanvas();
+        }
+    }, [width, height]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                ctx.lineWidth = 2;
+                ctx.lineWidth = lineWidth;
                 ctx.lineCap = 'round';
-                ctx.strokeStyle = '#ffffff'; 
+                ctx.strokeStyle = lineColor; 
             }
         }
-    }, []);
+    }, [lineWidth, lineColor]);
 
-    const startDrawing = (e: React.MouseEvent) => {
+    const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
         isDrawing.current = true;
-        saveCanvasState();
-        draw(e);
+        saveCanvasState(); 
         validateCanvas();
     };
 
@@ -53,17 +43,20 @@ const useDrawableCanvas = (maxWidth: number, maxHeight: number) => {
         }
     };
 
-    const draw = (e: React.MouseEvent) => {
+    const draw = (e: React.MouseEvent | React.TouchEvent) => {
         if (!isDrawing.current || !canvasRef.current) return;
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
         const rect = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        const clientX = 'clientX' in e ? e.clientX : e.touches[0].clientX;
+        const clientY = 'clientY' in e ? e.clientY : e.touches[0].clientY;
+
+        ctx.lineTo(clientX - rect.left, clientY - rect.top);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.moveTo(clientX - rect.left, clientY - rect.top);
     };
 
     const saveCanvasState = () => {
@@ -122,7 +115,15 @@ const useDrawableCanvas = (maxWidth: number, maxHeight: number) => {
         }
     };
 
-    return { canvasRef, startDrawing, stopDrawing, draw, undo, resetCanvas, isValid };
+    const setLineWidth = (width: number) => {
+        setLineWidthState(width);
+    };
+
+    const setLineColor = (color: string) => {
+        setLineColorState(color);
+    };
+
+    return { canvasRef, startDrawing, stopDrawing, draw, undo, resetCanvas, isValid, setLineWidth, setLineColor, saveCanvasState };
 };
 
 export default useDrawableCanvas;
