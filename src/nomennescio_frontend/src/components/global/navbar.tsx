@@ -8,15 +8,16 @@ import Sidebar from '../global/sidebar';
 import { UserService } from '../../service/user-service';
 import { IUser } from '../../interfaces/user-interface';
 import useFetchUsers from '../../hooks/use-fetch-user';
+import useGetCurrentUser from '../../hooks/use-get-current-user';
 
 const Navbar: React.FC = () => {
     const users = useFetchUsers();
-    const [query, setQuery] = useState('');
+    const currentUser = useGetCurrentUser();
     const [filteredResults, setFilteredResults] = useState<IUser[]>([]);
 
     const groupsDropdown = [
-        {name: 'NEW MAIL', icon: <FaPlus />, link: '#' },
-        {name: 'GROUP', icon: <FaUsers />, link: '#' },
+        {name: 'NEW MAIL', icon: <FaPlus />, link: '/upload' },
+        {name: 'GROUP', icon: <FaUsers />, link: '/group' },
     ];
 
     const searchData = [...users, ...groupsDropdown.map((item) => ({ ...item, email: '' }))];
@@ -27,18 +28,17 @@ const Navbar: React.FC = () => {
         const results = searchData.filter(
             (item) =>
                 (item.name && item.name.toLowerCase().includes(value.toLowerCase())) ||
-                (item.email && item.email.toLowerCase().includes(value.toLowerCase())) ||
-                (item.title && item.title.toLowerCase().includes(value.toLowerCase()))
+                (item.email && item.email.toLowerCase().includes(value.toLowerCase())) 
         );
         setFilteredResults(results);
-    };  
+    };
 
     return (
         <nav className="bg-transparent w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center space-x-4 z-50">
                 <Dropdown text="MAIL">
                     {groupsDropdown.map((item) => (
-                        <DropdownValue key={item.id} text={item.name} icon={item.icon} />
+                        <DropdownValue text={item.name} icon={item.icon} to={item.link}/>
                     ))}
                 </Dropdown>
             </div>

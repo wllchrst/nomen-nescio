@@ -20,9 +20,9 @@ const App: React.FC = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/storage" element={<Storage />} />
-            <Route path="/Upload" element={<Upload />} />
-            <Route path="/Group" element={<Group />} />
-            <Route path="/Setting" element={<Setting />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/group" element={<Group />} />
+            <Route path="/setting" element={<Setting />} />
           </Routes>
         </div>
       </MainLayout>
