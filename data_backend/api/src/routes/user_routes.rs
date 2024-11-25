@@ -18,6 +18,8 @@ pub async fn create_user(
 ) -> Json<Value> {
     let data = input.into_inner();
 
+    print!("{} {} {} {}", data.email, data.name, data.password, data.signature_file_path);
+
     let user_data = user::Model {
         email: data.email,
         name: data.name,

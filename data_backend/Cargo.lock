@@ -724,6 +724,7 @@ dependencies = [
  "api",
  "entity",
  "migration",
+ "rocket_cors",
  "sea-orm",
  "service",
  "tokio",

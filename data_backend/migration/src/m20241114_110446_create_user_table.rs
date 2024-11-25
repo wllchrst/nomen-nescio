@@ -23,6 +23,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(User::Password).string().not_null())
                     .col(ColumnDef::new(User::CreatedAt).date_time().not_null())
                     .col(ColumnDef::new(User::SignatureFilePath).string().not_null())
+                    .col(ColumnDef::new(User::SecretKey).string().not_null())
                     .to_owned(),
             )
             .await
@@ -43,5 +44,6 @@ enum User {
     Email,
     Password,
     SignatureFilePath,
+    SecretKey,
     CreatedAt,
 }

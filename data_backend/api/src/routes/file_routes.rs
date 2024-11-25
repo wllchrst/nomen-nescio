@@ -12,23 +12,36 @@ pub struct Upload<'f> {
     file: TempFile<'f>,
 }
 
+async fn create_folder_if_not_exist(folder_name: &str) -> Result<(), status::Custom<String>> {
+    if !Path::new(folder_name).exists() {
+        match fs::create_dir_all(folder_name).await {
+            Ok(_) => Ok(()),
+            Err(err) => Err(status::Custom(
+                rocket::http::Status::InternalServerError,
+                format!("Failed to create storage directory: {}", err)))
+        };
+    }
+
+    Ok(())
+}
+
+async fn copy_file_to(source: &Path, target: &Path) -> Result<(), status::Custom<String>> {
+    match fs::copy(source, target).await {
+        Ok(_) => Ok(()),
+        Err(err) => Err(status::Custom(
+            rocket::http::Status::InternalServerError,
+            format!("Failed to create directory: {}", err),
+        ))
+    }
+}
 
 #[post("/upload", format = "multipart/form-data", data = "<form>")]
 pub async fn upload_file(
     form: Form<Upload<'_>>,
     user_id: UserId,
 ) -> Result<status::Accepted<String>, status::Custom<String>> {
-    print!("File uploaded by user {}", user_id.0);
-
     // Ensure the "storage" directory exists
-    if !Path::new("storage").exists() {
-        if let Err(err) = fs::create_dir("storage").await {
-            return Err(status::Custom(
-                rocket::http::Status::InternalServerError,
-                format!("Failed to create storage directory: {}", err),
-            ));
-        }
-    }
+    create_folder_if_not_exist("storage").await?;
 
     // Use the original file name as is
     let original_name = form.file.name().unwrap_or("default");
@@ -65,4 +78,37 @@ pub async fn upload_file(
 
     // Return the path of the saved file
     Ok(status::Accepted(destination.to_string_lossy().to_string()))
+}
+
+#[post("/upload-signature", format="multipart/form-data", data = "<form>")]
+pub async fn upload_signature(
+    form: Form<Upload<'_>>,
+) -> Result<status::Accepted<String>, status::Custom<String>> {
+     create_folder_if_not_exist("storage").await?;
+ 
+     let destination_dir = format!("storage/signature");
+     let destination = Path::new(&destination_dir).join(format!("{}.jpg", Uuid::new_v4()));
+ 
+     let file_path = form.file.path().ok_or_else(|| {
+         status::Custom(
+             rocket::http::Status::BadRequest,
+             "No file path provided.".to_string(),
+         )
+     })?;
+ 
+     if let Err(err) = fs::create_dir_all(destination_dir).await {
+         return Err(status::Custom(
+             rocket::http::Status::InternalServerError,
+             format!("Failed to create directory: {}", err),
+         ));
+     }
+ 
+     if let Err(err) = fs::copy(file_path, &destination).await {
+         return Err(status::Custom(
+             rocket::http::Status::InternalServerError,
+             format!("Failed to save file: {}", err),
+         ));
+     }
+
+     Ok(status::Accepted(destination.to_string_lossy().to_string()))
 }

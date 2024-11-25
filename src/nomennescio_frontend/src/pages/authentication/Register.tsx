@@ -30,7 +30,7 @@ const Register: React.FC = () => {
       return;
     }
 
-    const path = await generalService.uploadFile(file);
+    const path = await generalService.uploadFile(file, "upload-signature");
     console.log(`PATH: ${path}`);
 
     if (path == "") {
