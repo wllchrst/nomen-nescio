@@ -13,9 +13,8 @@ import ProviderLayout from "./layouts/provider-layout";
 const App: React.FC = () => {
 
   return (
-    <MainLayout>
-      <ProviderLayout>
-      <Router>
+    <Router>
+      <MainLayout>
         <div className="min-h-screen overflow-hidden bg-[#0d1117] flex items-center justify-center overflow-y-hidden">
           <Routes>
             <Route path="/" element={<Login />} />
@@ -27,9 +26,8 @@ const App: React.FC = () => {
             <Route path="/Setting" element={<Setting />} />
           </Routes>
         </div>
-      </Router>
-      </ProviderLayout>
-    </MainLayout>
+      </MainLayout>
+    </Router>
   );
 };
 

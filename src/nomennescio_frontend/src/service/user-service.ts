@@ -11,7 +11,6 @@ export class UserService extends Service {
   }
 
   async registerUser(register: IRegister): Promise<boolean> {
-    console.log(register);
     const result = await this.post<IResponse<boolean>>("user", register);
     if (result == null) return false;
     else if (!result.success) console.error(result.message);
@@ -35,7 +34,9 @@ export class UserService extends Service {
   }
 
   async getUserInformation(id: string) {
-    
+    const result = await this.get<IResponse<IUser>>(`/user/${id}`);
+
+    return result;
   }
 
   async logOut() {
@@ -45,6 +46,27 @@ export class UserService extends Service {
     } catch (error) {
       console.error(error);
       return false;
+    }
+  }
+
+  getUserIdFromCookie(): string {
+    try {
+      const id = Cookie.get("user");
+      if (id == undefined) return "";
+      return id;
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  }
+
+  async getAllUser() {
+    try {
+      const result = await this.get<IResponse<IUser[]>>("user");
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   }
 }

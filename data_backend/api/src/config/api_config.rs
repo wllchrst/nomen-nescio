@@ -5,9 +5,10 @@ use rocket_cors::{AllowedOrigins, CorsOptions};
 use sea_orm::{Database, DatabaseConnection};
 
 use crate::routes::{
+    group_routes::{add_group_member, create_group, get_group_by_id, get_user_group},
     file_routes::{upload_file, upload_signature},
     test,
-    user_routes::{create_user, get_user_information, handle_login},
+    user_routes::{create_user, get_all_user, get_user_information, handle_login},
 };
 
 #[tokio::main]
@@ -36,7 +37,12 @@ pub async fn start() -> Result<(), rocket::Error> {
                 upload_file,
                 upload_signature,
                 handle_login,
-                get_user_information
+                get_user_information,
+                get_all_user,
+                create_group,
+                add_group_member,
+                get_group_by_id,
+                get_user_group
             ],
         )
         .launch()

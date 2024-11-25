@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use crate::models::request::{create_user::CreateUserData, login_user::LoginUser};
 use crate::models::{response::response::Response, User};
 use chrono::Utc;
@@ -134,6 +132,31 @@ pub async fn get_user_information(database: &State<DatabaseConnection>, id: Stri
         Ok(None) => Response {
             data: None,
             message: "User not found".to_string(),
+            success: false,
+        },
+        Err(e) => Response {
+            data: None,
+            message: format!("Something went wrong: {}", e),
+            success: false,
+        },
+    };
+
+    Json(json!(response))
+}
+
+#[get("/user")]
+pub async fn get_all_user(database: &State<DatabaseConnection>) -> Json<Value> {
+    let result: Result<Vec<user::Model>, DbErr> = UserQuery::get_all_user(database).await;
+
+    let response = match result {
+        Ok(users) if !users.is_empty() => Response {
+            data: Some(users),
+            message: "All user info".to_string(),
+            success: true,
+        },
+        Ok(_) => Response {
+            data: None,
+            message: "There is no user".to_string(),
             success: false,
         },
         Err(e) => Response {
