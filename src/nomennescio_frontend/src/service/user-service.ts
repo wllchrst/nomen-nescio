@@ -58,12 +58,30 @@ export class UserService extends Service {
     }
   }
 
-  async getAllUser() {
+  async getAllUser(): Promise<IUser[]> {
     try {
       const result = await this.get<IResponse<IUser[]>>("user");
-      return result;
+      if (result && result.success) {
+        return result.data;
+      } else {
+        console.error("Failed to fetch users");
+        return [];
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching users: " + error);
+      return [];
+    }
+  }
+
+  async getCurrentUser(): Promise<IUser | null> {
+    const userId = this.getUserIdFromCookie();
+    if (!userId) return null;
+
+    const result = await this.get<IResponse<IUser>>(`/user/${userId}`);
+    if (result && result.success) {
+      return result.data;
+    } else {
+      console.error("gk dapet current user");
       return null;
     }
   }

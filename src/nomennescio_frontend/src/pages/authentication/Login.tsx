@@ -16,6 +16,7 @@ const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     const result = await userService.loginUser(data);
+    console.log(data);
     if (result) navigate("/home");
   };
 

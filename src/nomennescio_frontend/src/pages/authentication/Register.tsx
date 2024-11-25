@@ -39,9 +39,13 @@ const Register: React.FC = () => {
     }
 
     data.signature_file_path = path;
+    data.secret_key = "ini dummy data";
     const result = await userService.registerUser(data);
 
-    if (result) console.log("SUCCESSFUL");
+    if (result){
+      console.log("SUCCESSFUL");
+      navigate("/");
+    } 
   };
 
   return (
