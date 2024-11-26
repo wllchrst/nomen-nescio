@@ -23,6 +23,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ startUploading, width = 'w-96',
         document.getElementById('fileInput')?.click();
     };
 
+    const handleSubmit = () => {
+        if (selectedFiles.length > 0) {
+            // startUploading(selectedFiles);
+            for(const file of selectedFiles) {
+                console.log(file.file.name)
+            }
+        }
+    };
+
     return (
         <div
             className={`${width} ${height} border ${isDragging ? 'border-blue-400 bg-gray-800' : 'border-gray-700 bg-gray-800'

@@ -46,14 +46,11 @@ pub async fn upload_file(
     form: Form<UploadWithName<'_>>,
     user_id: UserId,
 ) -> Result<status::Accepted<String>, status::Custom<String>> {
-    // Ensure the "storage" directory exists
     create_folder_if_not_exist("storage").await?;
 
-    // Build the destination path
     let destination_dir = format!("storage/raw/{}", user_id.0);
     let destination = Path::new(&destination_dir).join(form.file_name.to_string());
 
-    // Get the temporary file path
     let file_path = form.file.path().ok_or_else(|| {
         status::Custom(
             rocket::http::Status::BadRequest,
@@ -61,7 +58,6 @@ pub async fn upload_file(
         )
     })?;
 
-    // Ensure the directory exists
     if let Err(err) = fs::create_dir_all(destination_dir).await {
         return Err(status::Custom(
             rocket::http::Status::InternalServerError,
@@ -69,7 +65,6 @@ pub async fn upload_file(
         ));
     }
 
-    // Copy the file to the destination
     if let Err(err) = fs::copy(file_path, &destination).await {
         return Err(status::Custom(
             rocket::http::Status::InternalServerError,
@@ -77,7 +72,6 @@ pub async fn upload_file(
         ));
     }
 
-    // Return the path of the saved file
     Ok(status::Accepted(destination.to_string_lossy().to_string()))
 }
 

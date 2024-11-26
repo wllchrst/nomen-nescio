@@ -18,17 +18,19 @@ export class UserService extends Service {
     return result.success;
   }
 
-  async loginUser(login: ILogin): Promise<boolean> {
-    const result = await this.post<IResponse<string>>("user-login", login);
+  async loginUser(login: ILogin): Promise<IUser> {
+    const result = await this.post<IResponse<IUser>>("user-login", login);
 
-    if (result == null) return false;
-
-    if (result.success && result.data != "") {
-      Cookie.set("user", result.data);
-      return true;
+    if (result == null) {
+      throw new Error("Fail")
     }
 
-    return false;
+    if (result.success && result.data.email != "") {
+      Cookie.set("user", result.data.id);
+      return result.data;
+    }
+
+    throw new Error("Fail")
   }
 
   async getUserInformation(id: string) {

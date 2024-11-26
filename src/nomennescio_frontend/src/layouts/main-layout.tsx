@@ -14,7 +14,10 @@ export default function MainLayout({ children }: IChildren) {
   useEffect(() => {
     const id = userService.getUserIdFromCookie();
     setUserId(id);
-    setTried(true);
+    userService.getUserInformation(id).then((data) => {
+      setUserData(data!.data)
+      setTried(true);
+    })
   }, []);
 
   async function getUserInformation() {

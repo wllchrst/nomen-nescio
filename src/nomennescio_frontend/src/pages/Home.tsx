@@ -6,6 +6,7 @@ import TypingEffect from "react-typing-effect";
 import { useState, useRef, useEffect } from 'react';
 import useDrawableCanvas from '../hooks/use-drawable-canvas';
 import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
+import { useUserContext } from '../context/user-context';
 
 const dummyData = [
     {
@@ -43,6 +44,8 @@ const Home = () => {
     const [file, setFile] = useState<File | null>(null);
     const [canvasWidth, setCanvasWidth] = useState(1000);
     const [canvasHeight, setCanvasHeight] = useState(800);
+
+    const { user } = useUserContext()
 
     const handleCanvasToggle = () => {
         setShowCanvas(!showCanvas);

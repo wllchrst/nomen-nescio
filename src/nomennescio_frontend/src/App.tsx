@@ -7,6 +7,7 @@ import MainLayout from "./layouts/main-layout";
 import Storage from "./pages/Storage";
 import Upload from "./pages/Upload";
 import Setting from "./pages/Setting";
+import ProviderLayout from "./layouts/provider-layout";
 import Group from "./pages/Group";
 import Mail from "./pages/mail";
 

@@ -8,16 +8,21 @@ import ParticleBackground from "../../components/elements/canvas/particle-backgr
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ILogin } from "../../interfaces/login-interface";
 import { UserService } from "../../service/user-service";
+import { useUserContext } from "../../context/user-context";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<ILogin>();
   const userService = new UserService();
 
+  const { setUserData } = useUserContext();
+
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     const result = await userService.loginUser(data);
-    console.log(data);
-    if (result) navigate("/home");
+    if (result) {
+      setUserData(result)
+      navigate("/home");
+    }
   };
 
   return (
