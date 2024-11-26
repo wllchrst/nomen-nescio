@@ -1,4 +1,4 @@
 export interface ICreateGroup {
-  name: String;
-  description: String;
+  name: string;
+  description: string;
 }

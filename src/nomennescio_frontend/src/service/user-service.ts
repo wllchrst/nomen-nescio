@@ -60,9 +60,11 @@ export class UserService extends Service {
 
   async getAllUser(): Promise<IUser[]> {
     try {
+      const currentUser = await this.getCurrentUser();
       const result = await this.get<IResponse<IUser[]>>("user");
+      // disini aku ganti getAllUser kecuali current user
       if (result && result.success) {
-        return result.data;
+        return result.data.filter(user => user.id !== currentUser?.id);
       } else {
         console.error("Failed to fetch users");
         return [];

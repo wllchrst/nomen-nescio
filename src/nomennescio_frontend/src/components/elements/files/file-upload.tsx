@@ -2,7 +2,7 @@ import React from 'react';
 import { useDragAndDrop } from '../../../hooks/use-drag-and-drop';
 
 interface FileUploadProps {
-    startUploading: (files: File[]) => void;
+    startUploading?: (files: File[]) => void;
     width?: string;
     height?: string;
     fontSize?: string;

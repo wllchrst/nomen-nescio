@@ -23,20 +23,21 @@ pub async fn create_group(
     let result = GroupMutation::create_group(database, group).await;
 
     let response = match result {
-        Ok(active_model) => Response {
+        Ok(model) => Response {
             success: true,
             message: "Success creating group".to_string(),
-            data: Some(true),
+            data: Some(model), 
         },
         Err(error) => Response {
             success: false,
-            message: format!("Something went wrong creating the user {}", error),
-            data: Some(false),
+            message: format!("Something went wrong creating the group: {}", error),
+            data: None,
         },
     };
 
     Json(json!(response))
 }
+
 
 #[post("/group-member", data = "<input>")]
 pub async fn add_group_member(
@@ -64,12 +65,12 @@ pub async fn add_group_member(
         Ok(active_model) => Response {
             success: true,
             message: "Success adding group member".to_string(),
-            data: Some(true),
+            data: Some(active_model),
         },
         Err(error) => Response {
             success: false,
             message: format!("Something went wrong creating the group {}", error),
-            data: Some(false),
+            data: None,
         },
     };
 

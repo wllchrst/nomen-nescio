@@ -65,9 +65,9 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
     }, []);
 
     return (
-        <div className="relative flex justify-items-center z-50" ref={dropdownRef}>
+        <div className="relative flex justify-items-center wz-50" ref={dropdownRef}>
             {searchForUser ? (
-                <div className={clsx("flex flex-wrap items-center p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full", className)}>
+                <div className={clsx("flex flex-wrap items-center p-2  bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-40", className)}>
                     {chosenUsers.map(user => (
                         <div
                             key={user.id}
@@ -110,7 +110,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ data, searchForUser = f
                             onChange={handleSearch}
                             onClick={() => { handleInputClick(); setIsActive(true); }}
                             placeholder={"(ctrl + k)... " + text}
-                            className={clsx("p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full", className)}     
+                            className={clsx("p-2 bg-[#0d1117] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-96", className)}     
                         />
                     )}
                 />

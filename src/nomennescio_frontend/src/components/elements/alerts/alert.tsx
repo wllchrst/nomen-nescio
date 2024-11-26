@@ -1,5 +1,7 @@
 import React from 'react';
 import useAlert from '../../../hooks/use-alert';
+import canister from '../../../agent/agent';
+import clsx from 'clsx';
 
 interface AlertProps {
     title: string;
