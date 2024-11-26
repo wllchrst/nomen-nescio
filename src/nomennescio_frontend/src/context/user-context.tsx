@@ -1,7 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { IUserContext } from "../interfaces/user-context-interface";
 import { IUser } from "../interfaces/user-interface";
 import { IChildren } from "../interfaces/children-interface";
+import Cookie from "js-cookie"
+import { redirect, useNavigate } from "react-router-dom";
+import { UserService } from "../service/user-service";
 
 const userContext = createContext<IUserContext>({} as IUserContext);
 
@@ -9,8 +12,11 @@ export function useUserContext() {
   return useContext(userContext);
 }
 
+const userService = new UserService();
+
 export function UserContextProvider({ children }: IChildren) {
   const [user, setUser] = useState<IUser | null>(null);
+  const navigate = useNavigate()
 
   function setUserData(userData: IUser | null) {
     setUser(userData);
@@ -20,6 +26,21 @@ export function UserContextProvider({ children }: IChildren) {
     user: user,
     setUserData: setUserData,
   };
+
+  useEffect(() => {
+    const wait = async() => {
+      const userId = Cookie.get("user")
+
+      if(!userId) {
+        navigate("/")
+        return
+      }
+
+      const user = await userService.getUserInformation(userId)
+      setUserData(user!.data)
+    }
+    wait()
+  }, [])
 
   return <userContext.Provider value={value}>{children}</userContext.Provider>;
 }

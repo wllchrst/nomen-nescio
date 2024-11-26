@@ -10,7 +10,6 @@ const useGetCurrentUser = () => {
             const userService = new UserService();
             const user = await userService.getCurrentUser();
             setCurrentUser(user);
-            console.log("Current User:", user);
         };
         fetchCurrentUser();
     }, []);

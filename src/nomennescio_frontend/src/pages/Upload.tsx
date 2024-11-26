@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Template from "../components/global/template";
 import FileUpload from "../components/elements/files/file-upload";
 import UploadedFiles from "../components/elements/files/uploaded-files";
@@ -17,6 +17,19 @@ interface UploadedFile {
 const Upload = () => {
     const [selectedFiles, setSelectedFiles] = useState<UploadedFile[]>([]);
     const { user } = useUserContext();
+    
+    // Reference for to solve state async problem
+    const selectedFilesRef = useRef<UploadedFile[]>(selectedFiles);
+    const userRef = useRef<IUser | null>(user)
+
+    useEffect(() => {
+        selectedFilesRef.current = selectedFiles
+    }, [selectedFiles])
+
+    useEffect(() => {
+        userRef.current = user
+        console.log("inside: " + userRef.current)
+    }, [user])
 
     const handleUserClick = (user: IUser) => {
         console.log(user);
@@ -27,8 +40,9 @@ const Upload = () => {
     };
 
     const handleSendButton = async () => {
-        for(const file of selectedFiles) {
-            let path = await uploadFileFromUser(user!.id.toString(), file.file)
+        console.log(userRef.current)
+        for (const file of selectedFilesRef.current) {
+            let path = await uploadFileFromUser(userRef.current!.id.toString(), file.file)
             console.log(path)
         }
     }

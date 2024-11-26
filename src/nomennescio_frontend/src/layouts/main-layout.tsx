@@ -18,7 +18,6 @@ export default function MainLayout({ children }: IChildren) {
       setUserData(data!.data)
       setTried(true);
     })
-    console.log(id)
   }, []);
 
   async function getUserInformation() {
