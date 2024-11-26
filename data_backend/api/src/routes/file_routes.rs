@@ -10,6 +10,11 @@ use uuid::Uuid;
 #[derive(FromForm)]
 pub struct Upload<'f> {
     file: TempFile<'f>,
+}
+
+#[derive(FromForm)]
+pub struct UploadWithName<'f> {
+    file: TempFile<'f>,
     file_name: String,
 }
 
@@ -38,17 +43,13 @@ async fn copy_file_to(source: &Path, target: &Path) -> Result<(), status::Custom
 
 #[post("/upload", format = "multipart/form-data", data = "<form>")]
 pub async fn upload_file(
-    form: Form<Upload<'_>>,
+    form: Form<UploadWithName<'_>>,
     user_id: UserId,
 ) -> Result<status::Accepted<String>, status::Custom<String>> {
     create_folder_if_not_exist("storage").await?;
 
-    let original_name = form.file_name.clone();
-
-    let new_name = format!("{}_{}", original_name, Uuid::new_v4());
-
     let destination_dir = format!("storage/raw/{}", user_id.0);
-    let destination = Path::new(&destination_dir).join(original_name);
+    let destination = Path::new(&destination_dir).join(form.file_name.to_string());
 
     let file_path = form.file.path().ok_or_else(|| {
         status::Custom(
