@@ -40,7 +40,6 @@ impl GroupMutation {
         let mut active_models = Vec::new();
 
         for group_member_data in group_member_data_list {
-            // Validate user existence
             let user = UserQuery::get_user_by_id(db, group_member_data.user_id).await?;
             if user.is_none() {
                 return Err(DbErr::Custom("User was not found".to_owned()));

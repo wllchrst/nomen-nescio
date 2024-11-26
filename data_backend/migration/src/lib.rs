@@ -5,7 +5,9 @@ mod m20241115_033847_create_table_group;
 mod m20241115_033855_create_table_group_members;
 mod m20241118_002751_create_table_email;
 mod m20241118_002917_create_table_email_receivers;
-mod m20241118_002922_create_table_files;
+mod m20241118_002922_create_table_files;mod m20241126_143130_create_groups_and_members;
+mod m20241126_143150_group_member;
+
 
 
 pub struct Migrator;

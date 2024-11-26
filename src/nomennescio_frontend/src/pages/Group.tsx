@@ -109,7 +109,16 @@ const Group = () => {
             description: "", 
         };
 
-        groupService.addGroupMember({group_id: 1, user_id: 1, role: "Owner"});
+        // groupService.addGroupMember({group_id: 1, user_id: 1, role: "Owner"});
+        // const resultGroup = await groupService.createGroup(data);
+        // const resultMembers = await groupService.addGroupMember({
+        //     group_id: 24,
+        //     members: [
+        //         { user_id: 1, role: "Owner" },
+        //         { user_id: 2, role: "Members" },
+        //     ]
+        // });
+
 
         const result = await groupService.createGroupWithMembers(data, currentUser, newGroupMembers);
         if (result) {
