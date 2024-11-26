@@ -27,7 +27,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ width = 'w-96', height = 'h-56'
 
     const handleSubmit = () => {
         if (selectedFiles.length > 0) {
-            startUploading(selectedFiles);
+            // startUploading(selectedFiles);
+            for(const file of selectedFiles) {
+                console.log(file.file.name)
+            }
         }
     };
 
