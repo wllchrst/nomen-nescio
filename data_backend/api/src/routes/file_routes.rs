@@ -12,6 +12,12 @@ pub struct Upload<'f> {
     file: TempFile<'f>,
 }
 
+#[derive(FromForm)]
+pub struct UploadWithName<'f> {
+    file: TempFile<'f>,
+    file_name: String,
+}
+
 async fn create_folder_if_not_exist(folder_name: &str) -> Result<(), status::Custom<String>> {
     if !Path::new(folder_name).exists() {
         match fs::create_dir_all(folder_name).await {
@@ -37,20 +43,15 @@ async fn copy_file_to(source: &Path, target: &Path) -> Result<(), status::Custom
 
 #[post("/upload", format = "multipart/form-data", data = "<form>")]
 pub async fn upload_file(
-    form: Form<Upload<'_>>,
+    form: Form<UploadWithName<'_>>,
     user_id: UserId,
 ) -> Result<status::Accepted<String>, status::Custom<String>> {
     // Ensure the "storage" directory exists
     create_folder_if_not_exist("storage").await?;
 
-    // Use the original file name as is
-    let original_name = form.file.name().unwrap_or("default");
-
-    let new_name = format!("{}_{}", original_name, Uuid::new_v4());
-
     // Build the destination path
     let destination_dir = format!("storage/raw/{}", user_id.0);
-    let destination = Path::new(&destination_dir).join(original_name);
+    let destination = Path::new(&destination_dir).join(form.file_name.to_string());
 
     // Get the temporary file path
     let file_path = form.file.path().ok_or_else(|| {
