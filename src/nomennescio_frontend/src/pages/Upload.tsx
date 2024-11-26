@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Template from "../components/global/template";
 import FileUpload from "../components/elements/files/file-upload";
 import UploadedFiles from "../components/elements/files/uploaded-files";
 import SearchDropdown from "../components/elements/search/search-dropdown";
 import { IUser } from "../interfaces/user-interface";
 import { useFileUpload } from "../hooks/use-file-upload";
+import { useUserContext } from "../context/user-context";
+import { uploadFileFromUser } from "../service/file-service";
 
 interface UploadedFile {
     file: File;
@@ -14,6 +16,7 @@ interface UploadedFile {
 
 const Upload = () => {
     const [selectedFiles, setSelectedFiles] = useState<UploadedFile[]>([]);
+    const { user } = useUserContext();
 
     const handleUserClick = (user: IUser) => {
         console.log(user);
@@ -22,6 +25,13 @@ const Upload = () => {
     const handleFilesUploaded = (files: UploadedFile[]) => {
         setSelectedFiles(files);
     };
+
+    const handleSendButton = async () => {
+        for(const file of selectedFiles) {
+            let path = await uploadFileFromUser(user!.id.toString(), file.file)
+            console.log(path)
+        }
+    }
 
     const { startUploading } = useFileUpload(handleFilesUploaded);
 
@@ -53,7 +63,7 @@ const Upload = () => {
                             <UploadedFiles selectedFiles={selectedFiles} />
                         </div>
                     </div>
-                    <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
+                    <button onClick={handleSendButton} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
                 </div>
             </div>
         </Template>

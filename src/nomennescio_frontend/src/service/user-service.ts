@@ -26,7 +26,7 @@ export class UserService extends Service {
     }
 
     if (result.success && result.data.email != "") {
-      Cookie.set("user", result.data);
+      Cookie.set("user", result.data.id);
       return result.data;
     }
 
