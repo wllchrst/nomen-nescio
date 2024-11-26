@@ -18,8 +18,14 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
+                    .col(ColumnDef::new(Email::SenderId).integer().not_null())
                     .col(ColumnDef::new(Email::Title).string().not_null())
                     .col(ColumnDef::new(Email::Description).string().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .from(Email::Table, Email::SenderId)
+                            .to(User::Table, User::Id),
+                    )
                     .to_owned(),
             )
             .await
@@ -38,4 +44,11 @@ enum Email {
     Id,
     Title,
     Description,
+    SenderId,
+}
+
+#[derive(DeriveIden)]
+enum User {
+    Table,
+    Id,
 }
