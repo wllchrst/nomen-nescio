@@ -6,22 +6,29 @@ interface UploadedFile {
     status: 'uploading' | 'completed';
 }
 
-export const useFileUpload = () => {
+export const useFileUpload = (onFilesUploaded: (files: UploadedFile[]) => void) => {
     const [selectedFiles, setSelectedFiles] = useState<UploadedFile[]>([]);
 
     const startUploading = (files: File[]) => {
+        // ini utk filter file supaya filenya gk duplicated
         const uniqueFiles = files.filter(
             (file) => !selectedFiles.some((existingFile) => existingFile.file.name === file.name && existingFile.file.size === file.size)
         );
 
+        // init value dari animasi loading
         const uploadFiles = uniqueFiles.map((file) => ({
             file,
             progress: 0,
             status: 'uploading' as 'uploading',
         }));
 
-        setSelectedFiles((prevFiles) => [...prevFiles, ...uploadFiles]);
+        setSelectedFiles((prevFiles) => {
+            const newFiles = [...prevFiles, ...uploadFiles];
+            onFilesUploaded(newFiles); 
+            return newFiles;
+        });
 
+        // animasi utk load progress
         uploadFiles.reduce((promise, uploadFile, index) => {
             return promise.then(() => {
                 return new Promise<void>((resolve) => {
@@ -43,10 +50,11 @@ export const useFileUpload = () => {
                     clearInterval(interval);
                     onComplete();
                 }
+                onFilesUploaded(updatedFiles); 
                 return updatedFiles;
             });
         }, 200);
     };
 
-    return { selectedFiles, startUploading };
+    return { startUploading };
 };

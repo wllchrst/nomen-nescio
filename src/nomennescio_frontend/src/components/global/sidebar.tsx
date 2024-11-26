@@ -70,9 +70,9 @@ const Sidebar: React.FC = () => {
                     <IconButton
                         icon={FaFolder}
                         direction="right"
-                        innerText="My Drive"
+                        innerText="Mail"
                         className="w-full justify-start"
-                        to="/storage"
+                        to="/mail"
                     />
                     <IconButton
                         icon={FaUsers}
@@ -80,13 +80,6 @@ const Sidebar: React.FC = () => {
                         innerText="Groups"
                         className="w-full justify-start"
                         to='/group'
-                    />
-                    <IconButton
-                        icon={FaUpload}
-                        direction="right"
-                        innerText="Uploads"
-                        className="w-full justify-start"
-                        to="/upload"
                     />
                     <IconButton
                         icon={FaCog}

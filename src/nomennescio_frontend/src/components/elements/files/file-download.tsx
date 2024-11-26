@@ -14,7 +14,7 @@ import DeleteModal from '../modals/delete-modal';
 import RenameModal from '../modals/rename-modal';
 import FilePreview from './file-preview';
 import { useFileActions } from '../../../hooks/use-file-action';
-import DrawableCanvas from '../canvas/drawable-canvas'; // Import the DrawableCanvas component
+import DrawableCanvas from '../canvas/drawable-canvas'; 
 import Modal from '../modals/modal';
 import Search from '../search/search';
 import { AiOutlineClose, AiOutlineUserAdd, AiOutlineFile, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai'; // Import the necessary icons

@@ -5,8 +5,9 @@ use rocket_cors::{AllowedOrigins, CorsOptions};
 use sea_orm::{Database, DatabaseConnection};
 
 use crate::routes::{
-    group_routes::{add_group_member, create_group, get_group_by_id, get_user_group},
+    email_routes::{create_email, get_email_by_id, get_user_email},
     file_routes::{upload_file, upload_signature},
+    group_routes::{add_group_member, create_group, get_group_by_id, get_user_group},
     test,
     user_routes::{create_user, get_all_user, get_user_information, handle_login},
 };
@@ -42,7 +43,10 @@ pub async fn start() -> Result<(), rocket::Error> {
                 create_group,
                 add_group_member,
                 get_group_by_id,
-                get_user_group
+                get_user_group,
+                create_email,
+                get_email_by_id,
+                get_user_email
             ],
         )
         .launch()

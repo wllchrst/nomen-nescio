@@ -2,25 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import TypingEffect from 'react-typing-effect';
+import { IUser } from '../../../interfaces/user-interface';
 
 const words = ["Search Users", "Find Friends", "Discover People"];
 
-interface UserItem {
-    id: number;
-    image?: string;
-    name?: string;
-    email?: string;
-    link: string;
-}
-
 interface SearchProps {
-    data: UserItem[];
-    onUserSelect?: (user: UserItem) => void;
+    data: IUser[];
+    onUserSelect?: (user: IUser) => void;
 }
 
 const Search: React.FC<SearchProps> = ({ data, onUserSelect }) => {
     const [query, setQuery] = useState('');
-    const [filteredResults, setFilteredResults] = useState<UserItem[]>([]);
+    const [filteredResults, setFilteredResults] = useState<IUser[]>([]);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,12 +27,12 @@ const Search: React.FC<SearchProps> = ({ data, onUserSelect }) => {
         setFilteredResults(results);
     };
 
-    const handleUserClick = (user: UserItem) => {
+    const handleUserClick = (user: IUser) => {
         if (onUserSelect) {
             onUserSelect(user);
         }
-        setQuery(''); // Clear the search input
-        setFilteredResults([]); // Clear the search results
+        setQuery(''); 
+        setFilteredResults([]); 
     };
 
     useEffect(() => {

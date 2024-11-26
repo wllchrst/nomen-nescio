@@ -6,59 +6,44 @@ import FileUpload from '../components/elements/files/file-upload';
 import Modal from '../components/elements/modals/modal';
 import { AiFillCaretDown, AiOutlinePlus, AiOutlineUsergroupAdd, AiOutlineUserAdd, AiOutlineClose } from 'react-icons/ai';
 import Search from '../components/elements/search/search';
-
-interface UserItem {
-    id: number;
-    image?: string;
-    name?: string;
-    email?: string;
-    link: string;
-}
+import useGroup from '../hooks/use-group';
+import useFetchUsers from '../hooks/use-fetch-user';
+import { GroupService } from '../service/group-service';
+import { ICreateGroup } from '../interfaces/create-group-interface';
+import { UserService } from '../service/user-service';
+import { IUser } from '../interfaces/user-interface';
 
 const Group = () => {
-    const [showMembers, setShowMembers] = useState<{ [key: string]: boolean }>({});
-    const [selectedFile, setSelectedFile] = useState<string | null>(null);
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
-    const [newGroupName, setNewGroupName] = useState('');
-    const [newGroupMembers, setNewGroupMembers] = useState<UserItem[]>([]); // Update state type
-    const [memberSearch, setMemberSearch] = useState('');
-    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-    const [sharedFile, setSharedFile] = useState<string | null>(null);
-    const [sharedWithUsers, setSharedWithUsers] = useState<UserItem[]>([]);
+    const [selectedGroupId, setSelectedGroupId] = useState(null);
+    const [newGroupMembers, setNewGroupMembers] = useState<IUser[]>([]);
+    const {
+        showMembers,
+        selectedFile,
+        isUploadModalOpen,
+        isCreateGroupModalOpen,
+        newGroupName,
+        memberSearch,
+        isShareModalOpen,
+        sharedFile,
+        sharedWithUsers,
+        toggleMembers,
+        handleFileClick,
+        closeModal,
+        openUploadModal,
+        closeUploadModal,
+        openCreateGroupModal,
+        closeCreateGroupModal,
+        handleShareFile,
+        handleAddUserToShare,
+        handleRemoveUserFromShare,
+        handleShareSubmit,
+        handleRenameFile,
+        handleDeleteFile,
+        setNewGroupName,
+        setMemberSearch,
+    } = useGroup();
 
-    const dummyData: UserItem[] = [
-        {
-            id: 1,
-            image: 'https://via.placeholder.com/50',
-            name: 'Kolin',
-            email: 'john.doe@example.com',
-            link: 'profile/johndoe'
-        },
-        {
-            id: 2,
-            image: 'https://via.placeholder.com/50',
-            name: 'William Christian',
-            email: 'jane.smith@example.com',
-            link: 'profile/johnsmith'
-        },
-        {
-            id: 3,
-            image: 'https://via.placeholder.com/50',
-            name: 'Pibus',
-            email: 'michael.brown@example.com',
-            link: 'profile/michael'
-        },
-        {
-            id: 4,
-            image: 'https://via.placeholder.com/50',
-            name: 'Felix',
-            email: 'emily.davis@example.com',
-            link: 'profile/emily'
-        },
-    ];
-
-
+    const users = useFetchUsers();
     const groups = [
         {
             id: 'dev-team',
@@ -104,87 +89,52 @@ const Group = () => {
                 { fileUrl: 'src/uploads/Cheatsheet AI.pdf', uploadedDate: '6 Oct 2024' },
                 { fileUrl: 'src/uploads/Cheatsheet AI.pdf', uploadedDate: '6 Oct 2024' },
                 { fileUrl: 'src/uploads/Cheatsheet AI.pdf', uploadedDate: '6 Oct 2024' },
-                { fileUrl: 'src/uploads/Cheatsheet AI.pdf', uploadedDate: '6 Oct 2024' },
                 { fileUrl: 'https://example.com/file4.mp4', uploadedDate: '2023-10-04' },
             ],
         },
     ];
 
-    const toggleMembers = (groupId: string) => {
-        setShowMembers(prevState => ({
-            ...prevState,
-            [groupId]: !prevState[groupId],
-        }));
-    };
-
-    const handleFileClick = (fileUrl: string) => {
-        setSelectedFile(fileUrl);
-    };
-
-    const closeModal = () => {
-        setSelectedFile(null);
-    };
-
-    const openUploadModal = () => {
-        setIsUploadModalOpen(true);
-    };
-
-    const closeUploadModal = () => {
-        setIsUploadModalOpen(false);
-    };
-
-    const openCreateGroupModal = () => {
-        setIsCreateGroupModalOpen(true);
-    };
-
-    const closeCreateGroupModal = () => {
-        setIsCreateGroupModalOpen(false);
-    };
-
-    const handleAddMember = (user: UserItem) => {
-        if (!newGroupMembers.some(member => member.id === user.id)) {
-            setNewGroupMembers([...newGroupMembers, user]);
-        }
-    };
-
-    const handleRemoveMember = (userId: number) => {
-        setNewGroupMembers(newGroupMembers.filter(member => member.id !== userId));
-    };
-
-    const handleCreateGroupSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateGroupSubmit = async (e) => {
         e.preventDefault();
-        console.log('Group Name:', newGroupName);
-        console.log('Group Members:', newGroupMembers);
-        closeCreateGroupModal();
-    };
+        const groupService = new GroupService();
+        const userService = new UserService();
+        const currentUser = await userService.getCurrentUser();
+        if (!currentUser) {
+            console.error("Current user not found");
+            return;
+        }
 
-    const handleShareFile = (fileUrl: string) => {
-        setSharedFile(fileUrl);
-        setIsShareModalOpen(true);
-    };
+        const data: ICreateGroup = {
+            name: newGroupName,
+            description: "", 
+        };
 
-    const handleAddUserToShare = (user: UserItem) => {
-        if (!sharedWithUsers.some(u => u.id === user.id)) {
-            setSharedWithUsers([...sharedWithUsers, user]);
+        // groupService.addGroupMember({group_id: 1, user_id: 1, role: "Owner"});
+        // const resultGroup = await groupService.createGroup(data);
+        // const resultMembers = await groupService.addGroupMember({
+        //     group_id: 24,
+        //     members: [
+        //         { user_id: 1, role: "Owner" },
+        //         { user_id: 2, role: "Members" },
+        //     ]
+        // });
+
+
+        const result = await groupService.createGroupWithMembers(data, currentUser, newGroupMembers);
+        if (result) {
+            closeCreateGroupModal();
+            console.log("berhasil king " + data);
+        } else {
+            console.log("gagal king " + data);
         }
     };
 
-    const handleRemoveUserFromShare = (userId: number) => {
-        setSharedWithUsers(sharedWithUsers.filter(user => user.id !== userId));
+    const handleAddMember = (member: IUser) => {
+        setNewGroupMembers((prevMembers) => [...prevMembers, member]);
     };
 
-    const handleShareSubmit = () => {
-        console.log('Shared File:', sharedFile);
-        console.log('Shared With:', sharedWithUsers);
-        setIsShareModalOpen(false);
-    };
-
-    const handleRenameFile = (fileUrl: string, newName: string) => {
-        console.log(`Renamed ${fileUrl} to ${newName}`);
-    };
-
-    const handleDeleteFile = (fileUrl: string) => {
-        console.log(`Deleted ${fileUrl}`);
+    const handleRemoveMember = (memberId: number) => {
+        setNewGroupMembers((prevMembers) => prevMembers.filter(member => member.id !== memberId));
     };
 
     return (
@@ -200,7 +150,6 @@ const Group = () => {
                             <AiOutlineUsergroupAdd className="mr-2" />
                             Create Group
                         </button>
-                    
                     </div>
                 </div>
                 {groups.map(group => (
@@ -222,7 +171,10 @@ const Group = () => {
                             </div>
                             <button
                                 className="bg-gray-700 m-4 p-4 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 flex items-center group"
-                                onClick={openUploadModal}
+                                onClick={() => {
+                                    setSelectedGroupId(group.id);
+                                    openUploadModal();
+                                }}
                             >
                                 <AiOutlinePlus className="group-hover:rotate-180 transform transition-transform duration-300" />
                             </button>
@@ -289,17 +241,16 @@ const Group = () => {
                                 className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-                        {/* INI BAGIAN MODAL CREATE GROUP  */}
                         <div className="mb-4">
                             <label className="block text-white mb-2" htmlFor="addMembers">Add Members</label>
-                            <Search data={dummyData} onUserSelect={handleAddMember} />
+                            <Search data={users} onUserSelect={handleAddMember} />
                             <ul className="mt-2">
                                 {newGroupMembers.map((member) => (
                                     <li key={member.id} className="text-white flex justify-between items-center mb-2">
                                         <div className="flex items-center">
                                             <img
-                                                src={member.image || 'https://via.placeholder.com/50'}
-                                                alt={`${member.name}'s profile`}
+                                            // ini nanti pas ada profile pic jangan lupa diganti
+                                                src={'https://via.placeholder.com/50'}
                                                 className="w-8 h-8 rounded-full mr-2"
                                             />
                                             {member.name}
@@ -314,10 +265,9 @@ const Group = () => {
                                 ))}
                             </ul>
                         </div>
-                        {/* INI BAGIAN MODAL CREATE GROUP  */}
                         <button
                             type="submit"
-                            className="bg-green-600 p-2 rounded-lg text-white flex items-center justify-center w-full"
+                            className="bg-green-600 p-2 rounded-lg text-white flex items-center justify-center w-full" 
                         >
                             <AiOutlineUserAdd className="mr-2" />
                             Create Group
@@ -335,13 +285,14 @@ const Group = () => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-white mb-2" htmlFor="addUsers">Add Users</label>
-                        <Search data={dummyData} onUserSelect={handleAddUserToShare} />
+                        <Search data={users} onUserSelect={handleAddUserToShare} />
                         <ul className="mt-2">
                             {sharedWithUsers.map((user) => (
                                 <li key={user.id} className="text-white flex justify-between items-center mb-2">
                                     <div className="flex items-center">
                                         <img
-                                            src={user.image || 'https://via.placeholder.com/50'}
+                                            // jangan lupa user.profilePicture
+                                            src={'https://via.placeholder.com/50'}
                                             alt={`${user.name}'s profile`}
                                             className="w-8 h-8 rounded-full mr-2"
                                         />
