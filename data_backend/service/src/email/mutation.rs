@@ -1,10 +1,7 @@
-use ::entity::{
-    email, email::Entity as Email, email_file, email_file::Entity as EmailFile, receiver,
-    receiver::Entity as Receiver,
-};
+use ::entity::{email, email_file, receiver};
 use sea_orm::*;
 
-struct EmailMutation {}
+pub struct EmailMutation {}
 
 impl EmailMutation {
     pub async fn create_email(
@@ -20,6 +17,7 @@ impl EmailMutation {
         let saved_email = email::ActiveModel {
             description: Set(email_data.description.to_owned()),
             title: Set(email_data.title.to_owned()),
+            sender_id: Set(email_data.sender_id.to_owned()),
             ..Default::default()
         }
         .save(&transaction)
@@ -42,6 +40,7 @@ impl EmailMutation {
         for f in file_data {
             let f_active_model = email_file::ActiveModel {
                 file_path: Set(f.file_path.to_owned()),
+                file_name: Set(f.file_name.to_owned()),
                 email_id: Set(email_id), // Use `email_id` from saved email
                 ..Default::default()
             };
