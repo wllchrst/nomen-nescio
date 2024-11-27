@@ -25,6 +25,8 @@ export class UserService extends Service {
       throw new Error("Fail")
     }
 
+    console.log(result)
+
     if (result.success && result.data.email != "") {
       Cookie.set("user", result.data.id);
       return result.data;

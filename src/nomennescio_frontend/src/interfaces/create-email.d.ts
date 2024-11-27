@@ -2,7 +2,7 @@ export interface ICreateEmailData {
     title: String,
     description: String,
     sender_id: number,
-    files: FileData[],
+    files: IFileData[],
     receivers: number[],
 }
 
