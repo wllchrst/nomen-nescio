@@ -2,7 +2,7 @@ use crate::user::UserQuery;
 use ::entity::{
     group::{self, Entity as Group},
     group_member,
-    prelude::GroupMember,
+    group_member::Entity as GroupMember,
     user,
 };
 use sea_orm::*;
