@@ -33,6 +33,11 @@ export class UserService extends Service {
     throw new Error("Fail")
   }
 
+  async updateUser(register: IRegister, userId: number) {
+    const result = await this.put(`user/${userId}`, register);
+    return result;
+  }
+
   async getUserInformation(id: string) {
     const result = await this.get<IResponse<IUser>>(`/user/${id}`);
 

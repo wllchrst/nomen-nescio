@@ -13,6 +13,16 @@ export class Service {
     }
   }
 
+  async put<T>(url: string, data: any) {
+    try {
+      const response = await axios.put<T>(`${this.backendUrl}${url}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   async get<T>(url: string, data: any = null) {
     try {
       console.log(data);
