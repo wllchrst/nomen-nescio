@@ -1,6 +1,7 @@
 use std::env;
 
 use dotenv::dotenv;
+use rocket::fs::FileServer;
 use rocket_cors::{AllowedOrigins, CorsOptions};
 use sea_orm::{Database, DatabaseConnection};
 
@@ -30,6 +31,7 @@ pub async fn start() -> Result<(), rocket::Error> {
     rocket::build()
         .attach(cors)
         .manage(database)
+        .mount("/storage", FileServer::from("storage"))
         .mount(
             "/",
             routes![
