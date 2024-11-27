@@ -1,13 +1,14 @@
 import { ICreateEmailData } from "../interfaces/create-email";
+import { IResponse } from "../interfaces/response-interface";
 import { Service } from "./service";
 
 export class EmailService extends Service {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    async createEmail(createEmailData: ICreateEmailData) {
-        const result = await this.post("/email", createEmailData);
-        return result;
-    }
+  async createEmail(createEmail: ICreateEmailData) {
+    const response = await this.post<IResponse<{}>>("email", createEmail);
+    return response;
+  }
 }
