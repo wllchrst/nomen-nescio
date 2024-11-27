@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Template from '../components/global/template';
 import FileDownload from '../components/elements/files/file-download';
+import { EmailService } from '../service/email-service';
+import { useUserContext } from '../context/user-context';
+import { IEmail } from '../interfaces/email-interface';
 
-interface Email {
-    id: number;
-    sender: string;
-    title: string;
-    description: string;
-    content: string;
-    file_url: string;
-}
+const emailService = new EmailService()
 
 const Mail: React.FC = () => {
-    const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+    const [emails, setEmails] = useState<IEmail[]>([])
+    const [selectedEmail, setSelectedEmail] = useState<IEmail | null>(null);
+    const { user } = useUserContext()
 
-    const emails: Email[] = [
-        {
-            id: 1,
-            sender: 'John Doe',
-            title: 'Meeting Reminder',
-            description: "Don't forget about the meeting at 3 PM.",
-            content: 'Hi, just a reminder about the meeting we have scheduled at 3 PM today. Please be on time.',
-            file_url: 'https://example.com/file.pdf'
-        },
-        {
-            id: 2,
-            sender: 'Jane Smith',
-            title: 'Project Update',
-            description: 'The project is on track for completion.',
-            content: 'Hello, the project is on track for completion by the end of the week. Great job everyone! Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus. ello, the project is on track for completion by the end of the week. Great job everyone! Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditatello, the project is on track for completion by the end of the week. Great job everyone! Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditatello, the project is on track for completion by the end of the week. Great job everyone! Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditatello, the project is on track for completion by the end of the week. Great job everyone! Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditate minus.Lorem ipsum dolor sit amet consectetur, adipisicing elit. A ut illo nesciunt ea numquam, atque nisi dolorum, repudiandae explicabo suscipit harum ducimus labore velit doloribus expedita ad dolorem cupiditat',
-            file_url: 'https://example.com/file.pdf'
-        },
-    ];
+    useEffect(() => {
+        const wait = async() => {
+            let fetch = await emailService.getEmail(user!.id.toString())
+            console.log(fetch)
+            setEmails(fetch)
+        }
 
+        wait()
+    }, [])
+    
     return (
         <Template>
             <div className="flex w-full h-full p-6 bg-transparent">
