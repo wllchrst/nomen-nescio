@@ -15,12 +15,10 @@ const Mail: React.FC = () => {
     useEffect(() => {
         const wait = async() => {
             let fetch = await emailService.getEmail(user!.id.toString())
-            console.log(fetch)
             setEmails(fetch)
         }
-
         wait()
-    }, [])
+    }, [user])
     
     return (
         <Template>
