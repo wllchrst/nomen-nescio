@@ -13,17 +13,19 @@ export class EmailService extends Service {
   }
 
   async getUserEmail(id: string): Promise<IEmail[]> {
-      const result = await this.get<IResponse<IEmail[]>>(`/user/email/${id}`)
+    const result = await this.get<IResponse<IEmail[]>>(`/user/email/${id}`);
 
-      if(!result) throw Error("Failed to fetch emails")
+    if (!result) throw Error("Failed to fetch emails");
+    // console.log("hasil result data", result.data);
+    return result.data;
+}
 
-      return result.data
-  }
-
-  async getEmailDetail(email_id: string): Promise<object[]> {
-      const result = await this.get<IResponse<object[]>>(`/email/${email_id}`)
-
-      if(!result) throw Error("Failed to fetch email");
-      return result.data
+async getEmailDetail(email_id: string): Promise<object[]> {
+    const result = await this.get<IResponse<object[]>>(`/email/${email_id}`);
+    
+    if (!result) throw Error("Failed to fetch email");
+    
+    // console.log("hasil result data email detail", result.data);
+    return result.data;
   }
 }

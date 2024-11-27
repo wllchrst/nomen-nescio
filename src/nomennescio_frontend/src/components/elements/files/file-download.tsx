@@ -25,10 +25,11 @@ interface FileDownloadProps {
     onRename?: (newName: string) => void;
     onDelete?: () => void;
     className?: string;
+    fileName?: string;
 }
 
 const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete, onShare, className, needPreview = true }) => {
-    const fileName = fileUrl.split('/').pop() || 'Unnamed File';
+    const fileName = fileUrl.split(/[/\\]/).pop() || 'Unnamed File';
     const fileExtension = fileName.split('.').pop()?.toLowerCase();
 
     const {

@@ -35,6 +35,9 @@ const Mail: React.FC = () => {
                 })
             }
 
+            if (results.length > 0) {
+                setSelectedEmail(results[0])
+            }
             setEmails(results)
         }
         wait()
@@ -72,9 +75,17 @@ const Mail: React.FC = () => {
                             <div className="bg-gray-800 p-6 rounded-lg h-full shadow-inner overflow-y-auto">
                                 {selectedEmail ? (
                                     <div className="h-full flex flex-col items-start overflow-y-auto">
-                                        <h3 className="text-white text-xl">{selectedEmail.email.title}</h3>
-                                        <p className="text-white mt-4">{selectedEmail.email.content}</p>
-                                        <FileDownload className='m-4' fileUrl={selectedEmail.files[0].file_path} uploadedDate='123132' needPreview={false}></FileDownload>
+                                        <h3 className="text-white text-xl">Title {selectedEmail.email.title}</h3>
+                                        <p className="text-white mt-4">Content {selectedEmail.email.description}</p>
+                                        {selectedEmail.files.map((file, index) => (
+                                            <FileDownload
+                                                key={index}
+                                                className='m-4'
+                                                fileUrl={file.file_path}
+                                                uploadedDate='123132'
+                                                needPreview={false}
+                                            />
+                                        ))}
                                     </div>
                                 ) : (
                                     <p className="text-white">Select an email to read</p>

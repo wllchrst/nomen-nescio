@@ -14,6 +14,7 @@ import { UserService } from '../service/user-service';
 import { IUser } from '../interfaces/user-interface';
 import useProfileSource from '../hooks/use-get-profile-source';
 import { useNavigate } from 'react-router-dom';
+import useGetCurrentUser from '../hooks/use-get-current-user';
 
 const Group = () => {
     const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -46,6 +47,8 @@ const Group = () => {
     } = useGroup();
 
     const users = useFetchUsers();
+    // const currentUser = useGetCurrentUser();
+    // console.log("current user", currentUser);
     const groups = [
         {
             id: 'dev-team',
