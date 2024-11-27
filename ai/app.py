@@ -1,18 +1,14 @@
-# from service.api_service import ApiService
-# from fastapi import FastAPI
-
-# app = FastAPI()
-
-# api_service = ApiService()
-# app.include_router(api_service.router)
-
 import tensorflow as tf
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import numpy as np
 import cv2
 import base64
+import matplotlib.pyplot as plt
 
+
+TRESH_HOLD = 0.45
 # Define ManhattanDistance layer (necessary for deserialization)
 class ManhattanDistance(tf.keras.layers.Layer):
     def call(self, inputs):
@@ -44,13 +40,27 @@ def predict(images: ImagePair):
         img1 = preprocess_image(images.image1)
         img2 = preprocess_image(images.image2)
 
+        # Plot images
+        # plot_images(img1, img2)
+
         # Add batch dimension
         img1 = np.expand_dims(img1, axis=0)
         img2 = np.expand_dims(img2, axis=0)
 
         # Make a prediction
         prediction = model.predict({"image1": img1, "image2": img2})[0][0]
-        return {"prediction": float(prediction)}
+        end_prediction = float(prediction) 
+
+        print(f'end prediction: {end_prediction}')
+        result = False
+
+        if(end_prediction > TRESH_HOLD) : 
+            result = True
+
+        return {"prediction": result}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001)  # Change port here (e.g., 8080)

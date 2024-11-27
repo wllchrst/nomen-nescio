@@ -9,6 +9,7 @@ use crate::routes::{
     email_routes::{create_email, get_email_by_id, get_user_email},
     file_routes::{upload_file, upload_signature},
     group_routes::{add_group_member, create_group, get_group_by_id, get_user_group},
+    image_routes::compare_image,
     test,
     user_routes::{create_user, get_all_user, get_user_information, handle_login, update_user},
 };
@@ -49,7 +50,8 @@ pub async fn start() -> Result<(), rocket::Error> {
                 create_email,
                 get_email_by_id,
                 get_user_email,
-                update_user
+                update_user,
+                compare_image
             ],
         )
         .launch()

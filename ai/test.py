@@ -7,8 +7,8 @@ def encode_image(image_path):
         return base64.b64encode(img_file.read()).decode('utf-8')
 
 # Encode your test images
-image1_base64 = encode_image("./test_image/first.jpg")
-image2_base64 = encode_image("./test_image/first.jpg")
+image1_base64 = encode_image("./test_image/second.jpg")
+image2_base64 = encode_image("./test_image/01_049.png")
 
 # Send a POST request to the API
 url = "http://127.0.0.1:8000/predict"
