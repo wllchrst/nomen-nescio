@@ -13,6 +13,7 @@ import { ICreateGroup } from '../interfaces/create-group-interface';
 import { UserService } from '../service/user-service';
 import { IUser } from '../interfaces/user-interface';
 import useProfileSource from '../hooks/use-get-profile-source';
+import { useNavigate } from 'react-router-dom';
 
 const Group = () => {
     const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -94,6 +95,7 @@ const Group = () => {
             ],
         },
     ];
+    const navigate = useNavigate();
 
     const handleCreateGroupSubmit = async (e) => {
         e.preventDefault();
@@ -104,6 +106,7 @@ const Group = () => {
             console.error("Current user not found");
             return;
         }
+
 
         const data: ICreateGroup = {
             name: newGroupName,
@@ -173,10 +176,7 @@ const Group = () => {
                             </div>
                             <button
                                 className="bg-gray-700 m-4 p-4 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 flex items-center group"
-                                onClick={() => {
-                                    setSelectedGroupId(group.id);
-                                    openUploadModal();
-                                }}
+                                onClick={() => navigate("/upload")}
                             >
                                 <AiOutlinePlus className="group-hover:rotate-180 transform transition-transform duration-300" />
                             </button>
@@ -200,7 +200,7 @@ const Group = () => {
                             </ul>
                         </div>
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {group.files.map(file => (
+                            {/* {group.files.map(file => (
                                 <div key={file.fileUrl} className="flex-grow cursor-pointer" onClick={() => handleFileClick(file.fileUrl)}>
                                     <FileDownload
                                         fileUrl={file.fileUrl}
@@ -213,7 +213,7 @@ const Group = () => {
                                         onDelete={() => handleDeleteFile(file.fileUrl)}
                                     />
                                 </div>
-                            ))}
+                            ))} */}
                         </div>
                     </div>
                 ))}
