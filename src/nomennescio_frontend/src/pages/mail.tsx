@@ -4,21 +4,46 @@ import FileDownload from '../components/elements/files/file-download';
 import { EmailService } from '../service/email-service';
 import { useUserContext } from '../context/user-context';
 import { IEmail } from '../interfaces/email-interface';
+import { IFileData } from '../interfaces/create-email';
 
 const emailService = new EmailService()
 
+interface EmailWithFiles {
+    email: IEmail,
+    files: IFileData[]
+}
+
 const Mail: React.FC = () => {
-    const [emails, setEmails] = useState<IEmail[]>([])
-    const [selectedEmail, setSelectedEmail] = useState<IEmail | null>(null);
+    const [emails, setEmails] = useState<EmailWithFiles[]>([])
+    const [selectedEmail, setSelectedEmail] = useState<EmailWithFiles | null>(null);
     const { user } = useUserContext()
 
     useEffect(() => {
+        if(!user) return
+
         const wait = async() => {
-            let fetch = await emailService.getEmail(user!.id.toString())
-            setEmails(fetch)
+            const results : EmailWithFiles[] = []
+
+            let fetch = await emailService.getUserEmail(user!.id.toString())
+            for(const f of fetch) {
+                let emailDetails = await emailService.getEmailDetail(f.id.toString())
+                let file: object[] = emailDetails[2] as object[]
+                console.log(file)
+                results.push({
+                    email: f,
+                    files: file.map(({ file_name, file_path }) => ({file_name, file_path}))
+                })
+            }
+
+            setEmails(results)
         }
         wait()
     }, [user])
+
+    useEffect(() => {
+        console.log("Selected email: ")
+        console.log(selectedEmail)
+    }, [selectedEmail]) 
     
     return (
         <Template>
@@ -32,13 +57,13 @@ const Mail: React.FC = () => {
                             <ul className="text-white">
                                 {emails.map(email => (
                                     <li
-                                        key={email.id}
+                                        key={email.email.id}
                                         className="mb-4 hover:bg-gray-600 p-4 rounded border border-gray-500 cursor-pointer"
-                                        onClick={() => setSelectedEmail(email)}
+                                        onClick={() => {setSelectedEmail(email)}}
                                     >
-                                        <div className="font-bold">{email.sender}</div>
-                                        <div className="text-sm">{email.title}</div>
-                                        <div className="text-xs text-gray-400">{email.description}</div>
+                                        <div className="font-bold">{email.email.sender}</div>
+                                        <div className="text-sm">{email.email.title}</div>
+                                        <div className="text-xs text-gray-400">{email.email.description}</div>
                                     </li>
                                 ))}
                             </ul>
@@ -47,9 +72,9 @@ const Mail: React.FC = () => {
                             <div className="bg-gray-800 p-6 rounded-lg h-full shadow-inner overflow-y-auto">
                                 {selectedEmail ? (
                                     <div className="h-full flex flex-col items-start overflow-y-auto">
-                                        <h3 className="text-white text-xl">{selectedEmail.title}</h3>
-                                        <p className="text-white mt-4">{selectedEmail.content}</p>
-                                        <FileDownload className='m-4' fileUrl={selectedEmail.file_url} uploadedDate='123132' needPreview={false}></FileDownload>
+                                        <h3 className="text-white text-xl">{selectedEmail.email.title}</h3>
+                                        <p className="text-white mt-4">{selectedEmail.email.content}</p>
+                                        <FileDownload className='m-4' fileUrl={selectedEmail.files[0].file_path} uploadedDate='123132' needPreview={false}></FileDownload>
                                     </div>
                                 ) : (
                                     <p className="text-white">Select an email to read</p>
