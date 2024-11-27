@@ -9,6 +9,8 @@ import { useUserContext } from "../context/user-context";
 import { uploadFileFromUser } from "../service/file-service";
 import { ICreateEmailData, IFileData } from "../interfaces/create-email";
 import { EmailService } from "../service/email-service";
+import { AiOutlineConsoleSql } from "react-icons/ai";
+import Alert from "../components/elements/alerts/alert";
 
 interface UploadedFile {
     file: File;
@@ -21,10 +23,12 @@ const Upload = () => {
     const { user } = useUserContext();
     const [ description, setDescription ] = useState("")
     const [ message, setMessage ] = useState("")
+    const [alert, setAlert] = useState<{ show: boolean, title: string, desc: string, type: "success" | "error" | "warning" | "info" }>({ show: false, title: "", desc: "", type: "info" });
+    const [isClosing, setIsClosing] = useState(false);
     
     const selectedFilesRef = useRef<UploadedFile[]>(selectedFiles);
     const userRef = useRef<IUser | null>(user)
-    const sentUsers: IUser[] = []
+    const sendRef = useRef<IUser[]>([])
     const descRef = useRef(description)
     const msgRef = useRef(message)
 
@@ -41,7 +45,8 @@ const Upload = () => {
     }, [user, description, message])
 
     const handleUserClick = (user: IUser) => {
-        sentUsers.push(user)
+        console.log("click")
+        sendRef.current.push(user)
     };
 
     const handleFilesUploaded = (files: UploadedFile[]) => {
@@ -57,32 +62,53 @@ const Upload = () => {
     }
 
     const handleSendButton = async () => {
-        const filePaths: String[] = []
-
-        for (const file of selectedFilesRef.current) {
-            let path = await uploadFileFromUser(userRef.current!.id.toString(), file.file)
-            filePaths.push(path)
+        if (!descRef.current || !msgRef.current || sendRef.current.length === 0 || selectedFilesRef.current.length === 0) {
+            setAlert({ show: true, title: "Warning", desc: "All fields are required", type: "warning" });
+            return;
         }
 
-        const fileMapping: IFileData[] = []
-        for(let i=0; i<selectedFilesRef.current.length; i++) {
-            const obj: IFileData = {
-                file_name: selectedFilesRef.current[i].file.name,
-                file_path: filePaths[i] as string
+        try {
+            const filePaths: String[] = []
+
+            for (const file of selectedFilesRef.current) {
+                let path = await uploadFileFromUser(userRef.current!.id.toString(), file.file)
+                filePaths.push(path)
             }
-            fileMapping.push(obj)
-        }
 
-        const emailData: ICreateEmailData = {
-            title: descRef.current,
-            description: msgRef.current,
-            files: fileMapping,
-            sender_id: userRef.current!.id,
-            receivers: sentUsers.map(obj => obj.id)
-        }
+            const fileMapping: IFileData[] = []
+            for(let i=0; i<selectedFilesRef.current.length; i++) {
+                const obj: IFileData = {
+                    file_name: selectedFilesRef.current[i].file.name,
+                    file_path: filePaths[i] as string
+                }
+                fileMapping.push(obj)
+            }
 
-        await emailService.createEmail(emailData)
-    }
+            const emailData: ICreateEmailData = {
+                title: descRef.current,
+                description: msgRef.current,
+                files: fileMapping,
+                sender_id: userRef.current!.id,
+                receivers: sendRef.current.map(obj => obj.id)
+            }
+
+            await emailService.createEmail(emailData);
+            setAlert({ show: true, title: "Success", desc: "Email sent successfully", type: "success" });
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } catch (error) {
+            setAlert({ show: true, title: "Error", desc: "Failed to send email", type: "error" });
+        }
+    };
+
+    const closeAlert = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setAlert({ ...alert, show: false });
+            setIsClosing(false);
+        }, 400);
+    };
 
     const { startUploading } = useFileUpload(handleFilesUploaded);
 
@@ -119,6 +145,14 @@ const Upload = () => {
                     <button onClick={handleSendButton} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
                 </div>
             </div>
+            <Alert
+                title={alert.title}
+                desc={alert.desc}
+                type={alert.type}
+                showAlert={alert.show}
+                closeAlert={closeAlert}
+                isClosing={isClosing}
+            />
         </Template>
     )
 }

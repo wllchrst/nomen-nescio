@@ -29,18 +29,19 @@ impl EmailQuery {
     }
 
     pub async fn get_user_email(db: &DbConn, user_id: i32) -> Result<Vec<email::Model>, DbErr> {
-        // Join `receiver` with `email` to filter by user_id
-        let emails = email::Entity::find()
-            .join(
-                JoinType::InnerJoin,
-                receiver::Entity::belongs_to(email::Entity)
-                    .from(receiver::Column::EmailId)
-                    .to(email::Column::Id)
-                    .into(),
-            )
-            .filter(receiver::Column::UserId.eq(user_id))
-            .all(db)
-            .await?;
+            // Write the raw SQL query
+        let sql = "SELECT email.* FROM email INNER JOIN receiver ON receiver.email_id = email.id WHERE receiver.user_id = $1";
+
+        let emails: Vec<email::Model> = db
+            .query_all(Statement::from_sql_and_values(
+                sea_orm::DatabaseBackend::Postgres, 
+                sql,
+                vec![user_id.into()],
+            ))
+            .await?
+            .into_iter()
+            .map(|result| email::Model::from_query_result(&result, "").unwrap())
+            .collect();
 
         Ok(emails)
     }

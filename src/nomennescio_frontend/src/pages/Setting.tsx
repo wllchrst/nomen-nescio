@@ -41,7 +41,7 @@ const Setting: React.FC = () => {
         if (profilePic && croppedAreaPixels) {
             const croppedImage = await getCroppedImg(URL.createObjectURL(profilePic), croppedAreaPixels);
             setCroppedImage(croppedImage);
-            setIsProfilePicModalOpen(false);
+        setIsProfilePicModalOpen(false);
         }
     };
 

@@ -25,12 +25,9 @@ export class Service {
 
   async get<T>(url: string, data: any = null) {
     try {
-      console.log(data);
       const response = await axios.get<T>(`${this.backendUrl}${url}`, data);
-      console.log(response.data);
       return response.data;
     } catch (error) {
-      console.error(error);
       return null;
     }
   }

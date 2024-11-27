@@ -12,6 +12,9 @@ import { GroupService } from '../service/group-service';
 import { ICreateGroup } from '../interfaces/create-group-interface';
 import { UserService } from '../service/user-service';
 import { IUser } from '../interfaces/user-interface';
+import useProfileSource from '../hooks/use-get-profile-source';
+import { useNavigate } from 'react-router-dom';
+import useGetCurrentUser from '../hooks/use-get-current-user';
 
 const Group = () => {
     const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -44,6 +47,8 @@ const Group = () => {
     } = useGroup();
 
     const users = useFetchUsers();
+    // const currentUser = useGetCurrentUser();
+    // console.log("current user", currentUser);
     const groups = [
         {
             id: 'dev-team',
@@ -93,6 +98,7 @@ const Group = () => {
             ],
         },
     ];
+    const navigate = useNavigate();
 
     const handleCreateGroupSubmit = async (e) => {
         e.preventDefault();
@@ -103,6 +109,7 @@ const Group = () => {
             console.error("Current user not found");
             return;
         }
+
 
         const data: ICreateGroup = {
             name: newGroupName,
@@ -128,6 +135,7 @@ const Group = () => {
             console.log("gagal king " + data);
         }
     };
+
 
     const handleAddMember = (member: IUser) => {
         setNewGroupMembers((prevMembers) => [...prevMembers, member]);
@@ -160,9 +168,9 @@ const Group = () => {
                                 {group.members.map(member => (
                                     <img
                                         key={member.id}
-                                        src={member.profilePicture || 'https://via.placeholder.com/50'}
+                                        src={useProfileSource(member.profilePicture) || useProfileSource("dummy_profile.png")}
                                         alt={`${member.name}'s profile`}
-                                        className="w-12 h-12 rounded-full border-2 border-gray-800"
+                                        className="w-11 h-11 rounded-full border-2 border-gray-800"
                                     />
                                 ))}
                             </div>
@@ -171,10 +179,7 @@ const Group = () => {
                             </div>
                             <button
                                 className="bg-gray-700 m-4 p-4 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 flex items-center group"
-                                onClick={() => {
-                                    setSelectedGroupId(group.id);
-                                    openUploadModal();
-                                }}
+                                onClick={() => navigate("/upload")}
                             >
                                 <AiOutlinePlus className="group-hover:rotate-180 transform transition-transform duration-300" />
                             </button>
@@ -185,7 +190,7 @@ const Group = () => {
                                     <li key={member.id} className="mb-2 flex items-center">
                                         <div className="bg-gray-700 p-2 rounded-full mr-2">
                                             <img
-                                                src={member.profilePicture || 'https://via.placeholder.com/50'}
+                                                src={member.profilePicture || 'dummy_profile.png'}
                                                 alt={`${member.name}'s profile`}
                                                 className="w-12 h-12 rounded-full"
                                             />
@@ -198,7 +203,7 @@ const Group = () => {
                             </ul>
                         </div>
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {group.files.map(file => (
+                            {/* {group.files.map(file => (
                                 <div key={file.fileUrl} className="flex-grow cursor-pointer" onClick={() => handleFileClick(file.fileUrl)}>
                                     <FileDownload
                                         fileUrl={file.fileUrl}
@@ -211,7 +216,7 @@ const Group = () => {
                                         onDelete={() => handleDeleteFile(file.fileUrl)}
                                     />
                                 </div>
-                            ))}
+                            ))} */}
                         </div>
                     </div>
                 ))}
@@ -250,7 +255,7 @@ const Group = () => {
                                         <div className="flex items-center">
                                             <img
                                             // ini nanti pas ada profile pic jangan lupa diganti
-                                                src={'https://via.placeholder.com/50'}
+                                                src={member.profilePicture || 'dummy_profile.png'}
                                                 className="w-8 h-8 rounded-full mr-2"
                                             />
                                             {member.name}
@@ -292,7 +297,7 @@ const Group = () => {
                                     <div className="flex items-center">
                                         <img
                                             // jangan lupa user.profilePicture
-                                            src={'https://via.placeholder.com/50'}
+                                            src={user.profilePicture || 'dummy_profile.png'}
                                             alt={`${user.name}'s profile`}
                                             className="w-8 h-8 rounded-full mr-2"
                                         />
