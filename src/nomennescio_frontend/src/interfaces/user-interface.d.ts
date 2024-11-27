@@ -1,10 +1,10 @@
 export interface IUser {
-  id: number;
-  name: string;
   email: string;
+  name: string;
   password: string;
-  created_at: Date;
   signature_file_path: string;
+  profile_picture_path: string | null;
+  secret_key: string;
 }
 // pub struct Model {
 //     #[sea_orm(primary_key)]

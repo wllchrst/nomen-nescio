@@ -160,8 +160,8 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
                     <div className="bg-gray-800 text-white rounded-md shadow-md w-40 p-2">
                         <DropdownValue text="Open File" onClick={handleOpenFile} icon={<AiOutlineFile />} />
                         <DropdownValue text="Download File" onClick={handleDownloadFile} icon={<AiOutlineDownload />} />
-                        <DropdownValue text="Rename File" onClick={() => setIsRenameModalOpen(true)} icon={<AiOutlineEdit />} />
-                        <DropdownValue text="Delete File" onClick={() => setIsDeleteModalOpen(true)} icon={<AiOutlineDelete />} />
+                        {/* <DropdownValue text="Rename File" onClick={() => setIsRenameModalOpen(true)} icon={<AiOutlineEdit />} />
+                        <DropdownValue text="Delete File" onClick={() => setIsDeleteModalOpen(true)} icon={<AiOutlineDelete />} /> */}
                         <DropdownValue text="Share File" onClick={() => onShare?.(fileUrl)} icon={<AiOutlineShareAlt />} />
                     </div>
                 </div>

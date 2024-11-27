@@ -77,15 +77,17 @@ const Mail: React.FC = () => {
                                     <div className="h-full flex flex-col items-start overflow-y-auto">
                                         <h3 className="text-white text-xl">Title {selectedEmail.email.title}</h3>
                                         <p className="text-white mt-4">Content {selectedEmail.email.description}</p>
-                                        {selectedEmail.files.map((file, index) => (
-                                            <FileDownload
-                                                key={index}
-                                                className='m-4'
-                                                fileUrl={file.file_path}
-                                                uploadedDate='123132'
-                                                needPreview={false}
-                                            />
-                                        ))}
+                                        <div className="grid grid-cols-2 gap-4 mt-4">
+                                            {selectedEmail.files.map((file, index) => (
+                                                <FileDownload
+                                                    key={index}
+                                                    className='w-80'
+                                                    fileUrl={file.file_path}
+                                                    uploadedDate='123132'
+                                                    needPreview={false}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 ) : (
                                     <p className="text-white">Select an email to read</p>

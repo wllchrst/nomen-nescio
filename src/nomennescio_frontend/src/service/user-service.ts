@@ -42,7 +42,7 @@ export class UserService extends Service {
 
   async getUserInformation(id: string) {
     const result = await this.get<IResponse<IUser>>(`/user/${id}`);
-
+    console.log("WAIT AWGAUWGUDA")
     return result;
   }
 
