@@ -6,8 +6,8 @@ use rocket::serde::json::Json;
 use rocket::State;
 use sea_orm::{DatabaseConnection, DbErr};
 use serde_json::{json, Value};
-use uuid::Uuid;
 use service::user::{UserMutation, UserQuery};
+use uuid::Uuid;
 
 #[post("/user", data = "<input>")]
 pub async fn create_user(
@@ -16,7 +16,10 @@ pub async fn create_user(
 ) -> Json<Value> {
     let data = input.into_inner();
 
-    print!("{} {} {} {} ", data.email, data.name, data.password, data.signature_file_path);
+    print!(
+        "{} {} {} {} ",
+        data.email, data.name, data.password, data.signature_file_path
+    );
 
     let user_data = user::Model {
         email: data.email,
@@ -26,6 +29,7 @@ pub async fn create_user(
         id: 0,
         signature_file_path: data.signature_file_path,
         secret_key: Uuid::new_v4().to_string(),
+        profile_picture_path: data.profile_picture_path,
     };
 
     let result = UserMutation::create_user(&database, user_data).await;
@@ -103,6 +107,55 @@ pub async fn handle_login(
             }
         }
     }
+
+    Json(json!(response))
+}
+
+#[put("/user/<id>", data = "<input>")]
+pub async fn update_user(
+    database: &State<DatabaseConnection>,
+    input: Json<CreateUserData>,
+    id: String,
+) -> Json<Value> {
+    let user_id: i32 = match id.parse::<i32>() {
+        Ok(parsed_id) => parsed_id,
+        Err(_) => {
+            return Json(json!(Response::<Option<user::Model>> {
+                data: None,
+                message: "Invalid user ID".to_string(),
+                success: false,
+            }));
+        }
+    };
+
+    let data = input.into_inner();
+
+    let user_data = user::Model {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        created_at: Utc::now().naive_utc(),
+        id: 0,
+        signature_file_path: data.signature_file_path,
+        profile_picture_path: data.profile_picture_path,
+        secret_key: Uuid::new_v4().to_string(),
+    };
+
+    let result: Result<user::ActiveModel, DbErr> =
+        UserMutation::update_user_data(database, user_data, user_id).await;
+
+    let response = match result {
+        Ok(updated_user) => Response {
+            data: true,
+            success: true,
+            message: "Success updating user".to_string(),
+        },
+        Err(e) => Response {
+            data: false,
+            success: false,
+            message: format!("Failed to update user: {}", e),
+        },
+    };
 
     Json(json!(response))
 }

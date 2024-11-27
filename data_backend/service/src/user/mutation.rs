@@ -40,6 +40,7 @@ impl UserMutation {
             password: Set(user_data.password.to_owned()),
             signature_file_path: Set(user_data.signature_file_path.to_owned()),
             secret_key: Set(user_data.secret_key.to_owned()),
+            profile_picture_path: Set(user_data.profile_picture_path.to_owned()),
             created_at: user.created_at,
         }
         .save(db)
