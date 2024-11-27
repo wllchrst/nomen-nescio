@@ -5,7 +5,7 @@ import Register from "./pages/authentication/Register";
 import Home from "./pages/Home";
 import MainLayout from "./layouts/main-layout";
 import Storage from "./pages/Storage";
-import Upload from "./pages/Upload";
+import Upload from "./pages/upload";
 import Setting from "./pages/Setting";
 import ProviderLayout from "./layouts/provider-layout";
 import Group from "./pages/Group";

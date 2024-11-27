@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
 
-export const useFileActions = () => {
+export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
     const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
     const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
-    const [pendingAction, setPendingAction] = useState<() => void>(() => {});
+    const [pendingAction, setPendingAction] = useState<() => void>(() => { });
+    const [signatureFile, setSignatureFile] = useState<File | null>(null);
 
     const handleDoubleClick = () => {
-        setIsModalOpen(true);
+        handleOpenFile();
     };
+
+    const handleOpenFile = () => {
+        handleOpenSignatureModal(() => {
+            let success = validateSignature();
+            if (success) {
+                setIsModalOpen(true);
+            }
+        });
+    }
 
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -33,21 +43,47 @@ export const useFileActions = () => {
         };
     }, []);
 
-    const handleThreeDotsClick = (e: React.MouseEvent) => { 
-        e.preventDefault();
-        setIsContextMenuVisible(true);
-        setContextMenu({ x: e.clientX, y: e.clientY });
-        console.log("asdasd")
-    }
-
     const handleOpenSignatureModal = (action: () => void) => {
         setPendingAction(() => action);
         setIsSignatureModalOpen(true);
     };
 
     const handleConfirmSignature = () => {
-        pendingAction();
+        if (typeof pendingAction === 'function') {
+            pendingAction();
+        }
         setIsSignatureModalOpen(false);
+    };
+
+    const validateSignature = () => {
+        // Validasinya disni 
+
+
+        return true;
+    }
+
+    const handleDownloadFile = () => {
+        handleOpenSignatureModal(() => {
+            let success = validateSignature();
+            if (success) {
+                const link = document.createElement('a');
+                link.href = fileUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+    };
+
+    const handleDelete = () => {
+        onDelete?.();
+        setIsDeleteModalOpen(false);
+    };
+
+    const handleRename = (newName: string) => {
+        onRename?.(newName);
+        setIsRenameModalOpen(false);
     };
 
     return {
@@ -63,10 +99,15 @@ export const useFileActions = () => {
         setIsDeleteModalOpen,
         isRenameModalOpen,
         setIsRenameModalOpen,
-        handleThreeDotsClick,
         isSignatureModalOpen,
         setIsSignatureModalOpen,
         handleOpenSignatureModal,
-        handleConfirmSignature
+        handleConfirmSignature,
+        handleOpenFile,
+        handleDownloadFile,
+        handleDelete,
+        handleRename,
+        signatureFile,
+        setSignatureFile
     };
 };

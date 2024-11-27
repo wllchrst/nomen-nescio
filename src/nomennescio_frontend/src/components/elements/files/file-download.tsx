@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
     faFile,
     faFileImage,
@@ -6,18 +6,15 @@ import {
     faFilePdf,
     faFileWord,
     faEyeSlash,
-    faEllipsisV,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DropdownValue from '../dropdowns/dropdown-value';
 import DeleteModal from '../modals/delete-modal';
 import RenameModal from '../modals/rename-modal';
 import FilePreview from './file-preview';
+import DrawableCanvas from '../canvas/drawable-canvas';
+import { AiOutlineFile, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
 import { useFileActions } from '../../../hooks/use-file-action';
-import DrawableCanvas from '../canvas/drawable-canvas'; 
-import Modal from '../modals/modal';
-import Search from '../search/search';
-import { AiOutlineClose, AiOutlineUserAdd, AiOutlineFile, AiOutlineDownload, AiOutlineEdit, AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai'; // Import the necessary icons
 
 interface FileDownloadProps {
     fileUrl: string;
@@ -31,55 +28,33 @@ interface FileDownloadProps {
 }
 
 const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, profileUrl, onRename, onDelete, onShare, className, needPreview = true }) => {
+    const fileName = fileUrl.split('/').pop() || 'Unnamed File';
+    const fileExtension = fileName.split('.').pop()?.toLowerCase();
+
     const {
         isModalOpen,
         setIsModalOpen,
+        contextMenu,
         isContextMenuVisible,
-        setIsContextMenuVisible, 
+        setIsContextMenuVisible,
         handleDoubleClick,
+        handleRightClick,
         handleCloseContextMenu,
         isDeleteModalOpen,
         setIsDeleteModalOpen,
         isRenameModalOpen,
         setIsRenameModalOpen,
         isSignatureModalOpen,
+        setIsSignatureModalOpen,
         handleOpenSignatureModal,
         handleConfirmSignature,
-        setIsSignatureModalOpen 
-    } = useFileActions();
-
-    const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
-    const [signatureFile, setSignatureFile] = useState<File | null>(null);
-
-    const fileName = fileUrl.split('/').pop() || 'Unnamed File';
-    const fileExtension = fileName.split('.').pop()?.toLowerCase();
-
-    const handleDownloadFile = () => {
-        handleOpenSignatureModal(() => {
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-    };
-
-    const handleOpenFile = () => {
-        handleOpenSignatureModal(() => {
-            window.open(fileUrl, '_blank');
-        });
-    };
-
-    const handleDelete = () => {
-        onDelete?.();
-        setIsDeleteModalOpen(false);
-    };
-
-    const handleRename = (newName: string) => {
-        onRename?.(newName);
-        setIsRenameModalOpen(false);
-    };
+        handleOpenFile,
+        handleDownloadFile,
+        handleDelete,
+        handleRename,
+        signatureFile,
+        setSignatureFile
+    } = useFileActions(fileUrl, fileName, onRename, onDelete);
 
     const getFileIcon = () => {
         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension || '')) {
@@ -132,24 +107,6 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         }
     };
 
-    const handleContextMenu = (event: React.MouseEvent) => {
-        event.preventDefault();
-        const { clientX: x, clientY: y } = event;
-        setIsContextMenuVisible(true);
-        setContextMenu({ x, y });
-    };
-
-    const handlePreviewClick = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleThreeDotsClick = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        const { clientX: x, clientY: y } = event;
-        setIsContextMenuVisible(true);
-        setContextMenu({ x, y });
-    };
-
     const handleModalClick = (event: React.MouseEvent) => {
         event.stopPropagation();
     };
@@ -158,31 +115,12 @@ const FileDownload: React.FC<FileDownloadProps> = ({ fileUrl, uploadedDate, prof
         setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        const handleOutsideClick = (event: MouseEvent) => {
-            const modal = document.querySelector('.modal-content');
-            if (modal && !modal.contains(event.target as Node)) {
-                setIsModalOpen(false);
-            }
-        };
-
-        if (isModalOpen) {
-            document.addEventListener('click', handleOutsideClick);
-        } else {
-            document.removeEventListener('click', handleOutsideClick);
-        }
-
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-        };
-    }, [isModalOpen]);
-
     const containerClass = needPreview 
         ? `bg-gray-900 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 h-full ${className}`
         : `bg-gray-900 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
 
     return (
-        <div className={containerClass} onContextMenu={handleContextMenu} onDoubleClick={handleDoubleClick}>
+        <div className={containerClass} onContextMenu={handleRightClick} onDoubleClick={handleDoubleClick}>
             <div className={`flex ${needPreview ? 'flex-col' : 'flex-row'} items-center justify-between w-full`}>
                 <div className="flex items-center">
                     {getFileIcon()}

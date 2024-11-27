@@ -22,7 +22,6 @@ const Upload = () => {
     const [ description, setDescription ] = useState("")
     const [ message, setMessage ] = useState("")
     
-    // Reference for to solve state async problem
     const selectedFilesRef = useRef<UploadedFile[]>(selectedFiles);
     const userRef = useRef<IUser | null>(user)
     const sentUsers: IUser[] = []
