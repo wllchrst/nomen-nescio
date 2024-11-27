@@ -6,4 +6,5 @@ pub struct CreateUserData {
     pub email: String,
     pub password: String,
     pub signature_file_path: String,
+    pub profile_picture_path: Option<String>,
 }
