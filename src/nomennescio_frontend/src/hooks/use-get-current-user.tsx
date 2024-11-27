@@ -15,12 +15,15 @@ const useGetCurrentUser = () => {
             const user = await userService.getCurrentUser();
 
             if (!user?.profile_picture_path || user.profile_picture_path.trim() === '') {
-                user.profile_picture_path = 'dummy_profile.png';
+                user.profile_picture_path = 'http://localhost:8000/storage/profile/dummy_profile.png';
             }
 
-            const processedProfilePic = useProfileSource(user.profile_picture_path);
-            setProfilePic(processedProfilePic);
+            const processedProfilePic = user?.profile_picture_path;
+            // const processedProfilePic = useProfileSource(user.profile_picture_path);
+            // setProfilePic(processedProfilePic);
 
+
+            // console.log("hasil yang udah diconvert", processedProfilePic)
             setCurrentUser({
                 ...user,
                 profile_picture_path: processedProfilePic,
