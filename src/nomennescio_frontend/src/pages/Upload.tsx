@@ -9,6 +9,7 @@ import { useUserContext } from "../context/user-context";
 import { uploadFileFromUser } from "../service/file-service";
 import { ICreateEmailData, IFileData } from "../interfaces/create-email";
 import { EmailService } from "../service/email-service";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 interface UploadedFile {
     file: File;
@@ -24,7 +25,7 @@ const Upload = () => {
     
     const selectedFilesRef = useRef<UploadedFile[]>(selectedFiles);
     const userRef = useRef<IUser | null>(user)
-    const sentUsers: IUser[] = []
+    const sendRef = useRef<IUser[]>([])
     const descRef = useRef(description)
     const msgRef = useRef(message)
 
@@ -41,7 +42,8 @@ const Upload = () => {
     }, [user, description, message])
 
     const handleUserClick = (user: IUser) => {
-        sentUsers.push(user)
+        console.log("click")
+        sendRef.current.push(user)
     };
 
     const handleFilesUploaded = (files: UploadedFile[]) => {
@@ -78,7 +80,7 @@ const Upload = () => {
             description: msgRef.current,
             files: fileMapping,
             sender_id: userRef.current!.id,
-            receivers: sentUsers.map(obj => obj.id)
+            receivers: sendRef.current.map(obj => obj.id)
         }
 
         await emailService.createEmail(emailData)
