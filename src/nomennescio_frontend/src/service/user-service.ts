@@ -28,7 +28,7 @@ export class UserService extends Service {
     console.log(result)
 
     if (result.success && result.data.email != "") {
-      Cookie.set("user", result.data.id);
+      Cookie.set("user", result.data.id.toString());
       return result.data;
     }
 
