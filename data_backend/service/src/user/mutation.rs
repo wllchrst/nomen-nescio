@@ -36,7 +36,7 @@ impl UserMutation {
         user::ActiveModel {
             id: user.id,
             email: Set(user_data.email.to_owned()),
-            name: Set(user_data.email.to_owned()),
+            name: Set(user_data.name.to_owned()),
             password: Set(user_data.password.to_owned()),
             signature_file_path: Set(user_data.signature_file_path.to_owned()),
             secret_key: Set(user_data.secret_key.to_owned()),
