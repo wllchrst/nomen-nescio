@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai'; 
 import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
 import Modal from '../components/elements/modals/modal'; 
 import Cropper from 'react-easy-crop'; 
 import getCroppedImg from '../utils/cropImage';
+import useGetCurrentUser from '../hooks/use-get-current-user';
+import { UserService } from '../service/user-service';
+import Alert from '../components/elements/alerts/alert';
 
 const tabs = ['Profile', 'Signature', 'General'];
 
 const Setting: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState('Profile');
     const [profilePic, setProfilePic] = useState<File | null>(null);
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
     const [isProfilePicModalOpen, setIsProfilePicModalOpen] = useState(false); 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const userService = new UserService();
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertConfig, setAlertConfig] = useState({
+        title: '',
+        desc: '',
+        type: 'info' as 'success' | 'error' | 'warning' | 'info'
+    });
+    const [isAlertClosing, setIsAlertClosing] = useState(false);
+
+    const currentUser = useGetCurrentUser();
+    console.log("INI CURRENT USER" , currentUser);
 
     const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -45,6 +57,66 @@ const Setting: React.FC = () => {
         }
     };
 
+    const handleSaveProfile = async () => {
+        if (!currentUser) return;
+
+        if (name === currentUser.name && 
+            email === currentUser.email && 
+            !croppedImage) {
+            setAlertConfig({
+                title: 'Warning',
+                desc: 'No changes detected',
+                type: 'warning'
+            });
+            setShowAlert(true);
+            return;
+        }
+
+        const updatedUser = {
+            email: email || currentUser.email,
+            name: name || currentUser.name,
+            password: currentUser.password,
+            signature_file_path: currentUser.signature_file_path,
+            profile_picture_path: croppedImage || currentUser.profile_picture_path,
+            secret_key: currentUser.secret_key
+        };
+
+        console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEE", updatedUser, "USER ID ", userService.getUserIdFromCookie());
+        try {
+            await userService.updateUser(updatedUser, parseInt(userService.getUserIdFromCookie()));
+            setAlertConfig({
+                title: 'Success',
+                desc: 'Profile updated successfully',
+                type: 'success'
+            });
+            setShowAlert(true);
+            window.location.reload();
+        } catch (error) {
+            setAlertConfig({
+                title: 'Error',
+                desc: 'Failed to update profile',
+                type: 'error'
+            });
+            setShowAlert(true);
+            console.error('Failed to update profile:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser) {
+            setName(currentUser.name);
+            setEmail(currentUser.email);
+        }
+    }, [currentUser]);
+
+    const closeAlert = () => {
+        setIsAlertClosing(true);
+        setTimeout(() => {
+            setShowAlert(false);
+            setIsAlertClosing(false);
+        }, 300);
+    };
+
     const renderContent = () => {
         switch (selectedTab) {
             case 'Profile':
@@ -59,8 +131,8 @@ const Setting: React.FC = () => {
                                     className="w-48 h-48 rounded-full mb-4 object-cover"
                                 />
                             ) : (
-                                <div className="w-48 h-48 rounded-full mb-4 bg-gray-700 flex items-center justify-center text-gray-400">
-                                    No Image
+                                <div className=" rounded-full mb-4 flex items-center justify-center text-gray-400">
+                                    <img src={currentUser?.profile_picture_path} alt="" />
                                 </div>
                             )}
                             <button
@@ -71,20 +143,12 @@ const Setting: React.FC = () => {
                             </button>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-white mb-2">Name</label>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="mb-4">
                             <label className="block text-white mb-2">Username</label>
                             <input
                                 type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder={currentUser?.name}
+                                value={currentUser?.name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -92,19 +156,19 @@ const Setting: React.FC = () => {
                             <label className="block text-white mb-2">Email</label>
                             <input
                                 type="email"
-                                value={email}
+                                placeholder={currentUser?.email}
+                                value={currentUser?.email}  
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-white mb-2">Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                        <div className="mt-4">
+                            <button
+                                onClick={handleSaveProfile}
+                                className="w-full p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                Save Changes
+                            </button>
                         </div>
                     </div>
                 );
@@ -142,6 +206,14 @@ const Setting: React.FC = () => {
 
     return (
         <div className="w-full h-screen bg-gray-900 text-white flex">
+            <Alert
+                title={alertConfig.title}
+                desc={alertConfig.desc}
+                type={alertConfig.type}
+                showAlert={showAlert}
+                closeAlert={closeAlert}
+                isClosing={isAlertClosing}
+            />
             <div className="w-1/4 bg-gray-800 p-4 rounded-lg h-full">
                 <button className="flex items-center text-white mb-4" onClick={() => window.history.back()}>
                     <AiOutlineArrowLeft className="mr-2" />
