@@ -19,19 +19,19 @@ const Mail: React.FC = () => {
     const { user } = useUserContext()
 
     useEffect(() => {
-        if(!user) return
+        if (!user) return
 
-        const wait = async() => {
-            const results : EmailWithFiles[] = []
+        const wait = async () => {
+            const results: EmailWithFiles[] = []
 
             let fetch = await emailService.getUserEmail(user!.id.toString())
-            for(const f of fetch) {
+            for (const f of fetch) {
                 let emailDetails = await emailService.getEmailDetail(f.id.toString())
                 let file: object[] = emailDetails[2] as object[]
                 console.log(file)
                 results.push({
                     email: f,
-                    files: file.map(({ file_name, file_path }) => ({file_name, file_path}))
+                    files: file.map(({ file_name, file_path }) => ({ file_name, file_path }))
                 })
             }
 
@@ -43,8 +43,8 @@ const Mail: React.FC = () => {
     useEffect(() => {
         console.log("Selected email: ")
         console.log(selectedEmail)
-    }, [selectedEmail]) 
-    
+    }, [selectedEmail])
+
     return (
         <Template>
             <div className="flex w-full h-full p-6 bg-transparent">
@@ -59,7 +59,7 @@ const Mail: React.FC = () => {
                                     <li
                                         key={email.email.id}
                                         className="mb-4 hover:bg-gray-600 p-4 rounded border border-gray-500 cursor-pointer"
-                                        onClick={() => {setSelectedEmail(email)}}
+                                        onClick={() => { setSelectedEmail(email) }}
                                     >
                                         <div className="font-bold">{email.email.sender}</div>
                                         <div className="text-sm">{email.email.title}</div>

@@ -12,6 +12,7 @@ import { GroupService } from '../service/group-service';
 import { ICreateGroup } from '../interfaces/create-group-interface';
 import { UserService } from '../service/user-service';
 import { IUser } from '../interfaces/user-interface';
+import useProfileSource from '../hooks/use-get-profile-source';
 
 const Group = () => {
     const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -129,6 +130,7 @@ const Group = () => {
         }
     };
 
+
     const handleAddMember = (member: IUser) => {
         setNewGroupMembers((prevMembers) => [...prevMembers, member]);
     };
@@ -160,9 +162,9 @@ const Group = () => {
                                 {group.members.map(member => (
                                     <img
                                         key={member.id}
-                                        src={member.profilePicture || 'https://via.placeholder.com/50'}
+                                        src={useProfileSource(member.profilePicture) || useProfileSource("dummy_profile.png")}
                                         alt={`${member.name}'s profile`}
-                                        className="w-12 h-12 rounded-full border-2 border-gray-800"
+                                        className="w-11 h-11 rounded-full border-2 border-gray-800"
                                     />
                                 ))}
                             </div>
@@ -185,7 +187,7 @@ const Group = () => {
                                     <li key={member.id} className="mb-2 flex items-center">
                                         <div className="bg-gray-700 p-2 rounded-full mr-2">
                                             <img
-                                                src={member.profilePicture || 'https://via.placeholder.com/50'}
+                                                src={member.profilePicture || 'dummy_profile.png'}
                                                 alt={`${member.name}'s profile`}
                                                 className="w-12 h-12 rounded-full"
                                             />
@@ -250,7 +252,7 @@ const Group = () => {
                                         <div className="flex items-center">
                                             <img
                                             // ini nanti pas ada profile pic jangan lupa diganti
-                                                src={'https://via.placeholder.com/50'}
+                                                src={member.profilePicture || 'dummy_profile.png'}
                                                 className="w-8 h-8 rounded-full mr-2"
                                             />
                                             {member.name}
@@ -292,7 +294,7 @@ const Group = () => {
                                     <div className="flex items-center">
                                         <img
                                             // jangan lupa user.profilePicture
-                                            src={'https://via.placeholder.com/50'}
+                                            src={user.profilePicture || 'dummy_profile.png'}
                                             alt={`${user.name}'s profile`}
                                             className="w-8 h-8 rounded-full mr-2"
                                         />
