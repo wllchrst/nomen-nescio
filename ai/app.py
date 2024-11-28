@@ -8,7 +8,7 @@ import base64
 import matplotlib.pyplot as plt
 
 
-TRESH_HOLD = 0.45
+TRESH_HOLD = 0.5
 # Define ManhattanDistance layer (necessary for deserialization)
 class ManhattanDistance(tf.keras.layers.Layer):
     def call(self, inputs):
