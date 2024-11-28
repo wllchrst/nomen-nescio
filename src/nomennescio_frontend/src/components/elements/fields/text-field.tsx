@@ -38,7 +38,9 @@ const TextField: React.FC<TextFieldProps> = ({
 
   return (
     <div className="relative">
-      <Label text={title} className={clsx("text-sm", labelSize)} />
+      {title != "" && (
+        <Label text={title} className={clsx("text-sm", labelSize)} />
+      )}
       <input
         type="text"
         placeholder={placeholder}
