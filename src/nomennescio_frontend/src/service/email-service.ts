@@ -1,7 +1,9 @@
-import { ICreateEmailData } from "../interfaces/create-email";
+import { ICreateEmailData, IFileData } from "../interfaces/create-email";
 import { IEmail } from "../interfaces/email-interface";
 import { IPredictImage } from "../interfaces/predict-image";
 import { IResponse } from "../interfaces/response-interface";
+import { IUser } from "../interfaces/user-interface";
+import { uploadFileFromUser } from "./file-service";
 import { Service } from "./service";
 
 export class EmailService extends Service {
@@ -30,8 +32,17 @@ export class EmailService extends Service {
     return result.data;
   }
 
-  async compareSignature(predictData: IPredictImage) {
+  async compareSignature(user: IUser, file: File) {
+    const date = new Date();
+    const filePath = await uploadFileFromUser(date.toString(), file);
+    const predictData: IPredictImage = {
+      first_image_path: `./${filePath}`,
+      second_image_path: `./${user.signature_file_path}`,
+    };
+    console.log(predictData);
+
     const result = await this.post("/predict", predictData);
+    console.log(result);
     return result;
   }
 }

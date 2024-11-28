@@ -11,6 +11,7 @@ import { ICreateEmailData, IFileData } from "../interfaces/create-email";
 import { EmailService } from "../service/email-service";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 import Alert from "../components/elements/alerts/alert";
+import { UserService } from "../service/user-service";
 
 interface UploadedFile {
     file: File;
@@ -29,6 +30,7 @@ const Upload = () => {
     const userRef = useRef<IUser | null>(user)
     const sendRef = useRef<IUser[]>([])
     const descRef = useRef(description)
+    const userService = new UserService();
     const msgRef = useRef(message)
 
     const emailService = new EmailService()
@@ -87,7 +89,7 @@ const Upload = () => {
                 title: descRef.current,
                 description: msgRef.current,
                 files: fileMapping,
-                sender_id: userRef.current!.id,
+                sender_id: parseInt(userService.getUserIdFromCookie()),
                 receivers: sendRef.current.map(obj => obj.id)
             }
 
