@@ -2,6 +2,8 @@ import { AddGroupMemberData } from "./../interfaces/add-group-member.d";
 import { ICreateGroup } from "../interfaces/create-group-interface";
 import { Service } from "./service";
 import { IRegister } from "../interfaces/register-interface";
+import { IResponse } from "../interfaces/response-interface";
+import { IGroupData } from "../interfaces/group-interface";
 
 interface IGroup {
   id: number;
@@ -31,6 +33,13 @@ export class GroupService extends Service {
   async addGroupMember(data: AddGroupMemberData) {
     const result = await this.post<boolean>("/group-member", data);
     console.log("add Group Member", result);
+    return result;
+  }
+
+  async getUserGroup(userId: string) {
+    const result = await this.get<IResponse<IGroupData[]>>(
+      `/user/group/${userId}`
+    );
     return result;
   }
 
