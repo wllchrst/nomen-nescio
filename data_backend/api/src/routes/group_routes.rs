@@ -3,7 +3,7 @@ use crate::models::response::response::Response;
 use entity::{group, group_member};
 use rocket::serde::json::Json;
 use rocket::State;
-use sea_orm::DatabaseConnection;
+use sea_orm::{DatabaseConnection, DbErr};
 use serde_json::{json, Value};
 use service::group::{GroupMutation, GroupQuery};
 
@@ -26,7 +26,7 @@ pub async fn create_group(
         Ok(model) => Response {
             success: true,
             message: "Success creating group".to_string(),
-            data: Some(model), 
+            data: Some(model),
         },
         Err(error) => Response {
             success: false,
@@ -37,7 +37,6 @@ pub async fn create_group(
 
     Json(json!(response))
 }
-
 
 #[post("/group-member", data = "<input>")]
 pub async fn add_group_member(
@@ -71,6 +70,52 @@ pub async fn add_group_member(
             success: false,
             message: format!("Something went wrong creating the group {}", error),
             data: None,
+        },
+    };
+
+    Json(json!(response))
+}
+
+#[delete("/group_member/<gid>/<uid>")]
+pub async fn delete_group_member(
+    database: &State<DatabaseConnection>,
+    gid: String,
+    uid: String,
+) -> Json<Value> {
+    let group_id: i32 = match gid.parse::<i32>() {
+        Ok(parsed_id) => parsed_id,
+        Err(_) => {
+            return Json(json!(Response::<bool> {
+                data: false,
+                message: "Invalid user ID".to_string(),
+                success: false,
+            }));
+        }
+    };
+    let user_id: i32 = match uid.parse::<i32>() {
+        Ok(parsed_id) => parsed_id,
+        Err(_) => {
+            return Json(json!(Response::<bool> {
+                data: false,
+                message: "Invalid user ID".to_string(),
+                success: false,
+            }));
+        }
+    };
+
+    let result: Result<bool, DbErr> =
+        GroupMutation::remove_member(database, group_id, user_id).await;
+
+    let response = match result {
+        Ok(data) => Response {
+            data: data,
+            success: data,
+            message: "Delete Successful".to_string(),
+        },
+        Err(err) => Response {
+            data: false,
+            success: false,
+            message: format!("Something went wrong: {}", err.to_string()),
         },
     };
 
