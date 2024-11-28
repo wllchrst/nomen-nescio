@@ -73,7 +73,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           tempContext.drawImage(originalCanvas, 0, 0);
 
           const link = document.createElement("a");
-          link.href = tempCanvas.toDataURL("image/jpeg", 1.0);
+          link.href = tempCanvas.toDataURL("image/jpg", 1.0);
           link.download = "signature.jpg";
           link.click();
         }
@@ -86,12 +86,12 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
       const canvas = canvasRef.current as HTMLCanvasElement;
       canvas.toBlob((blob) => {
         if (blob) {
-          const file = new File([blob], "canvas_image.png", {
-            type: "image/png",
+          const file = new File([blob], "canvas_image.jpg", {
+            type: "image/jpg",
           });
           setFile(file);
         }
-      }, "image/png");
+      }, "image/jpg");
     }
     setFile(null);
   };
