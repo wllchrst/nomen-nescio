@@ -73,6 +73,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   const [isActive, setIsActive] = useState(false);
   const [hoveredUser, setHoveredUser] = useState<IUser | null>(null);
   const [hoveredGroup, setHoveredGroup] = useState<IGroupData | null>(null);
+  const [hoveredGroupMembers, setHoveredGroupMembers] = useState<IUser[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleItemClick = (item: SearchItem) => {
@@ -92,6 +93,16 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     ) {
       setIsActive(false);
     }
+  };
+
+  const handleGroupHover = (group: IGroupData) => {
+    setHoveredGroup(group);
+    setHoveredGroupMembers(group.members || []);
+  };
+
+  const handleGroupLeave = () => {
+    setHoveredGroup(null);
+    setHoveredGroupMembers([]);
   };
 
   useEffect(() => {
@@ -136,8 +147,8 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
             <div
               key={group.id}
               className="relative flex items-center bg-gray-800 rounded-full px-3 mr-2"
-              onMouseEnter={() => setHoveredGroup(group)}
-              onMouseLeave={() => setHoveredGroup(null)}
+              onMouseEnter={() => handleGroupHover(group)}
+              onMouseLeave={handleGroupLeave}
             >
               <FaUsers className="mr-2" />
               <span>{group.name}</span>
@@ -150,6 +161,16 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
               {hoveredGroup === group && (
                 <div className="absolute top-full mt-2 p-2 bg-gray-900 text-white rounded shadow-lg">
                   <p>{group.description}</p>
+                  {hoveredGroupMembers.length > 0 && (
+                    <div className="mt-2">
+                      <h4 className="text-gray-400">Members:</h4>
+                      <ul className="list-disc list-inside">
+                        {hoveredGroupMembers.map((member) => (
+                          <li key={member.id} className="text-gray-400">{member.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -278,6 +299,8 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
                   <div
                     key={group.id}
                     className="flex w-full items-center p-3 hover:bg-[#0d1117] transition-all duration-200 cursor-pointer"
+                    onMouseEnter={() => handleGroupHover(group)}
+                    onMouseLeave={handleGroupLeave}
                     onClick={() => {
                       handleGroupClick(group);
                       setIsActive(false);
@@ -287,6 +310,16 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
                     <div className="text-left flex-grow">
                       <p className="font-medium text-white">{group.name}</p>
                       <p className="text-sm text-gray-400">{group.description}</p>
+                      {hoveredGroup === group && hoveredGroupMembers.length > 0 && (
+                        <div className="mt-2">
+                          <h4 className="text-gray-400">Members:</h4>
+                          <ul className="list-disc list-inside">
+                            {hoveredGroupMembers.map((member) => (
+                              <li key={member.id} className="text-gray-400">{member.name}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}

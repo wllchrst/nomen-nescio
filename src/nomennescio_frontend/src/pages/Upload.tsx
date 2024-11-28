@@ -41,7 +41,6 @@ const Upload = () => {
     const [selectedGroup, setSelectedGroup] = useState<IGroupData | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const groupService = new GroupService();
-    const userService = new UserService();
 
     const emailService = new EmailService()
 

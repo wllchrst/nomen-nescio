@@ -23,6 +23,7 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchFor
     const [filteredGroups, setFilteredGroups] = useState<IGroupData[]>([]);
     const [allGroups, setAllGroups] = useState<IGroupData[]>([]);
     const [chosenGroups, setChosenGroups] = useState<IGroupData[]>([]);
+    const [hoveredGroupMembers, setHoveredGroupMembers] = useState<IGroupMember[]>([]);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     // Fetch all users and groups if searchForUser or searchForGroup is true
@@ -134,6 +135,18 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchFor
         setChosenGroups(chosenGroups.filter(g => g.id !== group.id));
     };
 
+    const handleGroupHover = async (group: IGroupData) => {
+        const groupService = new GroupService();
+        const result = await groupService.getGroupMembers(group.id);
+        if (result && result.success) {
+            setHoveredGroupMembers(result.data);
+        }
+    };
+
+    const handleGroupLeave = () => {
+        setHoveredGroupMembers([]);
+    };
+
     return {
         query,
         filteredResults,
@@ -148,6 +161,9 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchFor
         handleGroupClick,
         chosenGroups,
         handleRemoveGroup,
+        handleGroupHover,
+        handleGroupLeave,
+        hoveredGroupMembers,
     };
 };
 
