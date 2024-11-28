@@ -6,7 +6,7 @@ const useDrawableCanvas = (width: number, height: number) => {
     const [history, setHistory] = useState<ImageData[]>([]);
     const [isValid, setIsValid] = useState<boolean | null>(null);
     const [lineWidth, setLineWidthState] = useState(2);
-    const [lineColor, setLineColorState] = useState('#ffffff');
+    const [lineColor, setLineColorState] = useState('#000000');
 
     useEffect(() => {
         const canvas = canvasRef.current;

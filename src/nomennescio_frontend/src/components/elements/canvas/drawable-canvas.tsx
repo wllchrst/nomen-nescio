@@ -54,18 +54,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     };
   }, [handleKeyDown]);
 
-  const handleLineWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newLineWidth = parseInt(e.target.value, 10);
-    setLocalLineWidth(newLineWidth);
-    setLineWidth(newLineWidth);
-  };
-
-  const handleLineColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newLineColor = e.target.value;
-    setLocalLineColor(newLineColor);
-    setLineColor(newLineColor);
-  };
-
   const downloadCanvas = () => {
     if (canvasRef.current) {
       const originalCanvas = canvasRef.current as HTMLCanvasElement;
@@ -85,8 +73,8 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           tempContext.drawImage(originalCanvas, 0, 0);
 
           const link = document.createElement("a");
-          link.href = tempCanvas.toDataURL("image/png", 1.0);
-          link.download = "signature.png";
+          link.href = tempCanvas.toDataURL("image/jpeg", 1.0);
+          link.download = "signature.jpg";
           link.click();
         }
       }
@@ -127,25 +115,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
       <label className="text-base font-bold text-gray-300 mb-1 block">
         {text}
       </label>
-      {useCustomLine && (
-        <div className="flex items-center mb-2">
-          <label className="text-gray-300 mr-2">Line Width:</label>
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value={lineWidth}
-            onChange={handleLineWidthChange}
-            className="mr-4"
-          />
-          <label className="text-gray-300 mr-2">Line Color:</label>
-          <input
-            type="color"
-            value={lineColor}
-            onChange={handleLineColorChange}
-          />
-        </div>
-      )}
       <div
         className={`relative border rounded-md bg-white ${isValid === null
           ? "border-gray-600"
