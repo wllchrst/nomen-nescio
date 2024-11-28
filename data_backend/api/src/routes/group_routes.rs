@@ -5,7 +5,7 @@ use rocket::serde::json::Json;
 use rocket::State;
 use sea_orm::{DatabaseConnection, DbErr};
 use serde_json::{json, Value};
-use service::group::{GroupMutation, GroupQuery};
+use service::group::{GroupMutation, GroupQuery, IGroup};
 
 #[post("/group", data = "<input>")]
 pub async fn create_group(
@@ -172,8 +172,8 @@ pub async fn get_user_group(database: &State<DatabaseConnection>, id: String) ->
         }
     };
 
-    let result: Result<Vec<(group_member::Model, Option<group::Model>)>, sea_orm::DbErr> =
-        GroupQuery::get_user_groups(database, user_id).await;
+    let result: Result<Vec<IGroup>, DbErr> = 
+        GroupQuery::get_user_groups_with_members(database, user_id).await;
 
     let response = match result {
         Ok(users) if !users.is_empty() => Response {
