@@ -7,7 +7,7 @@ use sea_orm::{Database, DatabaseConnection};
 
 use crate::routes::{
     email_routes::{create_email, get_email_by_id, get_user_email},
-    file_routes::{upload_file, upload_signature},
+    file_routes::{upload_file, upload_signature, get_file, serve_file},
     group_routes::{add_group_member, create_group, get_group_by_id, get_user_group},
     image_routes::compare_image,
     test,
@@ -51,7 +51,9 @@ pub async fn start() -> Result<(), rocket::Error> {
                 get_email_by_id,
                 get_user_email,
                 update_user,
-                compare_image
+                compare_image,
+                get_file,
+                serve_file
             ],
         )
         .launch()
