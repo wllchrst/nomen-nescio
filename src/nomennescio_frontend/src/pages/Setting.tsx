@@ -16,7 +16,7 @@ const Setting: React.FC = () => {
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
     const [isProfilePicModalOpen, setIsProfilePicModalOpen] = useState(false); 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(0);
+    const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [name, setName] = useState('');
@@ -90,7 +90,11 @@ const Setting: React.FC = () => {
                 type: 'success'
             });
             setShowAlert(true);
-            window.location.reload();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+            
         } catch (error) {
             setAlertConfig({
                 title: 'Error',
@@ -123,7 +127,7 @@ const Setting: React.FC = () => {
                 return (
                     <div>
                         <h2 className="text-2xl font-semibold text-white mb-4">Profile Settings</h2>
-                        <div className="mb-4 flex flex-col items-center">
+                        <div className="mb-4 flex flex-col items-center rounded-full">
                             {croppedImage ? (
                                 <img
                                     src={croppedImage}
@@ -131,8 +135,8 @@ const Setting: React.FC = () => {
                                     className="w-48 h-48 rounded-full mb-4 object-cover"
                                 />
                             ) : (
-                                <div className=" rounded-full mb-4 flex items-center justify-center text-gray-400">
-                                    <img src={currentUser?.profile_picture_path} alt="" />
+                                <div className="rounded-full mb-4 flex items-center justify-center text-gray-400">
+                                    <img src={currentUser?.profile_picture_path} alt="" className='rounded-full'/>
                                 </div>
                             )}
                             <button

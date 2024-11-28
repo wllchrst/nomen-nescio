@@ -56,8 +56,7 @@ const Navbar: React.FC = () => {
                     </Dropdown>
 
                 <Dropdown text="" image="https://via.placeholder.com/50">
-                        <DropdownValue text="Profile" icon={<FaUserCircle />} />
-                        <DropdownValue text="Settings" icon={<FaCog />} to='/Setting'/>
+                        <DropdownValue text="Profile" icon={<FaUserCircle />} to='/setting'/>
                         <DropdownValue text="Log Out" icon={<FaSignOutAlt />} />
                     </Dropdown>
                 </div>
