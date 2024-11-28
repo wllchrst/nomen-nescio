@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function uploadFileFromUser(user_id: string, file: File) : Promise<String> {
+export async function uploadFileFromUser(user_id: string, file: File) : Promise<string> {
     const formData = new FormData()
 
     formData.append("file", file)
