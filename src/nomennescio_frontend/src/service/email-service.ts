@@ -41,7 +41,7 @@ export class EmailService extends Service {
     };
     console.log(predictData);
 
-    const result = await this.post("/predict", predictData);
+    const result = await this.post<IResponse<boolean>>("/predict", predictData);
     console.log(result);
     return result;
   }

@@ -61,13 +61,15 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         setIsSignatureModalOpen(false);
     };
 
-    const validateSignature = () => {
+    const validateSignature = async () => {
         // Validasinya disni 
         if(user == null || signatureFile == null) return false;
 
-        const result = emailService.compareSignature(user, signatureFile);
+        const result = await emailService.compareSignature(user, signatureFile);
 
-        return true;
+        if(result == null) return false;
+
+        return result.data;
     }
 
     const handleDownloadFile = () => {
