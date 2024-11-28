@@ -31,7 +31,8 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
   } = useDrawableCanvas(width, height);
 
   const [lineWidth, setLocalLineWidth] = useState(2);
-  const [lineColor, setLocalLineColor] = useState("#ffffff");
+  const [lineColor, setLocalLineColor] = useState("#000000");
+  const [drawingData, setDrawingData] = useState<ImageData | null>(null);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.ctrlKey && e.key === 'z') {
@@ -65,40 +66,27 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     setLineColor(newLineColor);
   };
 
-  const downloadInvertedCanvas = () => {
+  const downloadCanvas = () => {
     if (canvasRef.current) {
-      const canvas = canvasRef.current as HTMLCanvasElement;
-      const context = canvas.getContext("2d");
+      const originalCanvas = canvasRef.current as HTMLCanvasElement;
+      const context = originalCanvas.getContext("2d");
 
-      // invert colornya karna canvasnya didraw pake putih
       if (context) {
         const tempCanvas = document.createElement("canvas");
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
         const tempContext = tempCanvas.getContext("2d");
 
         if (tempContext) {
-          tempContext.drawImage(canvas, 0, 0);
+          tempCanvas.width = originalCanvas.width;
+          tempCanvas.height = originalCanvas.height;
 
-          const imageData = tempContext.getImageData(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-          const data = imageData.data;
+          tempContext.fillStyle = "white";
+          tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-          for (let i = 0; i < data.length; i += 4) {
-            data[i] = 255 - data[i];
-            data[i + 1] = 255 - data[i + 1];
-            data[i + 2] = 255 - data[i + 2];
-          }
-
-          tempContext.putImageData(imageData, 0, 0);
+          tempContext.drawImage(originalCanvas, 0, 0);
 
           const link = document.createElement("a");
-          link.href = tempCanvas.toDataURL("image/png");
-          link.download = "inverted_signature.png";
+          link.href = tempCanvas.toDataURL("image/png", 1.0);
+          link.download = "signature.png";
           link.click();
         }
       }
@@ -113,7 +101,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           const file = new File([blob], "canvas_image.png", {
             type: "image/png",
           });
-          console.log("dapet", file);
           setFile(file);
         }
       }, "image/png");
@@ -123,8 +110,16 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
 
   const handleMouseUp = () => {
     stopDrawing();
+    if (canvasRef.current) {
+      const canvas = canvasRef.current as HTMLCanvasElement;
+      const context = canvas.getContext('2d');
+      if (context) {
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        setDrawingData(imageData);
+      }
+    }
     getCanvasImage();
-    saveCanvasState(); 
+    saveCanvasState();
   };
 
   return (
@@ -152,13 +147,12 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
         </div>
       )}
       <div
-        className={`relative border rounded-md bg-black ${
-          isValid === null
-            ? "border-gray-600"
-            : isValid
+        className={`relative border rounded-md bg-white ${isValid === null
+          ? "border-gray-600"
+          : isValid
             ? "border-green-500"
             : "border-red-500"
-        }`}
+          }`}
         style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
       >
         <canvas
@@ -184,7 +178,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
             <FaTrash className="text-white" />
           </button>
           <button
-            onClick={downloadInvertedCanvas}
+            onClick={downloadCanvas}
             className="p-2 bg-gray-700 rounded-md hover:bg-gray-600 transition-opacity duration-300 opacity-20 hover:opacity-100"
           >
             <FaDownload className="text-white" />
