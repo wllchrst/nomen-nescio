@@ -28,6 +28,7 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     setLineWidth,
     setLineColor,
     saveCanvasState,
+    downloadCanvas,
   } = useDrawableCanvas(width, height);
 
   const [lineWidth, setLocalLineWidth] = useState(2);
@@ -53,33 +54,6 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
-
-  const downloadCanvas = () => {
-    if (canvasRef.current) {
-      const originalCanvas = canvasRef.current as HTMLCanvasElement;
-      const context = originalCanvas.getContext("2d");
-
-      if (context) {
-        const tempCanvas = document.createElement("canvas");
-        const tempContext = tempCanvas.getContext("2d");
-
-        if (tempContext) {
-          tempCanvas.width = originalCanvas.width;
-          tempCanvas.height = originalCanvas.height;
-
-          tempContext.fillStyle = "white";
-          tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-          tempContext.drawImage(originalCanvas, 0, 0);
-
-          const link = document.createElement("a");
-          link.href = tempCanvas.toDataURL("image/jpg", 1.0);
-          link.download = "signature.jpg";
-          link.click();
-        }
-      }
-    }
-  };
 
   const getCanvasImage = () => {
     if (canvasRef.current) {
