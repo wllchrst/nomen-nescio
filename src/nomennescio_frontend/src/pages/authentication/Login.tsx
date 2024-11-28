@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     const result = await userService.loginUser(data);
     if (result) {
-      setUserData(result)
+      setUserData(result);
       navigate("/home");
     }
   };
@@ -67,8 +67,9 @@ const Login: React.FC = () => {
                   className="text-gray-500 mr-3"
                 />
                 <TextField
-                  title="Email"
+                  title=""
                   variant="email"
+                  placeholder="Email"
                   className="flex-1"
                   register={register("email")}
                 />
@@ -76,8 +77,9 @@ const Login: React.FC = () => {
               <div className="flex items-center border-b border-gray-700 py-2">
                 <FontAwesomeIcon icon={faLock} className="text-gray-500 mr-3" />
                 <PasswordField
+                  title=""
                   variant="normal"
-                  title="Password"
+                  placeholder="Password"
                   register={register("password")}
                 />
               </div>
