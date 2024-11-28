@@ -59,7 +59,7 @@ const useDrawableCanvas = (width: number, height: number) => {
         const clientY = 'clientY' in e ? e.clientY : e.touches[0].clientY;
 
         ctx.lineTo(clientX - rect.left, clientY - rect.top);
-        ctx.stroke();
+        ctx.stroke(); 
         ctx.beginPath();
         ctx.moveTo(clientX - rect.left, clientY - rect.top);
     };
