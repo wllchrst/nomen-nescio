@@ -147,6 +147,15 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchFor
         setHoveredGroupMembers([]);
     };
 
+    const getEmailData = () => {
+        const userIds = chosenUsers.map(user => user.id);
+        const groupUserIds = chosenGroups.flatMap(group => group.members.map(member => member.user_id));
+        const allUserIds = [...userIds, ...groupUserIds];
+        return {
+            receivers: allUserIds
+        };
+    };
+
     return {
         query,
         filteredResults,
@@ -164,6 +173,7 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchFor
         handleGroupHover,
         handleGroupLeave,
         hoveredGroupMembers,
+        getEmailData,
     };
 };
 

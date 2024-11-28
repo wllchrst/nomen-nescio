@@ -136,11 +136,12 @@ const Upload = () => {
                 sender_id: parseInt(userService.getUserIdFromCookie()),
                 receivers: sendRef.current.map(obj => obj.id)
             }
+            console.log(emailData);
 
             await emailService.createEmail(emailData);
             setAlert({ show: true, title: "Success", desc: "Email sent successfully", type: "success" });
             setTimeout(() => {
-                // window.location.reload();
+                window.location.reload();
             }, 2000);
         } catch (error) {
             setAlert({ show: true, title: "Error", desc: "Failed to send email", type: "error" });

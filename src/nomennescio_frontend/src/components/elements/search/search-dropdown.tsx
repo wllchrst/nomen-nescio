@@ -68,8 +68,8 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     handleInputClick,
     handleRemoveUser,
     handleRemoveGroup,
+    getEmailData,
   } = useSearchDropdown(data, searchForUser, searchForGroup, onUserClick, onGroupClick);
-
   const [isActive, setIsActive] = useState(false);
   const [hoveredUser, setHoveredUser] = useState<IUser | null>(null);
   const [hoveredGroup, setHoveredGroup] = useState<IGroupData | null>(null);
