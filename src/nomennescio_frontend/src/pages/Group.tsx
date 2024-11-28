@@ -189,7 +189,11 @@ const Group = () => {
                   <li key={member.id} className="mb-2 flex items-center">
                     <div className="bg-gray-700 p-2 rounded-full mr-2">
                       <img
-                        src={member.profile_picture_path == null ? DUMMY_PROFILE : useProfileSource(member.profile_picture_path)}
+                        src={
+                          member.profile_picture_path == null
+                            ? DUMMY_PROFILE
+                            : useProfileSource(member.profile_picture_path)
+                        }
                         alt={`${member.name}'s profile`}
                         className="w-12 h-12 rounded-full"
                       />
@@ -264,7 +268,11 @@ const Group = () => {
                     <div className="flex items-center">
                       <img
                         // ini nanti pas ada profile pic jangan lupa diganti
-                        src={member.profilePicture || "dummy_profile.png"}
+                        src={
+                          member.profile_picture_path == null
+                            ? DUMMY_PROFILE
+                            : useProfileSource(member.profile_picture_path)
+                        }
                         className="w-8 h-8 rounded-full mr-2"
                       />
                       {member.name}
@@ -317,7 +325,11 @@ const Group = () => {
                   <div className="flex items-center">
                     <img
                       // jangan lupa user.profilePicture
-                      src={user.profile_picture_path == null ? DUMMY_PROFILE : useProfileSource(user.profile_picture_path)}
+                      src={
+                        user.profile_picture_path == null
+                          ? DUMMY_PROFILE
+                          : useProfileSource(user.profile_picture_path)
+                      }
                       alt={`${user.name}'s profile`}
                       className="w-8 h-8 rounded-full mr-2"
                     />

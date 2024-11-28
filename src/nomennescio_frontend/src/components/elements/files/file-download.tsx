@@ -22,6 +22,7 @@ import {
 } from "react-icons/ai";
 import { useFileActions } from "../../../hooks/use-file-action";
 import useProfileSource from "../../../hooks/use-get-profile-source";
+import { EmailService } from "../../../service/email-service";
 
 interface FileDownloadProps {
   fileUrl: string;

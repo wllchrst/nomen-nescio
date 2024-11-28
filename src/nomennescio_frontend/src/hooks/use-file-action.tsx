@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import useProfileSource from './use-get-profile-source';
+import { EmailService } from '../service/email-service';
+import { useUserContext } from '../context/user-context';
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +12,8 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
     const [pendingAction, setPendingAction] = useState<() => void>(() => { });
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
+    const emailService = new EmailService();
+    const {user} = useUserContext()
 
     const handleDoubleClick = () => {
         handleOpenFile();
@@ -50,6 +54,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     };
 
     const handleConfirmSignature = () => {
+        validateSignature(); 
         if (typeof pendingAction === 'function') {
             pendingAction();
         }
@@ -58,9 +63,14 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
 
     const validateSignature = () => {
         // Validasinya disni 
+        if(user == null || signatureFile == null) return false;
 
+        emailService.compareSignature(user, signatureFile).then((result) => {
+            if(result == null) return false;
 
-        return true;
+            return result.data;
+        });
+        return false;
     }
 
     const handleDownloadFile = () => {

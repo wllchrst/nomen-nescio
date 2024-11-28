@@ -32,6 +32,7 @@ const Upload = () => {
     const userRef = useRef<IUser | null>(user)
     const sendRef = useRef<IUser[]>([])
     const descRef = useRef(description)
+    const userService = new UserService();
     const msgRef = useRef(message)
     const [groups, setGroups] = useState<IGroupData[]>([]);
     const [filteredGroups, setFilteredGroups] = useState<IGroupData[]>([]);
@@ -133,7 +134,7 @@ const Upload = () => {
                 title: descRef.current,
                 description: msgRef.current,
                 files: fileMapping,
-                sender_id: userRef.current!.id,
+                sender_id: parseInt(userService.getUserIdFromCookie()),
                 receivers: sendRef.current.map(obj => obj.id)
             }
 
