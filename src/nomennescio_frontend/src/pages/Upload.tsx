@@ -25,7 +25,6 @@ const Upload = () => {
     const [ message, setMessage ] = useState("")
     const [alert, setAlert] = useState<{ show: boolean, title: string, desc: string, type: "success" | "error" | "warning" | "info" }>({ show: false, title: "", desc: "", type: "info" });
     const [isClosing, setIsClosing] = useState(false);
-    
     const selectedFilesRef = useRef<UploadedFile[]>(selectedFiles);
     const userRef = useRef<IUser | null>(user)
     const sendRef = useRef<IUser[]>([])
@@ -95,7 +94,7 @@ const Upload = () => {
             await emailService.createEmail(emailData);
             setAlert({ show: true, title: "Success", desc: "Email sent successfully", type: "success" });
             setTimeout(() => {
-                window.location.reload();
+                // window.location.reload();
             }, 2000);
         } catch (error) {
             setAlert({ show: true, title: "Error", desc: "Failed to send email", type: "error" });
