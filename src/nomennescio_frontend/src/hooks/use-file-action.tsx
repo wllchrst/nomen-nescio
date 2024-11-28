@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useProfileSource from './use-get-profile-source';
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,8 +68,8 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
             let success = validateSignature();
             if (success) {
                 const link = document.createElement('a');
-                link.href = fileUrl;
-                link.download = fileName;
+                link.href = useProfileSource(fileUrl);
+                link.download = useProfileSource(fileName);
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
