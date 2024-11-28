@@ -22,17 +22,17 @@ export class UserService extends Service {
     const result = await this.post<IResponse<IUser>>("user-login", login);
 
     if (result == null) {
-      throw new Error("Fail")
+      throw new Error("Fail");
     }
 
-    console.log(result)
+    console.log(result);
 
     if (result.success && result.data.email != "") {
       Cookie.set("user", result.data.id.toString());
       return result.data;
     }
 
-    throw new Error("Fail")
+    throw new Error("Fail");
   }
 
   async updateUser(register: IRegister, userId: number) {
@@ -42,7 +42,7 @@ export class UserService extends Service {
 
   async getUserInformation(id: string) {
     const result = await this.get<IResponse<IUser>>(`/user/${id}`);
-    console.log("WAIT AWGAUWGUDA")
+
     return result;
   }
 
@@ -73,7 +73,7 @@ export class UserService extends Service {
       const result = await this.get<IResponse<IUser[]>>("user");
       // disini aku ganti getAllUser kecuali current user
       if (result && result.success) {
-        return result.data.filter(user => user.id !== currentUser?.id);
+        return result.data.filter((user) => user.id !== currentUser?.id);
       } else {
         console.error("Failed to fetch users");
         return [];
@@ -90,6 +90,7 @@ export class UserService extends Service {
 
     const result = await this.get<IResponse<IUser>>(`/user/${userId}`);
     if (result && result.success) {
+      result.data.profile_picture_path = `${this.backendUrl}${result.data.profile_picture_path}`;
       return result.data;
     } else {
       console.error("gk dapet current user");
