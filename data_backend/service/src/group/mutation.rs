@@ -29,7 +29,6 @@ impl GroupMutation {
             .await?
             .ok_or_else(|| sea_orm::DbErr::Custom("Failed to fetch inserted group".to_string()))?;
 
-        // diganti dari return Active Model jadi return Model
         Ok(inserted_group)
     }
 
@@ -68,6 +67,39 @@ impl GroupMutation {
             .await?;
 
         Ok(inserted_records)
+    }
+
+    pub async fn remove_member(db: &DbConn, group_id: i32, user_id: i32) -> Result<bool, DbErr> {
+        // Find the group member record
+        let finder: Option<group_member::Model> = GroupMember::find()
+            .filter(group_member::Column::GroupId.eq(group_id))
+            .filter(group_member::Column::UserId.eq(user_id))
+            .one(db)
+            .await?;
+
+        // If the record is found, delete it
+        if let Some(data) = finder {
+            GroupMember::delete_by_id(data.id) // Assuming `id` is the primary key
+                .exec(db)
+                .await?;
+            Ok(true) // Member removed successfully
+        } else {
+            Ok(false) // Member not found
+        }
+    }
+
+    pub async fn add_member(
+        db: &DbConn,
+        data: group_member::Model,
+    ) -> Result<group_member::ActiveModel, DbErr> {
+        group_member::ActiveModel {
+            group_id: Set(data.group_id.to_owned()),
+            user_id: Set(data.user_id.to_owned()),
+            role: Set(data.role.to_owned()),
+            ..Default::default()
+        }
+        .save(db)
+        .await
     }
 
     pub async fn update_group(
