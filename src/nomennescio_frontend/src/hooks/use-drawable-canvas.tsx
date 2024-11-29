@@ -6,13 +6,18 @@ const useDrawableCanvas = (width: number, height: number) => {
     const [history, setHistory] = useState<ImageData[]>([]);
     const [isValid, setIsValid] = useState<boolean | null>(null);
     const [lineWidth, setLineWidthState] = useState(2);
-    const [lineColor, setLineColorState] = useState('#ffffff');
+    const [lineColor, setLineColorState] = useState('#000000');
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
             canvas.width = width;
             canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
             validateCanvas();
         }
     }, [width, height]);
@@ -54,7 +59,7 @@ const useDrawableCanvas = (width: number, height: number) => {
         const clientY = 'clientY' in e ? e.clientY : e.touches[0].clientY;
 
         ctx.lineTo(clientX - rect.left, clientY - rect.top);
-        ctx.stroke();
+        ctx.stroke(); 
         ctx.beginPath();
         ctx.moveTo(clientX - rect.left, clientY - rect.top);
     };
@@ -123,7 +128,46 @@ const useDrawableCanvas = (width: number, height: number) => {
         setLineColorState(color);
     };
 
-    return { canvasRef, startDrawing, stopDrawing, draw, undo, resetCanvas, isValid, setLineWidth, setLineColor, saveCanvasState };
+    const downloadCanvas = () => {
+        if (canvasRef.current) {
+            const originalCanvas = canvasRef.current as HTMLCanvasElement;
+            const context = originalCanvas.getContext("2d");
+
+            if (context) {
+                const tempCanvas = document.createElement("canvas");
+                const tempContext = tempCanvas.getContext("2d");
+
+                if (tempContext) {
+                    tempCanvas.width = originalCanvas.width;
+                    tempCanvas.height = originalCanvas.height;
+
+                    tempContext.fillStyle = "white";
+                    tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+                    tempContext.drawImage(originalCanvas, 0, 0);
+
+                    const link = document.createElement("a");
+                    link.href = tempCanvas.toDataURL("image/jpg", 1.0);
+                    link.download = "signature.jpg";
+                    link.click();
+                }
+            }
+        }
+    };
+
+    return { 
+        canvasRef, 
+        startDrawing, 
+        stopDrawing, 
+        draw, 
+        undo, 
+        resetCanvas, 
+        isValid, 
+        setLineWidth, 
+        setLineColor, 
+        saveCanvasState,
+        downloadCanvas 
+    };
 };
 
 export default useDrawableCanvas;

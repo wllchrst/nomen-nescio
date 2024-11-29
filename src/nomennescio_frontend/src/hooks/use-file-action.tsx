@@ -4,6 +4,9 @@ import { useUserContext } from '../context/user-context';
 import { IUser } from '../interfaces/user-interface';
 import { getFile, getFileUrl } from '../service/file-service';
 import { UserService } from '../service/user-service';
+import { EmailService } from '../service/email-service';
+import { useUserContext } from '../context/user-context';
+import Alert from '../components/elements/alerts/alert'; // Import Alert component
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +18,9 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     const [pendingAction, setPendingAction] = useState<() => void>(() => { });
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
     const userService = new UserService()
+    const [alert, setAlert] = useState<{ show: boolean, type: string, title: string, desc: string }>({ show: false, type: '', title: '', desc: '' });
+    const emailService = new EmailService();
+    const {user} = useUserContext()
 
     const handleDoubleClick = () => {
         handleOpenFile();
@@ -76,24 +82,58 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
 
     const validateSignature = () => {
         // Validasinya disni 
+        if(user == null || signatureFile == null) return false;
 
+        emailService.compareSignature(user, signatureFile).then((result) => {
+            if(result == null) return false;
 
-        return true;
+            return result.data;
+        });
+        return false;
     }
 
-    const handleDownloadFile = () => {
-        handleOpenSignatureModal(() => {
+    const handleDownloadFile = async () => {
+        handleOpenSignatureModal(async () => {
             let success = validateSignature();
+            success = true;  
             if (success) {
-                const link = document.createElement('a');
-                link.href = useProfileSource(fileUrl);
-                link.download = useProfileSource(fileName);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                try {
+                    let modifiedFileUrl = fileUrl.replace(/\\/g, '/');
+
+                    const fullUrl = `http://localhost:8000/${modifiedFileUrl}`;
+                    console.log("Full urlnya:", fullUrl);
+
+                    const response = await fetch(fullUrl);
+
+                    if (!response.ok) {
+                        throw new Error('kga bs');
+                    }
+
+                    const blob = await response.blob();
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+
+                    link.download = fullUrl.split('/').pop();
+
+                    link.click();
+
+                    console.log("Download success");
+
+                    URL.revokeObjectURL(link.href);
+
+                    setAlert({ show: true, type: 'success', title: 'Download Success', desc: 'File downloaded successfully.' });
+                } catch (error) {
+                    console.error('Download failed:', error);
+                    setAlert({ show: true, type: 'error', title: 'Download Failed', desc: 'Failed to download the file.' });
+                }
             }
         });
     };
+
+
+
+
 
     const handleDelete = () => {
         onDelete?.();
@@ -127,6 +167,8 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         handleDelete,
         handleRename,
         signatureFile,
-        setSignatureFile
+        setSignatureFile,
+        alert,
+        setAlert
     };
 };

@@ -85,4 +85,9 @@ export class GroupService extends Service {
     console.log("ga bisa create group");
     return null;
   }
+
+  async getGroupMembers(groupId: number) {
+    const result = await this.get<IResponse<IGroupMember[]>>(`/group/${groupId}/members`);
+    return result;
+  }
 }

@@ -11,6 +11,9 @@ import { ICreateEmailData, IFileData } from "../interfaces/create-email";
 import { EmailService } from "../service/email-service";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 import Alert from "../components/elements/alerts/alert";
+import { GroupService } from "../service/group-service";
+import { IGroupData } from "../interfaces/group-interface";
+import { UserService } from "../service/user-service";
 
 interface UploadedFile {
     file: File;
@@ -29,7 +32,15 @@ const Upload = () => {
     const userRef = useRef<IUser | null>(user)
     const sendRef = useRef<IUser[]>([])
     const descRef = useRef(description)
+    const userService = new UserService();
     const msgRef = useRef(message)
+    const [groups, setGroups] = useState<IGroupData[]>([]);
+    const [filteredGroups, setFilteredGroups] = useState<IGroupData[]>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
+    const [selectedGroup, setSelectedGroup] = useState<IGroupData | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const groupService = new GroupService();
 
     const emailService = new EmailService()
 
@@ -43,9 +54,44 @@ const Upload = () => {
         msgRef.current = message
     }, [user, description, message])
 
+    useEffect(() => {
+        const fetchGroupsAndUsers = async () => {
+            if (!user) return;
+            const groupResult = await groupService.getUserGroup(user.id.toString());
+            console.log("Group" , groupResult)
+            const userResult = await userService.getAllUser();
+            if (groupResult.success) {
+                setGroups(groupResult.data);
+                setFilteredGroups(groupResult.data);
+            }
+            setUsers(userResult);
+            setFilteredUsers(userResult);
+        };
+        fetchGroupsAndUsers();
+    }, [user]);
+
+    useEffect(() => {
+        const groupResults = groups.filter(group =>
+            group.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredGroups(groupResults);
+
+        const userResults = users.filter(user =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredUsers(userResults);
+    }, [searchTerm, groups, users]);
+
     const handleUserClick = (user: IUser) => {
         console.log("click")
         sendRef.current.push(user)
+    };
+
+    const handleGroupSelect = (group: IGroupData) => {
+        setSelectedGroup(group);
+        const memberIds = group.members.map(member => member.user_id);
+        sendRef.current = memberIds.map(id => ({ id } as IUser));
+        console.log("Selected group members' user IDs: ", memberIds);
     };
 
     const handleFilesUploaded = (files: UploadedFile[]) => {
@@ -87,14 +133,15 @@ const Upload = () => {
                 title: descRef.current,
                 description: msgRef.current,
                 files: fileMapping,
-                sender_id: userRef.current!.id,
+                sender_id: parseInt(userService.getUserIdFromCookie()),
                 receivers: sendRef.current.map(obj => obj.id)
             }
+            console.log(emailData);
 
             await emailService.createEmail(emailData);
             setAlert({ show: true, title: "Success", desc: "Email sent successfully", type: "success" });
             setTimeout(() => {
-                // window.location.reload();
+                window.location.reload();
             }, 2000);
         } catch (error) {
             setAlert({ show: true, title: "Error", desc: "Failed to send email", type: "error" });
@@ -119,8 +166,12 @@ const Upload = () => {
                     <SearchDropdown
                         data={[]}
                         searchForUser={true}
+                        searchForGroup={true}
                         onUserClick={handleUserClick}
+                        onGroupClick={handleGroupSelect}
                         className="p-4 rounded-lg border border-gray-600 bg-gray-800 text-white w-full"
+                        users={filteredUsers}
+                        groups={filteredGroups}
                     />
                     <input
                         type="text"

@@ -24,6 +24,8 @@ import { useFileActions } from "../../../hooks/use-file-action";
 import useProfileSource from "../../../hooks/use-get-profile-source";
 import { IUser } from "../../../interfaces/user-interface";
 import { getFileUrl } from "../../../service/file-service";
+import { EmailService } from "../../../service/email-service";
+import Alert from "../alerts/alert"; 
 
 interface FileDownloadProps {
   fileUrl: string;
@@ -75,6 +77,8 @@ const FileDownload: React.FC<FileDownloadProps> = ({
     handleRename,
     signatureFile,
     setSignatureFile,
+    alert,
+    setAlert,
   } = useFileActions(fileUrl, fileName, onRename, onDelete);
 
   const [ fileNameA, setFileName ] = useState("")
@@ -170,6 +174,10 @@ const FileDownload: React.FC<FileDownloadProps> = ({
 
   const handleModalContainerClick = () => {
     setIsModalOpen(false);
+  };
+
+  const closeAlert = () => {
+    setAlert({ ...alert, show: false });
   };
 
   const containerClass = needPreview
@@ -270,6 +278,17 @@ const FileDownload: React.FC<FileDownloadProps> = ({
             />
           </div>
         </div>
+      )}
+
+      {alert.show && (
+        <Alert
+          title={alert.title}
+          desc={alert.desc}
+          type={alert.type}
+          showAlert={alert.show}
+          closeAlert={closeAlert}
+          isClosing={!alert.show}
+        />
       )}
 
       {isModalOpen && (

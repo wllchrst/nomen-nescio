@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { IUser } from '../interfaces/user-interface';
 import { UserService } from '../service/user-service';
+import { GroupService } from '../service/group-service';
 
 interface SearchItem {
     id: number;
@@ -13,26 +14,38 @@ interface SearchItem {
     variant?: string;
 }
 
-const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, onUserClick?: (user: IUser) => void) => {
+const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, searchForGroup: boolean, onUserClick?: (user: IUser) => void, onGroupClick?: (group: IGroupData) => void) => {
     const [query, setQuery] = useState('');
     const [filteredResults, setFilteredResults] = useState<SearchItem[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
     const [allUsers, setAllUsers] = useState<IUser[]>([]);
     const [chosenUsers, setChosenUsers] = useState<IUser[]>([]);
+    const [filteredGroups, setFilteredGroups] = useState<IGroupData[]>([]);
+    const [allGroups, setAllGroups] = useState<IGroupData[]>([]);
+    const [chosenGroups, setChosenGroups] = useState<IGroupData[]>([]);
+    const [hoveredGroupMembers, setHoveredGroupMembers] = useState<IGroupMember[]>([]);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    // Fetch all users if searchForUser is true
+    // Fetch all users and groups if searchForUser or searchForGroup is true
     useEffect(() => {
-        if (searchForUser) {
-            const fetchUsers = async () => {
+        const fetchUsersAndGroups = async () => {
+            if (searchForUser) {
                 const userService = new UserService();
                 const users = await userService.getAllUser();
                 setFilteredUsers(users);
                 setAllUsers(users);
-            };
-            fetchUsers();
-        }
-    }, [searchForUser]);
+            }
+            if (searchForGroup) {
+                const groupService = new GroupService();
+                const userService = new UserService();
+                const userId = userService.getUserIdFromCookie();
+                const groups = await groupService.getUserGroup(userId);
+                setFilteredGroups(groups.data);
+                setAllGroups(groups.data);
+            }
+        };
+        fetchUsersAndGroups();
+    }, [searchForUser, searchForGroup]);
 
     // Handle search input changes
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,12 +71,26 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, onUserCli
                 setFilteredUsers(userResults);
             }
         }
+
+        if (searchForGroup) {
+            if (value === '') {
+                setFilteredGroups(allGroups.filter(group => !chosenGroups.includes(group)));
+            } else {
+                const groupResults = allGroups.filter(
+                    (group) =>
+                        group.name.toLowerCase().includes(value.toLowerCase()) ||
+                        group.description.toLowerCase().includes(value.toLowerCase())
+                ).filter(group => !chosenGroups.includes(group));
+                setFilteredGroups(groupResults);
+            }
+        }
     };
 
     // Handle input click to show all users if query is empty
     const handleInputClick = () => {
         if (query === '') {
             setFilteredUsers(allUsers.filter(user => !chosenUsers.includes(user)));
+            setFilteredGroups(allGroups.filter(group => !chosenGroups.includes(group)));
         }
     };
 
@@ -96,6 +123,39 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, onUserCli
         setChosenUsers(chosenUsers.filter(u => u.id !== user.id));
     };
 
+    const handleGroupClick = (group: IGroupData) => {
+        if (onGroupClick) {
+            onGroupClick(group);
+        }
+        setChosenGroups([...chosenGroups, group]);
+        setQuery('');
+    };
+
+    const handleRemoveGroup = (group: IGroupData) => {
+        setChosenGroups(chosenGroups.filter(g => g.id !== group.id));
+    };
+
+    const handleGroupHover = async (group: IGroupData) => {
+        const groupService = new GroupService();
+        const result = await groupService.getGroupMembers(group.id);
+        if (result && result.success) {
+            setHoveredGroupMembers(result.data);
+        }
+    };
+
+    const handleGroupLeave = () => {
+        setHoveredGroupMembers([]);
+    };
+
+    const getEmailData = () => {
+        const userIds = chosenUsers.map(user => user.id);
+        const groupUserIds = chosenGroups.flatMap(group => group.members.map(member => member.user_id));
+        const allUserIds = [...userIds, ...groupUserIds];
+        return {
+            receivers: allUserIds
+        };
+    };
+
     return {
         query,
         filteredResults,
@@ -106,6 +166,14 @@ const useSearchDropdown = (data: SearchItem[], searchForUser: boolean, onUserCli
         handleUserClick,
         handleInputClick,
         handleRemoveUser,
+        filteredGroups,
+        handleGroupClick,
+        chosenGroups,
+        handleRemoveGroup,
+        handleGroupHover,
+        handleGroupLeave,
+        hoveredGroupMembers,
+        getEmailData,
     };
 };
 

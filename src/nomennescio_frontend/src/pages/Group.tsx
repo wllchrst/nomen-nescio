@@ -24,6 +24,7 @@ import useGetCurrentUser from "../hooks/use-get-current-user";
 import { useUserContext } from "../context/user-context";
 import useGetUserGroup from "../hooks/use-get-user-group";
 import { DUMMY_PROFILE } from "../constants/image-constants";
+import Alert from "../components/elements/alerts/alert";
 
 const Group = () => {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
@@ -60,11 +61,29 @@ const Group = () => {
   const users = useFetchUsers();
   const { groups } = useGetUserGroup(userService.getUserIdFromCookie());
   const navigate = useNavigate();
+  const [alert, setAlert] = useState({ show: false, title: "", desc: "", type: "info" });
+  const [isClosing, setIsClosing] = useState(false);
+
+  const showAlert = (title, desc, type) => {
+    setAlert({ show: true, title, desc, type });
+    setTimeout(() => setIsClosing(true), 1800);
+    setTimeout(() => setAlert({ show: false, title: "", desc: "", type: "info" }), 2000);
+  };
 
   const handleCreateGroupSubmit = async (e) => {
     e.preventDefault();
     const currentUserId = userService.getUserIdFromCookie();
     if (currentUserId == null) return;
+
+    if (!newGroupName.trim()) {
+      showAlert("Error", "Group name cannot be empty", "error");
+      return;
+    }
+
+    if (newGroupMembers.length === 0) {
+      showAlert("Error", "Please add at least one member", "error");
+      return;
+    }
 
     const data: ICreateGroup = {
       name: newGroupName,
@@ -79,9 +98,10 @@ const Group = () => {
 
     if (result) {
       closeCreateGroupModal();
-      console.log("berhasil king " + data);
+      showAlert("Success", "Group created successfully", "success");
+      setTimeout(() => window.location.reload(), 2000);
     } else {
-      console.log("gagal king " + data);
+      showAlert("Error", "Failed to create group", "error");
     }
   };
 
@@ -95,8 +115,20 @@ const Group = () => {
     );
   };
 
+  const filteredUsers = users.filter(
+    (user) => !newGroupMembers.some((member) => member.id === user.id)
+  );
+
   return (
     <Template>
+      <Alert
+        title={alert.title}
+        desc={alert.desc}
+        type={alert.type}
+        showAlert={alert.show}
+        closeAlert={() => setAlert({ ...alert, show: false })}
+        isClosing={isClosing}
+      />
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold text-white">Groups</h1>
@@ -157,7 +189,11 @@ const Group = () => {
                   <li key={member.id} className="mb-2 flex items-center">
                     <div className="bg-gray-700 p-2 rounded-full mr-2">
                       <img
-                        src={member.profile_picture_path == null ? DUMMY_PROFILE : useProfileSource(member.profile_picture_path)}
+                        src={
+                          member.profile_picture_path == null
+                            ? DUMMY_PROFILE
+                            : useProfileSource(member.profile_picture_path)
+                        }
                         alt={`${member.name}'s profile`}
                         className="w-12 h-12 rounded-full"
                       />
@@ -222,7 +258,7 @@ const Group = () => {
               <label className="block text-white mb-2" htmlFor="addMembers">
                 Add Members
               </label>
-              <Search data={users} onUserSelect={handleAddMember} />
+              <Search data={filteredUsers} onUserSelect={handleAddMember} />
               <ul className="mt-2">
                 {newGroupMembers.map((member) => (
                   <li
@@ -232,7 +268,11 @@ const Group = () => {
                     <div className="flex items-center">
                       <img
                         // ini nanti pas ada profile pic jangan lupa diganti
-                        src={member.profilePicture || "dummy_profile.png"}
+                        src={
+                          member.profile_picture_path == null
+                            ? DUMMY_PROFILE
+                            : useProfileSource(member.profile_picture_path)
+                        }
                         className="w-8 h-8 rounded-full mr-2"
                       />
                       {member.name}
@@ -285,7 +325,11 @@ const Group = () => {
                   <div className="flex items-center">
                     <img
                       // jangan lupa user.profilePicture
-                      src={user.profile_picture_path == null ? DUMMY_PROFILE : useProfileSource(user.profile_picture_path)}
+                      src={
+                        user.profile_picture_path == null
+                          ? DUMMY_PROFILE
+                          : useProfileSource(user.profile_picture_path)
+                      }
                       alt={`${user.name}'s profile`}
                       className="w-8 h-8 rounded-full mr-2"
                     />
