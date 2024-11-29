@@ -16,20 +16,23 @@ const Login: React.FC = () => {
   const { register, handleSubmit } = useForm<ILogin>();
   const userService = new UserService();
   const { setUserData } = useUserContext();
-  const [alert, setAlert] = useState({ show: false, message: "", type: "error" });
+  const [alert, setAlert] = useState({ show: false, message: "", type: "error", key: 0 });
 
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     if (!data.email || !data.password) {
-      setAlert({ show: true, message: "Please fill in all fields.", type: "error" });
+      setAlert({ show: true, message: "Please fill in all fields.", type: "error", key: alert.key + 1 });
       return;
     }
-    const result = await userService.loginUser(data);
-    console.log(result);
-    if (result) {
-      setUserData(result);
-      navigate("/");
-    } else {
-      setAlert({ show: true, message: "Wrong credentials. Please try again.", type: "error" });
+    try {
+      const result = await userService.loginUser(data);
+      if (result && result.success && result.data.email !== "") {
+        setUserData(result.data);
+        navigate("/");
+      } else {
+        setAlert({ show: true, message: "Wrong credentials. Please try again.", type: "error", key: alert.key + 1 });
+      }
+    } catch (error) {
+      setAlert({ show: true, message: "Login failed. Please try again.", type: "error", key: alert.key + 1 });
     }
   };
 
@@ -38,6 +41,7 @@ const Login: React.FC = () => {
       <ParticleBackground />
       {alert.show && (
         <Alert
+          key={alert.key}
           title="Login Error"
           desc={alert.message}
           type={alert.type}
