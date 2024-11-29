@@ -11,18 +11,30 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IRegister } from "../../interfaces/register-interface";
 import { GeneralService } from "../../service/general-service";
 import { UserService } from "../../service/user-service";
+import clsx from "clsx";
 
 const Register: React.FC = () => {
   const words = useWords();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<IRegister>();
+  const { register, handleSubmit, getValues } = useForm<IRegister>();
   const [file, setFile] = useState<File | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
   const generalService = new GeneralService();
   const userService = new UserService();
 
   function changeFile(inputFile: File | null) {
     setFile(inputFile);
   }
+
+  const validateForm = () => {
+    const values = getValues();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(values.email);
+    const isNameValid = values.name.trim() !== "";
+    const isPasswordValid = values.password.length >= 6; // Adjust the password validation as needed
+
+    setIsFormValid(isEmailValid && isNameValid && isPasswordValid && file !== null);
+  };
 
   const onSubmit: SubmitHandler<IRegister> = async (data) => {
     if (file == null) {
@@ -75,26 +87,35 @@ const Register: React.FC = () => {
                 variant="username"
                 title="Full Name*"
                 className="w-full"
-                register={register("name")}
+                register={register("name", { onChange: validateForm })}
+                showValidationOnHover
+                needValidationMessage
               />
               <TextField
                 variant="email"
                 title="Email*"
                 className="w-full"
-                register={register("email")}
+                register={register("email", { onChange: validateForm })}
+                showValidationOnHover
+                needValidationMessage
               />
               <PasswordField
                 variant="password"
                 title="Password*"
                 className="w-full"
-                register={register("password")}
+                register={register("password", { onChange: validateForm })}
+                showValidationOnHover
+                needValidationMessage
               />
               <Checkbox text="I agree to" link="Terms & Conditions" />
             </div>
 
             <div className="space-y-4">
               <DrawableCanvas
-                setFile={changeFile}
+                setFile={(inputFile) => {
+                  changeFile(inputFile);
+                  validateForm();
+                }}
                 width={350}
                 height={250}
                 text="Draw Your Signature*"
@@ -102,7 +123,17 @@ const Register: React.FC = () => {
             </div>
           </div>
 
-          <button className="w-full mt-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 transition duration-200 transform hover:scale-105">
+          <button
+            type="submit"
+            className={clsx(
+              "w-full mt-6 text-lg font-semibold rounded-md py-2 transition duration-200 transform hover:scale-105",
+              {
+                "bg-blue-600 hover:bg-blue-700 text-white": isFormValid,
+                "bg-gray-400 cursor-not-allowed": !isFormValid,
+              }
+            )}
+            disabled={!isFormValid}
+          >
             Register
           </button>
         </form>

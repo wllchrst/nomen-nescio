@@ -1,27 +1,36 @@
 import { useState } from "react";
 
-
 const usePasswordStrength = () => {
-    const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<{
+    lengthValid: boolean;
+    caseValid: boolean;
+    numberValid: boolean;
+    specialCharValid: boolean;
+    strongValid: boolean;
+    overall: "weak" | "medium" | "strong" | null;
+  } | null>(null);
 
-    const evaluatePasswordStrength = (password: string) => {
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const evaluatePasswordStrength = (password: string) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-        if (password.length < 6) {
-            setPasswordStrength("weak");
-        } else if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
-            setPasswordStrength("medium");
-        } else if (password.length >= 10) {
-            setPasswordStrength("strong");
-        } else {
-            setPasswordStrength("medium");
-        }
-    };
+    const lengthValid = password.length >= 6;
+    const caseValid = hasUpperCase && hasLowerCase;
+    const numberValid = hasNumber;
+    const specialCharValid = hasSpecialChar;
+    const strongValid = password.length >= 10;
 
-    return { passwordStrength, evaluatePasswordStrength };
+    let overall: "weak" | "medium" | "strong" | null = "weak";
+    if (lengthValid && caseValid && numberValid && specialCharValid) {
+      overall = strongValid ? "strong" : "medium";
+    }
+
+    setPasswordStrength({ lengthValid, caseValid, numberValid, specialCharValid, strongValid, overall });
+  };
+
+  return { passwordStrength, evaluatePasswordStrength };
 };
 
 export default usePasswordStrength;
