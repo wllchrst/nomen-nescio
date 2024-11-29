@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaUndo, FaTrash, FaDownload } from "react-icons/fa";
 import useDrawableCanvas from "../../../hooks/use-drawable-canvas";
+import clsx from "clsx";
 
 interface DrawableCanvasProps {
   text?: string;
@@ -29,19 +30,19 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     setLineColor,
     saveCanvasState,
     downloadCanvas,
+    validateCanvas,
   } = useDrawableCanvas(width, height);
 
   const [lineWidth, setLocalLineWidth] = useState(2);
   const [lineColor, setLocalLineColor] = useState("#000000");
-  const [drawingData, setDrawingData] = useState<ImageData | null>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === "z") {
-        undo();
+        handleUndo();
       }
     },
-    [undo]
+    []
   );
 
   useEffect(() => {
@@ -58,42 +59,23 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     };
   }, [handleKeyDown]);
 
-  // const getCanvasImage = () => {
-  //   if (canvasRef.current) {
-  //     const canvas = canvasRef.current as HTMLCanvasElement;
-  //     canvas.toBlob((blob) => {
-  //       if (blob) {
-  //         const file = new File([blob], "canvas_image.jpg", {
-  //           type: "image/jpg",
-  //         });
-  //         setFile(file);
-  //       }
-  //     }, "image/jpg");
-  //   }
-  //   setFile(null);
-  // };
-
   const getCanvasImage = () => {
     if (canvasRef.current) {
       const canvas = canvasRef.current as HTMLCanvasElement;
       const context = canvas.getContext("2d");
 
       if (context) {
-        // Create a temporary canvas to add a white background
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvas.width;
         tempCanvas.height = canvas.height;
         const tempContext = tempCanvas.getContext("2d");
 
         if (tempContext) {
-          // Fill with white background
           tempContext.fillStyle = "white";
           tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-          // Draw the original canvas content
           tempContext.drawImage(canvas, 0, 0);
 
-          // Convert to blob and save as file
           tempCanvas.toBlob((blob) => {
             if (blob) {
               const file = new File([blob], "canvas_image.jpg", {
@@ -121,11 +103,23 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           canvas.width,
           canvas.height
         );
-        setDrawingData(imageData);
+        if (imageData) {
+          validateCanvas();
+        }
       }
     }
     getCanvasImage();
     saveCanvasState();
+  };
+
+  const handleUndo = () => {
+    undo();
+    validateCanvas(); // Validate canvas after undo
+  };
+
+  const handleReset = () => {
+    resetCanvas();
+    validateCanvas(); // Validate canvas after reset
   };
 
   return (
@@ -134,13 +128,14 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
         {text}
       </label>
       <div
-        className={`relative border rounded-md bg-white ${
-          isValid === null
-            ? "border-gray-600"
-            : isValid
-            ? "border-green-500"
-            : "border-red-500"
-        }`}
+        className={clsx(
+          "relative border rounded-md bg-white",
+          {
+            "border-gray-600": isValid === null,
+            "border-green-500": isValid === true,
+            "border-red-500": isValid === false,
+          }
+        )}
         style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
       >
         <canvas
@@ -154,13 +149,13 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
 
         <div className="absolute top-2 right-2 flex space-x-2">
           <button
-            onClick={undo}
+            onClick={handleUndo}
             className="p-2 bg-gray-700 rounded-md hover:bg-gray-600 transition-opacity duration-300 opacity-20 hover:opacity-100"
           >
             <FaUndo className="text-white" />
           </button>
           <button
-            onClick={resetCanvas}
+            onClick={handleReset}
             className="p-2 bg-gray-700 rounded-md hover:bg-gray-600 transition-opacity duration-300 opacity-20 hover:opacity-100"
           >
             <FaTrash className="text-white" />

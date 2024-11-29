@@ -19,6 +19,7 @@ const Register: React.FC = () => {
   const { register, handleSubmit, getValues } = useForm<IRegister>();
   const [file, setFile] = useState<File | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
   const generalService = new GeneralService();
   const userService = new UserService();
 
@@ -26,14 +27,19 @@ const Register: React.FC = () => {
     setFile(inputFile);
   }
 
+  const handleTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsTermsChecked(e.target.checked);
+    validateForm();
+  };
+
   const validateForm = () => {
     const values = getValues();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmailValid = emailRegex.test(values.email);
     const isNameValid = values.name.trim() !== "";
-    const isPasswordValid = values.password.length >= 6; // Adjust the password validation as needed
+    const isPasswordValid = values.password.length >= 6; 
 
-    setIsFormValid(isEmailValid && isNameValid && isPasswordValid && file !== null);
+    setIsFormValid(isEmailValid && isNameValid && isPasswordValid && file !== null && isTermsChecked);
   };
 
   const onSubmit: SubmitHandler<IRegister> = async (data) => {
@@ -107,7 +113,7 @@ const Register: React.FC = () => {
                 showValidationOnHover
                 needValidationMessage
               />
-              <Checkbox text="I agree to" link="Terms & Conditions" />
+              <Checkbox text="I agree to" link="Terms & Conditions" onChange={handleTermsChange} />
             </div>
 
             <div className="space-y-4">

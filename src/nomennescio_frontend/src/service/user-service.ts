@@ -97,4 +97,8 @@ export class UserService extends Service {
       return null;
     }
   }
+
+  isAuthenticated(): boolean {
+    return !!Cookie.get("user");
+  }
 }

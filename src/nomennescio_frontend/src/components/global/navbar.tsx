@@ -30,11 +30,12 @@ const Navbar: React.FC = () => {
   const userService = new UserService();
   const [filteredResults, setFilteredResults] = useState<IUser[]>([]);
   const { setUserData } = useUserContext();
+  const navigate = useNavigate();
 
   function handleLogout() {
     userService.logOut();
     setUserData(null);
-    window.location.href = "/";
+    navigate("/");
   }
 
   const groupsDropdown = [

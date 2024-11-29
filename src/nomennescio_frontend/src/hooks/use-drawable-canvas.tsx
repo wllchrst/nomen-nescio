@@ -4,7 +4,7 @@ const useDrawableCanvas = (width: number, height: number) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const isDrawing = useRef(false);
     const [history, setHistory] = useState<ImageData[]>([]);
-    const [isValid, setIsValid] = useState<boolean | null>(null);
+    const [isValid, setIsValid] = useState<boolean | null>(false); // Initialize as false
     const [lineWidth, setLineWidthState] = useState(2);
     const [lineColor, setLineColorState] = useState('#000000');
 
@@ -37,7 +37,6 @@ const useDrawableCanvas = (width: number, height: number) => {
     const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
         isDrawing.current = true;
         saveCanvasState(); 
-        validateCanvas();
     };
 
     const stopDrawing = () => {
@@ -46,6 +45,7 @@ const useDrawableCanvas = (width: number, height: number) => {
             const ctx = canvasRef.current.getContext('2d');
             if (ctx) ctx.beginPath();
         }
+        validateCanvas(); // Validate canvas after drawing
     };
 
     const draw = (e: React.MouseEvent | React.TouchEvent) => {
@@ -103,7 +103,8 @@ const useDrawableCanvas = (width: number, height: number) => {
             if (ctx) {
                 const imageData = ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
                 for (let i = 0; i < imageData.data.length; i += 4) {
-                    if (imageData.data[i + 3] !== 0) {
+                    // Check if the pixel is not white (i.e., black or any other color)
+                    if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
                         return false;
                     }
                 }
@@ -166,7 +167,8 @@ const useDrawableCanvas = (width: number, height: number) => {
         setLineWidth, 
         setLineColor, 
         saveCanvasState,
-        downloadCanvas 
+        downloadCanvas,
+        validateCanvas // Ensure validateCanvas is returned
     };
 };
 
