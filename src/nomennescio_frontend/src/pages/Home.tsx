@@ -106,7 +106,7 @@ const Home = () => {
                                     onClick={() => navigate("/register")}
                                     onKeyPress={handleKeyPress}
                                 >
-                                    Get Started
+                                    Get Started &nbsp;
                                 </button>
                                 <span className="text-white">|</span>
                             </div>

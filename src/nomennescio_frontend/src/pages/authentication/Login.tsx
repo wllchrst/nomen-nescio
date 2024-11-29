@@ -9,25 +9,43 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ILogin } from "../../interfaces/login-interface";
 import { UserService } from "../../service/user-service";
 import { useUserContext } from "../../context/user-context";
+import Alert from "../../components/elements/alerts/alert";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<ILogin>();
   const userService = new UserService();
-
   const { setUserData } = useUserContext();
+  const [alert, setAlert] = useState({ show: false, message: "", type: "error" });
 
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
+    if (!data.email || !data.password) {
+      setAlert({ show: true, message: "Please fill in all fields.", type: "error" });
+      return;
+    }
     const result = await userService.loginUser(data);
+    console.log(result);
     if (result) {
       setUserData(result);
       navigate("/");
+    } else {
+      setAlert({ show: true, message: "Wrong credentials. Please try again.", type: "error" });
     }
   };
 
   return (
     <div className="relative flex justify-center items-center bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white">
       <ParticleBackground />
+      {alert.show && (
+        <Alert
+          title="Login Error"
+          desc={alert.message}
+          type={alert.type}
+          showAlert={alert.show}
+          closeAlert={() => setAlert({ ...alert, show: false })}
+          isClosing={false}
+        />
+      )}
 
       <div className="flex flex-col md:flex-row z-10 max-w-4xl bg-[#1e293b] rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:shadow-2xl p-8 md:p-10 text-white space-y-8 md:space-y-0 md:space-x-10">
         <div className="hidden md:flex flex-col justify-center items-start space-y-4">
@@ -39,16 +57,16 @@ const Login: React.FC = () => {
           </p>
           <div className="flex space-x-2">
             <button
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
               className="text-base bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 transition duration-200"
             >
-              Learn More
+              Get Started
             </button>
             <button
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               className="text-base bg-gray-700 hover:bg-gray-800 text-white rounded-md px-4 py-2 transition duration-200"
             >
-              Register
+              Login
             </button>
           </div>
         </div>

@@ -56,35 +56,35 @@ const Sidebar: React.FC = () => {
                 className="h-full w-full text-white p-4"
             >
                 <GridItem className="w-full flex flex-col justify-items-start">
-                    <a href="/" className="text-white m-0 p-0 font-bold flex items-center hover:text-gray-300 mb-2">
-                        <img src="public/nomen-nescio-logo.png" className='w-20 h-10 object-cover p-0 invert m-0' alt="" />
+                    <a href="/" className="text-white m-0 p-0 font-bold flex translate-x-1/4 justify-items-center hover:text-gray-300 mb-2">
+                        <img src="public/nomen-nescio-logo.png" className='w-24 hover:scale-110 duration-150 h-auto object-cover p-0 invert m-0' alt="" />
                     </a>
                     <IconButton
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
-                        className="w-full justify-start pl-0"
+                        className="w-full justify-start"
                         to="/"
                     />
                     <IconButton
                         icon={FaFolder}
                         direction="right"
                         innerText="Mail"
-                        className="w-full justify-start pl-0"
+                        className="w-full justify-start"
                         to="/mail"
                     />
                     <IconButton
                         icon={FaUsers}
                         direction="right"
                         innerText="Groups"
-                        className="w-full justify-start pl-0"
+                        className="w-full justify-start"
                         to='/group'
                     />
                     <IconButton
                         icon={FaCog}
                         direction="right"
                         innerText="Settings"
-                        className="w-full justify-start pl-0"
+                        className="w-full justify-start"
                         to='/setting'
                     />
                 </GridItem>
