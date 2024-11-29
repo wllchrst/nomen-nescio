@@ -31,11 +31,12 @@ const Navbar: React.FC = () => {
   const [filteredResults, setFilteredResults] = useState<IUser[]>([]);
   const { setUserData } = useUserContext();
   const navigate = useNavigate();
+  const isAuthenticated = userService.isAuthenticated();
 
   function handleLogout() {
     userService.logOut();
     setUserData(null);
-    navigate("/");
+    navigate("/login");
   }
 
   const groupsDropdown = [
@@ -61,39 +62,47 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-transparent w-full z-50 border-gray-800 px-4 py-2 flex items-center justify-between">
-      <div className="flex items-center space-x-4 z-50">
-        <Dropdown text="MAIL">
-          {groupsDropdown.map((item, index) => (
-            <div key={index}>
-              <DropdownValue text={item.name} icon={item.icon} to={item.link} />
+      {isAuthenticated ? (
+        <>
+          <div className="flex items-center space-x-4 z-50">
+            <Dropdown text="MAIL">
+              {groupsDropdown.map((item, index) => (
+                <div key={index}>
+                  <DropdownValue text={item.name} icon={item.icon} to={item.link} />
+                </div>
+              ))}
+            </Dropdown>
+          </div>
+
+          <div className="flex items-center space-x-3 z-50">
+            <div>
+              <SearchDropdown
+                data={filteredResults.length > 0 ? filteredResults : searchData}
+                onSearch={handleSearch}
+              />
             </div>
-          ))}
-        </Dropdown>
-      </div>
 
-      <div className="flex items-center space-x-3 z-50">
-        <div>
-          <SearchDropdown
-            data={filteredResults.length > 0 ? filteredResults : searchData}
-            onSearch={handleSearch}
-          />
+            <div className="flex items-center space-x-2">
+              <Dropdown text="" image={user?.profile_picture_path}>
+                <DropdownValue
+                  text="Profile"
+                  icon={<FaUserCircle />}
+                  to="/setting"
+                />
+                <DropdownValue
+                  text="Log Out"
+                  icon={<FaSignOutAlt />}
+                  onClick={() => handleLogout()}
+                />
+              </Dropdown>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="flex items-center space-x-4 z-50">
+          
         </div>
-
-        <div className="flex items-center space-x-2">
-          <Dropdown text="" image={user?.profile_picture_path}>
-            <DropdownValue
-              text="Profile"
-              icon={<FaUserCircle />}
-              to="/setting"
-            />
-            <DropdownValue
-              text="Log Out"
-              icon={<FaSignOutAlt />}
-              onClick={() => handleLogout()}
-            />
-          </Dropdown>
-        </div>
-      </div>
+      )}
     </nav>
   );
 };
