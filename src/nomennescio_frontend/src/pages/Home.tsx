@@ -100,15 +100,17 @@ const Home = () => {
                     </p>
                     <div className="flex justify-center items-center space-x-4">
                         {!isAuthenticated && (
-                            <button
-                                className="text-blue-500 hover:text-blue-700 transition duration-300 transform hover:scale-105"
-                                onClick={() => navigate("/register")}
-                                onKeyPress={handleKeyPress}
-                            >
-                                Get Started
-                            </button>
+                            <div className="">
+                                <button
+                                    className="text-blue-500 hover:text-blue-700 transition duration-300 transform hover:scale-105"
+                                    onClick={() => navigate("/register")}
+                                    onKeyPress={handleKeyPress}
+                                >
+                                    Get Started
+                                </button>
+                                <span className="text-white">|</span>
+                            </div>
                         )}
-                        <span className="text-white">|</span>
                         <button
                             onClick={handleCanvasToggle}
                             className=" text-blue-500 hover:text-blue-700 transition duration-300 transform hover:scale-105"

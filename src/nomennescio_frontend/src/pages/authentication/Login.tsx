@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     const result = await userService.loginUser(data);
     if (result) {
       setUserData(result);
-      navigate("/home");
+      navigate("/");
     }
   };
 
