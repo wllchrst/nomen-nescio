@@ -62,7 +62,7 @@ const Register: React.FC = () => {
 
     if (result){
       console.log("SUCCESSFUL");
-      navigate("/");
+      navigate("/home");
     } 
   };
 
@@ -147,7 +147,7 @@ const Register: React.FC = () => {
         <p className="mt-4 text-gray-400 text-center text-sm">
           Already have an account?{" "}
           <span
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/login")}
             className="text-blue-400 hover:underline cursor-pointer"
           >
             Login

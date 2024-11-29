@@ -56,16 +56,15 @@ const Sidebar: React.FC = () => {
                 className="h-full w-full text-white p-4"
             >
                 <GridItem className="w-full">
-                    <a href="/" className="text-white  font-bold flex items-center hover:text-gray-300 mb-4">
-                        <AiFillGithub className="w-8 h-8" />
-                        <span className="ml-4 text-xl">Nomen Nescio</span>
+                    <a href="/" className="text-white m-0 p-0 -translate-x-6 font-bold flex items-center hover:text-gray-300 mb-2">
+                        <img src="public/nomen-nescio-logo.png" className='w-40 h-20 object-cover p-0 invert m-0' alt="" />
                     </a>
                     <IconButton
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
                         className="w-full justify-start"
-                        to="/home"
+                        to="/"
                     />
                     <IconButton
                         icon={FaFolder}

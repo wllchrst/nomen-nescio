@@ -7,6 +7,8 @@ import { useState, useRef, useEffect } from 'react';
 import useDrawableCanvas from '../hooks/use-drawable-canvas';
 import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
 import { useUserContext } from '../context/user-context';
+import { UserService } from '../service/user-service';
+import { useNavigate } from 'react-router-dom';
 
 const dummyData = [
     {
@@ -45,7 +47,10 @@ const Home = () => {
     const [canvasWidth, setCanvasWidth] = useState(1000);
     const [canvasHeight, setCanvasHeight] = useState(800);
 
-    const { user } = useUserContext()
+    const { user } = useUserContext();
+    const userService = new UserService();
+    const isAuthenticated = userService.isAuthenticated();
+    const navigate = useNavigate();
 
     const handleCanvasToggle = () => {
         setShowCanvas(!showCanvas);
@@ -57,6 +62,12 @@ const Home = () => {
 
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCanvasHeight(parseInt(e.target.value, 10));
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (e.key === 'Enter') {
+            navigate("/register");
+        }
     };
 
     return (
@@ -74,7 +85,7 @@ const Home = () => {
                         Pronunciation: No-men Nes-kee-o
                     </span>
                 </h2>
-                <div className="w-screen m-4 z-40 text-center font-bold animate-fade-in">
+                <div className="w-screen flex flex-col m-4 z-40 text-center font-bold animate-fade-in">
                     <p className='text-4xl mb-2'>From Hand to Hand</p>
                     <p className='text-4xl mb-8'>Secured by Your&nbsp;
                         <TypingEffect
@@ -87,9 +98,26 @@ const Home = () => {
                             displayTextRenderer={(text: string) => <span>{text}</span>}
                         />
                     </p>
-                    <button onClick={handleCanvasToggle} className="mt-4 text-blue-500 hover:text-blue-700 transition duration-300">
-                        Try finding your signature?
-                    </button>
+                    <div className="flex justify-center items-center space-x-4">
+                        {!isAuthenticated && (
+                            <div className="">
+                                <button
+                                    className="text-blue-500 hover:text-blue-700 transition duration-300 transform hover:scale-105"
+                                    onClick={() => navigate("/register")}
+                                    onKeyPress={handleKeyPress}
+                                >
+                                    Get Started
+                                </button>
+                                <span className="text-white">|</span>
+                            </div>
+                        )}
+                        <button
+                            onClick={handleCanvasToggle}
+                            className=" text-blue-500 hover:text-blue-700 transition duration-300 transform hover:scale-105"
+                        >
+                            Try finding your signature?
+                        </button>
+                    </div>
                 </div>
                 {showCanvas && (
                     <div className="w-full flex flex-col items-center mt-4 z-50">

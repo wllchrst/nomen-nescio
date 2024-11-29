@@ -28,10 +28,10 @@ const AppRoutes: React.FC = () => {
     const isAuthenticated = userService.isAuthenticated();
     const currentPath = window.location.pathname;
 
-    if (!isAuthenticated && !["/", "/register"].includes(currentPath)) {
+    if (!isAuthenticated && !["/login", "/register", "/"].includes(currentPath)) {
+      navigate("/login");
+    } else if (isAuthenticated && ["/login", "/register"].includes(currentPath)) {
       navigate("/");
-    } else if (isAuthenticated && ["/", "/register"].includes(currentPath)) {
-      navigate("/home");
     }
   }, [navigate, userService]);
 
@@ -39,13 +39,13 @@ const AppRoutes: React.FC = () => {
     <MainLayout>
       <div className="min-h-screen overflow-hidden bg-[#0d1117] flex items-center justify-center overflow-y-hidden">
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/mail" element={<Mail />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/group" element={<Group />} />
           <Route path="/setting" element={<Setting />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </div>
     </MainLayout>

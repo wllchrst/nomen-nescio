@@ -72,11 +72,11 @@ const TextField: React.FC<TextFieldProps> = ({
             {isValid ? <FaCheckCircle className="text-green-500" /> : <FaTimesCircle className="text-red-500" />}
           </div>
         )}
-        {isValid === false && !showValidationOnHover && (
+        {/* {isValid === false && !showValidationOnHover && (
           <div className="absolute top-0 left-0 mt-8 text-xs text-red-500">
             {validationMessages[variant]}
           </div>
-        )}
+        )} */}
         {showValidationOnHover && needValidationMessage && (
           <div className="absolute top-[-40px] left-0 text-xs text-gray-400 bg-[#0d1117] p-2 rounded-md shadow-lg hidden group-hover:block transition-all duration-300 ease-in-out transform -translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
             <div className="flex items-center">
