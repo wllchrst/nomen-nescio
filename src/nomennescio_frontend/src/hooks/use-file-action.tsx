@@ -73,19 +73,44 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         return false;
     }
 
-    const handleDownloadFile = () => {
-        handleOpenSignatureModal(() => {
-            let success = validateSignature();
+    const handleDownloadFile = async () => {
+        handleOpenSignatureModal(async () => {
+            let success = true;  
             if (success) {
-                const link = document.createElement('a');
-                link.href = useProfileSource(fileUrl);
-                link.download = useProfileSource(fileName);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                try {
+                    let modifiedFileUrl = fileUrl.replace(/\\/g, '/');
+
+                    const fullUrl = `http://localhost:8000/${modifiedFileUrl}`;
+                    console.log("Full urlnya:", fullUrl);
+
+                    const response = await fetch(fullUrl);
+
+                    if (!response.ok) {
+                        throw new Error('kga bisa');
+                    }
+
+                    const blob = await response.blob();
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+
+                    link.download = fullUrl.split('/').pop();
+
+                    link.click();
+
+                    console.log("Download success");
+
+                    URL.revokeObjectURL(link.href);
+                } catch (error) {
+                    console.error('Download failed:', error);
+                }
             }
         });
     };
+
+
+
+
 
     const handleDelete = () => {
         onDelete?.();
