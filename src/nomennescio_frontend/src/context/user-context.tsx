@@ -54,6 +54,7 @@ export function UserContextProvider({ children }: IChildren) {
       }
 
       setUserData(user!.data);
+      console.log(user!.data)
     };
     wait();
   }, []);

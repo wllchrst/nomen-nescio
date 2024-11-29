@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import useProfileSource from './use-get-profile-source';
-import { EmailService } from '../service/email-service';
 import { useUserContext } from '../context/user-context';
+import { IUser } from '../interfaces/user-interface';
+import { getFile, getFileUrl } from '../service/file-service';
+import { UserService } from '../service/user-service';
+import { EmailService } from '../service/email-service';
+
 import Alert from '../components/elements/alerts/alert'; // Import Alert component
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
@@ -13,6 +17,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
     const [pendingAction, setPendingAction] = useState<() => void>(() => { });
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
+    const userService = new UserService()
     const [alert, setAlert] = useState<{ show: boolean, type: string, title: string, desc: string }>({ show: false, type: '', title: '', desc: '' });
     const emailService = new EmailService();
     const {user} = useUserContext()
@@ -55,12 +60,27 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         setIsSignatureModalOpen(true);
     };
 
-    const handleConfirmSignature = () => {
-        validateSignature(); 
-        if (typeof pendingAction === 'function') {
-            pendingAction();
+    const handleConfirmSignature = (user: IUser, url: string) => {
+        return async () => {
+            if (typeof pendingAction === 'function') {
+                pendingAction();
+            }
+
+            const file_name = await getFile(userService.getUserIdFromCookie(), url, user.secret_key)
+            const file_url = getFileUrl(file_name)
+
+            const response = await fetch(file_url);
+            const blob = await response.blob()
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = file_name;
+            link.style.display = "hidden"
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-        setIsSignatureModalOpen(false);
     };
 
     const validateSignature = () => {
