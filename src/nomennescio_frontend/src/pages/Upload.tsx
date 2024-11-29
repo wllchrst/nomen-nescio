@@ -129,12 +129,14 @@ const Upload = () => {
                 fileMapping.push(obj)
             }
 
+            const receivers = sendRef.current.filter(obj => obj.id !== userRef.current!.id).map(obj => obj.id);
+
             const emailData: ICreateEmailData = {
                 title: descRef.current,
                 description: msgRef.current,
                 files: fileMapping,
                 sender_id: parseInt(userService.getUserIdFromCookie()),
-                receivers: sendRef.current.map(obj => obj.id)
+                receivers: receivers
             }
             console.log(emailData);
 
