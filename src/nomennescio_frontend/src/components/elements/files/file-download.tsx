@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   faFile,
   faFileImage,
@@ -22,6 +22,8 @@ import {
 } from "react-icons/ai";
 import { useFileActions } from "../../../hooks/use-file-action";
 import useProfileSource from "../../../hooks/use-get-profile-source";
+import { IUser } from "../../../interfaces/user-interface";
+import { getFileUrl } from "../../../service/file-service";
 
 interface FileDownloadProps {
   fileUrl: string;
@@ -33,6 +35,7 @@ interface FileDownloadProps {
   onDelete?: () => void;
   className?: string;
   fileName?: string;
+  user: IUser
 }
 
 const FileDownload: React.FC<FileDownloadProps> = ({
@@ -44,6 +47,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
   onShare,
   className,
   needPreview = true,
+  user
 }) => {
   const fileName = fileUrl.split(/[/\\]/).pop() || "Unnamed File";
   const fileExtension = fileName.split(".").pop()?.toLowerCase();
@@ -72,6 +76,22 @@ const FileDownload: React.FC<FileDownloadProps> = ({
     signatureFile,
     setSignatureFile,
   } = useFileActions(fileUrl, fileName, onRename, onDelete);
+
+  const [ fileNameA, setFileName ] = useState("")
+
+  const userRef = useRef(user)
+  const fileNameRef = useRef(fileName)
+
+  useEffect(() => {
+    if(!user) return
+    userRef.current = user
+  }, [user])
+
+  // useEffect(() => {
+  //   if(fileName.length == 0) return
+
+  //   fileNameRef.current = fileNameA
+  // }, [fileNameA])
 
   const getFileIcon = () => {
     if (["jpg", "jpeg", "png", "gif"].includes(fileExtension || "")) {
@@ -121,7 +141,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
       return (
         <iframe
           src={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
-            fileUrl
+            getFileUrl(fileNameRef.current)
           )}`}
           className="w-full h-full rounded-md"
           title="Word Document Preview"
@@ -155,6 +175,10 @@ const FileDownload: React.FC<FileDownloadProps> = ({
   const containerClass = needPreview
     ? `bg-gray-900 text-white rounded-lg shadow-lg p-4 max-w-sm mx-auto relative transition-colors duration-300 hover:bg-gray-700 h-full ${className}`
     : `bg-gray-900 text-white rounded-lg shadow-lg p-4 w-96 h-10 mx-auto relative flex items-center transition-colors duration-300 hover:bg-gray-700 ${className}`;
+
+  useEffect(() => {
+    console.log(user)
+  })
 
   return (
     <div
@@ -289,7 +313,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
                 Cancel
               </button>
               <button
-                onClick={handleConfirmSignature}
+                onClick={handleConfirmSignature(userRef.current, fileUrl)}
                 className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Confirm

@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import useProfileSource from './use-get-profile-source';
+import { useUserContext } from '../context/user-context';
+import { IUser } from '../interfaces/user-interface';
+import { getFile, getFileUrl } from '../service/file-service';
+import { UserService } from '../service/user-service';
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +14,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
     const [pendingAction, setPendingAction] = useState<() => void>(() => { });
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
+    const userService = new UserService()
 
     const handleDoubleClick = () => {
         handleOpenFile();
@@ -49,11 +54,24 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         setIsSignatureModalOpen(true);
     };
 
-    const handleConfirmSignature = () => {
-        if (typeof pendingAction === 'function') {
-            pendingAction();
+    const handleConfirmSignature = (user: IUser, url: string) => {
+        return async () => {
+            // if (typeof pendingAction === 'function') {
+            //     pendingAction();
+            // }
+
+            const file_name = await getFile(userService.getUserIdFromCookie(), url, user.secret_key)
+            const file_url = getFileUrl(file_name)
+
+            const link = document.createElement('a');
+            link.href = file_url;
+            link.download = file_name;
+            link.style.display = "hidden"
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-        setIsSignatureModalOpen(false);
     };
 
     const validateSignature = () => {

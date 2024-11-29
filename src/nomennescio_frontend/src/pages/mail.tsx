@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Template from '../components/global/template';
 import FileDownload from '../components/elements/files/file-download';
 import { EmailService } from '../service/email-service';
@@ -85,6 +85,7 @@ const Mail: React.FC = () => {
                                                     fileUrl={file.file_path}
                                                     uploadedDate='123132'
                                                     needPreview={false}
+                                                    user={user!}
                                                 />
                                             ))}
                                         </div>
