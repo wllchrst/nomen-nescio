@@ -49,42 +49,42 @@ const Sidebar: React.FC = () => {
     return (
         <div
             ref={sidebarRef}
-            className="relative h-full bg-gray-900"
+            className="relative h-full bg-gray-900 flex justify-start items-start"
             style={{ width: sidebarWidth }}
         >
             <Grid
                 className="h-full w-full text-white p-4"
             >
-                <GridItem className="w-full">
-                    <a href="/" className="text-white m-0 p-0 -translate-x-6 font-bold flex items-center hover:text-gray-300 mb-2">
-                        <img src="public/nomen-nescio-logo.png" className='w-40 h-20 object-cover p-0 invert m-0' alt="" />
+                <GridItem className="w-full flex flex-col justify-items-start">
+                    <a href="/" className="text-white m-0 p-0 font-bold flex items-center hover:text-gray-300 mb-2">
+                        <img src="public/nomen-nescio-logo.png" className='w-20 h-10 object-cover p-0 invert m-0' alt="" />
                     </a>
                     <IconButton
                         icon={FaHome}
                         direction="right"
                         innerText="Home"
-                        className="w-full justify-start"
+                        className="w-full justify-start pl-0"
                         to="/"
                     />
                     <IconButton
                         icon={FaFolder}
                         direction="right"
                         innerText="Mail"
-                        className="w-full justify-start"
+                        className="w-full justify-start pl-0"
                         to="/mail"
                     />
                     <IconButton
                         icon={FaUsers}
                         direction="right"
                         innerText="Groups"
-                        className="w-full justify-start"
+                        className="w-full justify-start pl-0"
                         to='/group'
                     />
                     <IconButton
                         icon={FaCog}
                         direction="right"
                         innerText="Settings"
-                        className="w-full justify-start"
+                        className="w-full justify-start pl-0"
                         to='/setting'
                     />
                 </GridItem>
