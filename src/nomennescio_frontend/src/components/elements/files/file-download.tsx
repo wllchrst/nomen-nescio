@@ -293,7 +293,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
 
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40"
           onClick={handleModalContainerClick}
         >
           <button
@@ -311,7 +311,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
         </div>
       )}
       {isSignatureModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40">
           <div className="bg-gray-700 rounded-lg shadow-lg w-10/12 md:w-2/3 lg:w-1/2 p-4">
             <h2 className="text-xl font-bold mb-4">
               Please Draw Your Signature

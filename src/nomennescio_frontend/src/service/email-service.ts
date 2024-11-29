@@ -35,6 +35,7 @@ export class EmailService extends Service {
   async compareSignature(user: IUser, file: File) {
     const date = new Date();
     const filePath = await uploadFileFromUser(date.toString(), file);
+    console.log("File path", filePath)
     const predictData: IPredictImage = {
       first_image_path: `./${filePath}`,
       second_image_path: `./${user.signature_file_path}`,
@@ -44,5 +45,12 @@ export class EmailService extends Service {
     const result = await this.post<IResponse<boolean>>("/predict", predictData);
     console.log(result);
     return result;
+  }
+
+  async getSignatureFile(signaturePath: string): Promise<File> {
+    const response = await fetch(signaturePath);
+    const blob = await response.blob();
+    const file = new File([blob], "signature.png", { type: blob.type });
+    return file;
   }
 }

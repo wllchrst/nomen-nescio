@@ -57,21 +57,50 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         setIsSignatureModalOpen(true);
     };
 
+    const getSignatureFromCanvas = (canvas: HTMLCanvasElement): File | null => {
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            console.error("bkn canvas element");
+            return null;
+        }
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        const blob = dataURLToBlob(dataUrl);
+        if (blob) {
+            return new File([blob], "signature.jpg", { type: "image/jpeg" });
+        }
+        return null;
+    };
+
+    const dataURLToBlob = (dataUrl: string): Blob | null => {
+        const byteString = atob(dataUrl.split(",")[1]);
+        const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    };
+
     // disini handle confirm signaturenya
-    const handleConfirmSignature = async () => {
+    const handleConfirmSignature = async (canvas: HTMLCanvasElement) => {
+        const signatureFile = getSignatureFromCanvas(canvas);
+        if (signatureFile) {
+            setSignatureFile(signatureFile);
+        }
         let success = await validateSignature();
-        success = true;
         if (success && pendingAction) {
             console.log("BERHASILLLLLLLLLL");
             setIsSignatureModalOpen(false);
             pendingAction();
         } else {
             console.log("Signature nya gagal euy");
+            showAlert('error', 'Signature Validation Failed', 'The provided signature is invalid.');
         }
     };
 
     const validateSignature = async () => {
         if (user == null || signatureFile == null) return false;
+        // console.log("user", user, "signature ", signatureFile)
         const result = await emailService.compareSignature(user, signatureFile);
         return result?.data || false;
     };
@@ -100,6 +129,10 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
                 setAlert({ show: true, type: 'error', title: 'Download Failed', desc: 'Failed to download the file.' });
             }
         });
+    };
+
+    const showAlert = (type: string, title: string, desc: string) => {
+        setAlert({ show: true, type, title, desc });
     };
 
     const handleDelete = () => {
@@ -136,6 +169,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         signatureFile,
         setSignatureFile,
         alert,
-        setAlert
+        setAlert,
+        showAlert
     };
 };

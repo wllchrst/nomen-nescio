@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaUndo, FaTrash, FaDownload } from "react-icons/fa";
 import useDrawableCanvas from "../../../hooks/use-drawable-canvas";
+import { useFileActions } from '../../../hooks/use-file-action';
 import clsx from "clsx";
 
 interface DrawableCanvasProps {
@@ -32,6 +33,8 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     downloadCanvas,
     validateCanvas,
   } = useDrawableCanvas(width, height);
+
+  const { showAlert } = useFileActions('', ''); 
 
   const [lineWidth, setLocalLineWidth] = useState(2);
   const [lineColor, setLocalLineColor] = useState("#000000");
@@ -91,6 +94,17 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
     }
   };
 
+  const dataURLToBlob = (dataUrl: string): Blob | null => {
+    const byteString = atob(dataUrl.split(",")[1]);
+    const mimeString = dataUrl.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  };
+
   const handleMouseUp = () => {
     stopDrawing();
     if (canvasRef.current) {
@@ -104,22 +118,26 @@ const DrawableCanvas: React.FC<DrawableCanvasProps> = ({
           canvas.height
         );
         if (imageData) {
-          validateCanvas();
+          const isValidCanvas = validateCanvas();
+          if (!isValidCanvas) {
+            showAlert('error', 'Invalid Canvas', 'The canvas content is invalid.');
+          }
         }
       }
+      getCanvasImage();
+      saveCanvasState();
+      setFile(canvas); 
     }
-    getCanvasImage();
-    saveCanvasState();
   };
 
   const handleUndo = () => {
     undo();
-    validateCanvas(); // Validate canvas after undo
+    validateCanvas(); 
   };
 
   const handleReset = () => {
     resetCanvas();
-    validateCanvas(); // Validate canvas after reset
+    validateCanvas(); 
   };
 
   return (

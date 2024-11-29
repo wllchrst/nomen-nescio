@@ -17,7 +17,7 @@ export async function uploadFileFromUser(user_id: string, file: File) : Promise<
         });
         return response.data;
       } catch (error) {
-        console.error(error);
+        console.error("gabisa euy error", error);
         return "";
       }
 }
