@@ -28,12 +28,9 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
 
     const handleOpenFile = () => {
         handleOpenSignatureModal(() => {
-            let success = validateSignature();
-            if (success) {
-                setIsModalOpen(true);
-            }
+            setIsModalOpen(true);
         });
-    }
+    };
 
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -60,83 +57,50 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         setIsSignatureModalOpen(true);
     };
 
-    const handleConfirmSignature = (user: IUser, url: string) => {
-        return async () => {
-            if (typeof pendingAction === 'function') {
-                pendingAction();
-            }
-
-            const file_name = await getFile(userService.getUserIdFromCookie(), url, user.secret_key)
-            const file_url = getFileUrl(file_name)
-
-            const response = await fetch(file_url);
-            const blob = await response.blob()
-
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = file_name;
-            link.style.display = "hidden"
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+    // disini handle confirm signaturenya
+    const handleConfirmSignature = async () => {
+        let success = await validateSignature();
+        success = true;
+        if (success && pendingAction) {
+            console.log("BERHASILLLLLLLLLL");
+            setIsSignatureModalOpen(false);
+            pendingAction();
+        } else {
+            console.log("Signature nya gagal euy");
         }
     };
 
-    const validateSignature = () => {
-        // Validasinya disni 
-        if(user == null || signatureFile == null) return false;
-
-        emailService.compareSignature(user, signatureFile).then((result) => {
-            if(result == null) return false;
-
-            return result.data;
-        });
-        return false;
-    }
+    const validateSignature = async () => {
+        if (user == null || signatureFile == null) return false;
+        const result = await emailService.compareSignature(user, signatureFile);
+        return result?.data || false;
+    };
 
     const handleDownloadFile = async () => {
         handleOpenSignatureModal(async () => {
-            let success = validateSignature();
-            success = true;  
-            if (success) {
-                try {
-                    let modifiedFileUrl = fileUrl.replace(/\\/g, '/');
+            try {
+                let modifiedFileUrl = fileUrl.replace(/\\/g, '/');
+                const fullUrl = `http://localhost:8000/${modifiedFileUrl}`;
+                const response = await fetch(fullUrl);
 
-                    const fullUrl = `http://localhost:8000/${modifiedFileUrl}`;
-                    console.log("Full urlnya:", fullUrl);
-
-                    const response = await fetch(fullUrl);
-
-                    if (!response.ok) {
-                        throw new Error('kga bs');
-                    }
-
-                    const blob = await response.blob();
-
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-
-                    link.download = fullUrl.split('/').pop();
-
-                    link.click();
-
-                    console.log("Download success");
-
-                    URL.revokeObjectURL(link.href);
-
-                    setAlert({ show: true, type: 'success', title: 'Download Success', desc: 'File downloaded successfully.' });
-                } catch (error) {
-                    console.error('Download failed:', error);
-                    setAlert({ show: true, type: 'error', title: 'Download Failed', desc: 'Failed to download the file.' });
+                if (!response.ok) {
+                    throw new Error('Failed to download');
                 }
+
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fullUrl.split('/').pop();
+                link.click();
+                URL.revokeObjectURL(link.href);
+
+                setAlert({ show: true, type: 'success', title: 'Download Success', desc: 'File downloaded successfully.' });
+            } catch (error) {
+                console.error('Download failed:', error);
+                setAlert({ show: true, type: 'error', title: 'Download Failed', desc: 'Failed to download the file.' });
             }
         });
     };
-
-
-
-
 
     const handleDelete = () => {
         onDelete?.();

@@ -332,7 +332,7 @@ const FileDownload: React.FC<FileDownloadProps> = ({
                 Cancel
               </button>
               <button
-                onClick={handleConfirmSignature(userRef.current, fileUrl)}
+                onClick={handleConfirmSignature}
                 className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Confirm
