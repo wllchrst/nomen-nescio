@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useProfileSource from './use-get-profile-source';
 import { EmailService } from '../service/email-service';
 import { useUserContext } from '../context/user-context';
+import Alert from '../components/elements/alerts/alert'; // Import Alert component
 
 export const useFileActions = (fileUrl: string, fileName: string, onRename?: (newName: string) => void, onDelete?: () => void) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +13,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
     const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
     const [pendingAction, setPendingAction] = useState<() => void>(() => { });
     const [signatureFile, setSignatureFile] = useState<File | null>(null);
+    const [alert, setAlert] = useState<{ show: boolean, type: string, title: string, desc: string }>({ show: false, type: '', title: '', desc: '' });
     const emailService = new EmailService();
     const {user} = useUserContext()
 
@@ -75,7 +77,8 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
 
     const handleDownloadFile = async () => {
         handleOpenSignatureModal(async () => {
-            let success = true;  
+            let success = validateSignature();
+            success = true;  
             if (success) {
                 try {
                     let modifiedFileUrl = fileUrl.replace(/\\/g, '/');
@@ -86,7 +89,7 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
                     const response = await fetch(fullUrl);
 
                     if (!response.ok) {
-                        throw new Error('kga bisa');
+                        throw new Error('kga bs');
                     }
 
                     const blob = await response.blob();
@@ -101,8 +104,11 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
                     console.log("Download success");
 
                     URL.revokeObjectURL(link.href);
+
+                    setAlert({ show: true, type: 'success', title: 'Download Success', desc: 'File downloaded successfully.' });
                 } catch (error) {
                     console.error('Download failed:', error);
+                    setAlert({ show: true, type: 'error', title: 'Download Failed', desc: 'Failed to download the file.' });
                 }
             }
         });
@@ -144,6 +150,8 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
         handleDelete,
         handleRename,
         signatureFile,
-        setSignatureFile
+        setSignatureFile,
+        alert,
+        setAlert
     };
 };
