@@ -8,7 +8,8 @@ import useDrawableCanvas from '../hooks/use-drawable-canvas';
 import DrawableCanvas from '../components/elements/canvas/drawable-canvas';
 import { useUserContext } from '../context/user-context';
 import { UserService } from '../service/user-service';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Alert from '../components/elements/alerts/alert';
 
 const dummyData = [
     {
@@ -51,6 +52,18 @@ const Home = () => {
     const userService = new UserService();
     const isAuthenticated = userService.isAuthenticated();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (location.state && location.state.alertMessage) {
+            setAlertMessage(location.state.alertMessage);
+        }
+    }, [location.state]);
+
+    const closeAlert = () => {
+        setAlertMessage(null);
+    };
 
     const handleCanvasToggle = () => {
         setShowCanvas(!showCanvas);
@@ -72,6 +85,16 @@ const Home = () => {
 
     return (
         <div className='w-full bg-gray-900'>
+            {alertMessage && (
+                <Alert
+                    title="Logout"
+                    desc={alertMessage}
+                    type="success"
+                    showAlert={!!alertMessage}
+                    closeAlert={closeAlert}
+                    isClosing={!alertMessage}
+                />
+            )}
             <div className="z-50">
                 <Navbar />
             </div>

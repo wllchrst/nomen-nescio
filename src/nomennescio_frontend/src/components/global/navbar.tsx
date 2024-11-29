@@ -34,9 +34,12 @@ const Navbar: React.FC = () => {
   const isAuthenticated = userService.isAuthenticated();
 
   function handleLogout() {
-    userService.logOut();
-    setUserData(null);
-    navigate("/login");
+    userService.logOut().then((success) => {
+      if (success) {
+        setUserData(null);
+        navigate("/", { state: { alertMessage: "Successfully logged out" } });
+      }
+    });
   }
 
   const groupsDropdown = [
@@ -82,8 +85,8 @@ const Navbar: React.FC = () => {
               />
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Dropdown text="" image={user?.profile_picture_path}>
+            <div className="flex items-center  space-x-2">
+              <Dropdown text="" image={user?.profile_picture_path || "public/dummy_profile.png"}>
                 <DropdownValue
                   text="Profile"
                   icon={<FaUserCircle />}

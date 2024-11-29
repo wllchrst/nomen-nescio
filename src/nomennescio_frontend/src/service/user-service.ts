@@ -18,21 +18,22 @@ export class UserService extends Service {
     return result.success;
   }
 
-  async loginUser(login: ILogin): Promise<IUser> {
+  async loginUser(login: ILogin): Promise<{ success: boolean; data: IUser | null }> {
     const result = await this.post<IResponse<IUser>>("user-login", login);
 
     if (result == null) {
-      throw new Error("Fail");
+      return { success: false, data: null };
     }
 
     console.log(result);
 
     if (result.success && result.data.email != "") {
       Cookie.set("user", result.data.id.toString());
-      return result.data;
+      console.log("INI RESULT DATA", result.data);
+      return { success: true, data: result.data };
     }
 
-    throw new Error("Fail");
+    return { success: false, data: null };
   }
 
   async updateUser(register: IRegister, userId: number) {
@@ -46,7 +47,7 @@ export class UserService extends Service {
     return result;
   }
 
-  async logOut() {
+  async logOut(): Promise<boolean> {
     try {
       Cookie.remove("user");
       return true;

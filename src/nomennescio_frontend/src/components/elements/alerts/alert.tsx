@@ -3,10 +3,10 @@ import IAlert from '../../../interfaces/alert-interface';
 
 const Alert: React.FC<IAlert> = ({ title, desc, type = 'info', showAlert, closeAlert, isClosing }) => {
     const alertTypeClasses = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        warning: 'bg-yellow-500',
-        info: 'bg-blue-500',
+        success: 'bg-green-600 border-green-800',
+        error: 'bg-red-600 border-red-800',
+        warning: 'bg-yellow-600 border-yellow-800',
+        info: 'bg-blue-600 border-blue-800',
     };
 
     const [progress, setProgress] = useState(0);
@@ -26,9 +26,9 @@ const Alert: React.FC<IAlert> = ({ title, desc, type = 'info', showAlert, closeA
                         window.clearInterval(interval);
                         return 100;
                     }
-                    return prevProgress + 10;
+                    return prevProgress + 2;
                 });
-            }, 100);
+            }, 10);
 
             hideTimeout = window.setTimeout(() => {
                 closeAlert();
@@ -48,7 +48,7 @@ const Alert: React.FC<IAlert> = ({ title, desc, type = 'info', showAlert, closeA
         <div className="fixed top-0 left-0 right-0 z-50">
             {showAlert && visible && (
                 <div
-                    className={`mb-4 p-4 max-w-xs mx-auto ${alertTypeClasses[type]} text-white rounded-lg shadow-xl transition-all duration-500 ease-out transform ${isClosing ? '-translate-y-4 opacity-0' : 'translate-y-0 opacity-100'} animate__animated animate__fadeIn animate__faster`}
+                    className={`mb-4 p-4 max-w-xs mx-auto ${alertTypeClasses[type]} text-white rounded-lg shadow-xl border-2 transition-all duration-500 ease-out transform ${isClosing ? '-translate-y-4 opacity-0' : 'translate-y-0 opacity-100'} animate__animated animate__fadeIn animate__faster`}
                 >
                     <div className="flex items-center justify-between">
                         <div>
@@ -64,7 +64,7 @@ const Alert: React.FC<IAlert> = ({ title, desc, type = 'info', showAlert, closeA
                     </div>
 
                     <div
-                        className={`absolute bottom-0 left-0 w-full h-1 ${alertTypeClasses[type].replace('500', '700')} transition-all duration-500 ease-in-out`}
+                        className={`absolute bottom-0 left-0 w-full h-1 ${alertTypeClasses[type].replace('600', '800')} transition-all duration-500 ease-in-out`}
                     >
                         <div
                             className="h-full bg-white transition-all duration-500 ease-in-out"

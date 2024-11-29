@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({ image, text, icon, children, classN
                 {icon ? (
                     <span className="mr-2">{icon}</span>
                 ) : (
-                    image && <img src={image} alt="" className='mr-4 w-6 h-6 rounded-full' />
+                    image && <img src={image} alt="" className='mr-2 w-8 h-8 rounded-full' />
                 )}
                 <p className={size}>{text}</p>
                 {(!icon && !image) && <AiFillCaretDown className="ml-2 text-gray-400" />}

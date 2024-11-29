@@ -25,10 +25,11 @@ const Login: React.FC = () => {
     }
     try {
       const result = await userService.loginUser(data);
-      if (result && result.success && result.data.email !== "") {
+      if (result.success && result.data) {
         setUserData(result.data);
         navigate("/");
       } else {
+        console.log("INI RESULT ", result);
         setAlert({ show: true, message: "Wrong credentials. Please try again.", type: "error", key: alert.key + 1 });
       }
     } catch (error) {
