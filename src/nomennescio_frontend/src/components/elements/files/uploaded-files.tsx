@@ -12,7 +12,7 @@ interface UploadedFilesProps {
 
 const UploadedFiles: React.FC<UploadedFilesProps> = ({ selectedFiles, width }) => {
     return (
-        <div className={`overflow-y-scroll grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${selectedFiles.length > 4 ? 'overflow-y-scroll max-h-64' : ''}`}>
+        <div className={`overflow-y-scroll grid grid-cols-3 gap-4 w-full${selectedFiles.length > 4 ? 'overflow-y-scroll max-h-80' : ''}`}>
             {selectedFiles.map((fileObj, index) => (
                 <div key={index} className="bg-gray-800 p-3 rounded-md shadow-md flex flex-col space-y-2">
                     <div className="flex justify-between items-center">

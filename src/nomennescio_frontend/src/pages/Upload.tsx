@@ -233,7 +233,7 @@ const Upload = () => {
                         <div className="w-1/3">
                             <FileUpload startUploading={startUploading} />
                         </div>
-                        <div className="">
+                        <div className="w-full">
                             <UploadedFiles selectedFiles={selectedFiles} />
                         </div>
                     </div>
