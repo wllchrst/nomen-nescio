@@ -1,4 +1,5 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Template from "../components/global/template";
 import FileUpload from "../components/elements/files/file-upload";
 import UploadedFiles from "../components/elements/files/uploaded-files";
@@ -14,6 +15,7 @@ import Alert from "../components/elements/alerts/alert";
 import { GroupService } from "../service/group-service";
 import { IGroupData } from "../interfaces/group-interface";
 import { UserService } from "../service/user-service";
+import { useNavigate } from "react-router-dom";
 
 interface UploadedFile {
     file: File;
@@ -22,6 +24,8 @@ interface UploadedFile {
 }
 
 const Upload = () => {
+    const location = useLocation();
+    let groupData = location.state?.groupData || null;
     const [selectedFiles, setSelectedFiles] = useState<UploadedFile[]>([]);
     const { user } = useUserContext();
     const [ description, setDescription ] = useState("")
@@ -43,6 +47,8 @@ const Upload = () => {
     const groupService = new GroupService();
 
     const emailService = new EmailService()
+    const navigate = useNavigate();
+    // console.log("Data hasil navigate", groupData);
 
     useEffect(() => {
         selectedFilesRef.current = selectedFiles
@@ -58,7 +64,7 @@ const Upload = () => {
         const fetchGroupsAndUsers = async () => {
             if (!user) return;
             const groupResult = await groupService.getUserGroup(user.id.toString());
-            console.log("Group" , groupResult)
+            // console.log("Group" , groupResult)
             const userResult = await userService.getAllUser();
             if (groupResult.success) {
                 setGroups(groupResult.data);
@@ -82,16 +88,52 @@ const Upload = () => {
         setFilteredUsers(userResults);
     }, [searchTerm, groups, users]);
 
-    const handleUserClick = (user: IUser) => {
-        console.log("click")
-        sendRef.current.push(user)
-    };
-
     const handleGroupSelect = (group: IGroupData) => {
         setSelectedGroup(group);
-        const memberIds = group.members.map(member => member.user_id);
+        const memberIds = group.members ? group.members.map(member => member.user_id) : [];
         sendRef.current = memberIds.map(id => ({ id } as IUser));
-        console.log("Selected group members' user IDs: ", memberIds);
+        // console.log("Selected group members' user IDs: ", memberIds);
+        setFilteredGroups([group]);
+    };
+
+    useEffect(() => {
+        if (groupData) {
+            setSelectedGroup(groupData);
+            // console.log("GROUP DATAAA", groupData)
+            const memberIds = groupData.members ? groupData.members.map(member => member.user_id) : [];
+            sendRef.current = memberIds.map(id => ({ id } as IUser));
+            setFilteredGroups([groupData]);
+            console.log("KWKEEKWKE")
+        }
+    }, [groupData]);
+
+    useEffect(() => {
+        if (groupData) {
+            handleGroupSelect(groupData); 
+        }
+    }, [groupData]);
+    
+    const resetNavigateData = () => {
+        navigate('/upload', { state: null });
+    }
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('groupData');
+            localStorage.removeItem('selectedFiles');
+            localStorage.removeItem('description');
+            localStorage.removeItem('message');
+            resetNavigateData();
+        };
+      
+        window.addEventListener('beforeunload', handleBeforeUnload);
+      
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
+    const handleUserClick = (user: IUser) => {
+        sendRef.current.push(user)
     };
 
     const handleFilesUploaded = (files: UploadedFile[]) => {
@@ -138,7 +180,7 @@ const Upload = () => {
                 sender_id: parseInt(userService.getUserIdFromCookie()),
                 receivers: receivers
             }
-            console.log(emailData);
+            // console.log(emailData);
 
             await emailService.createEmail(emailData);
             setAlert({ show: true, title: "Success", desc: "Email sent successfully", type: "success" });
@@ -166,7 +208,7 @@ const Upload = () => {
                 <h1 className="text-gray-300 mb-8 text-6xl font-bold">New Mail</h1>
                 <div className="flex flex-col space-y-4">
                     <SearchDropdown
-                        data={[]}
+                        data={groupData ? [groupData] : []}
                         searchForUser={true}
                         searchForGroup={true}
                         onUserClick={handleUserClick}
@@ -174,6 +216,7 @@ const Upload = () => {
                         className="p-4 rounded-lg border border-gray-600 bg-gray-800 text-white w-full"
                         users={filteredUsers}
                         groups={filteredGroups}
+                        chosenGroups={selectedGroup ? [selectedGroup] : []}
                     />
                     <input
                         type="text"

@@ -172,7 +172,7 @@ const Group = () => {
               </div>
               <button
                 className="bg-gray-700 m-4 p-4 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 flex items-center group"
-                onClick={() => navigate("/upload")}
+                onClick={() => navigate("/upload", { state: { groupData: group } })} // Pass only the selected group
               >
                 <AiOutlinePlus className="group-hover:rotate-180 transform transition-transform duration-300" />
               </button>
@@ -267,7 +267,6 @@ const Group = () => {
                   >
                     <div className="flex items-center">
                       <img
-                        // ini nanti pas ada profile pic jangan lupa diganti
                         src={
                           member.profile_picture_path == null
                             ? DUMMY_PROFILE

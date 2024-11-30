@@ -53,6 +53,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
   className,
   users,
   groups,
+  chosenGroups = [], 
 }) => {
   const {
     query,
@@ -60,7 +61,6 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     filteredUsers = [],
     filteredGroups = [],
     chosenUsers,
-    chosenGroups,
     searchInputRef,
     handleSearch,
     handleUserClick,
