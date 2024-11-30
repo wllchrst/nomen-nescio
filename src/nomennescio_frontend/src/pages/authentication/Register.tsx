@@ -62,7 +62,7 @@ const Register: React.FC = () => {
 
     if (result){
       console.log("SUCCESSFUL");
-      navigate("/home");
+      navigate("/login", { state: { successMessage: "Registration successful! Please log in." } });
     } 
   };
 

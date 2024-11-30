@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import TextField from "../../components/elements/fields/text-field";
@@ -13,10 +13,17 @@ import Alert from "../../components/elements/alerts/alert";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register, handleSubmit } = useForm<ILogin>();
   const userService = new UserService();
   const { setUserData } = useUserContext();
   const [alert, setAlert] = useState({ show: false, message: "", type: "error", key: 0 });
+
+  useEffect(() => {
+    if (location.state?.successMessage) {
+      setAlert({ show: true, message: location.state.successMessage, type: "success", key: alert.key + 1 });
+    }
+  }, [location.state]);
 
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     if (!data.email || !data.password) {
@@ -43,7 +50,7 @@ const Login: React.FC = () => {
       {alert.show && (
         <Alert
           key={alert.key}
-          title="Login Error"
+          title={alert.type === "success" ? "Success" : "Login Error"}
           desc={alert.message}
           type={alert.type}
           showAlert={alert.show}
