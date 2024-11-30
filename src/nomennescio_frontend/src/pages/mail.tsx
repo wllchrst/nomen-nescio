@@ -75,8 +75,8 @@ const Mail: React.FC = () => {
                             <div className="bg-gray-800 p-6 rounded-lg h-full shadow-inner overflow-y-auto">
                                 {selectedEmail ? (
                                     <div className="h-full flex flex-col items-start overflow-y-auto">
-                                        <h3 className="text-white text-xl">Title {selectedEmail.email.title}</h3>
-                                        <p className="text-white mt-4">Content {selectedEmail.email.description}</p>
+                                        <h3 className="text-white font-bold text-6xl">{selectedEmail.email.title}</h3>
+                                        <p className="text-white mt-4">{selectedEmail.email.description}</p>
                                         <div className="grid grid-cols-2 gap-4 mt-4">
                                             {selectedEmail.files.map((file, index) => (
                                                 <FileDownload
