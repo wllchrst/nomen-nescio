@@ -22,8 +22,14 @@ cargo build
 cargo run
 ```
 ## Running AI Locally
+Make sure that you have all the requirements installed (FastAPI, matplotlib, tensorflow are the main ones)
+```
+uvicorn app:app --reload --port 8001
+```
 
+**NOTES**
+- Please make sure that all the environment variables direct to the right path.
 ## Additional Information
 
 **Documentation in PDF Format**
-- https://drive.google.com/file/d/1YZh131pAPtsuhs4ykMu5PqbjaXIBW789/view?usp=sharing
+- https://drive.google.com/file/d/1M5NRNXC1CdHd_ZgtY-ZigiQ9h6ChbPCr/view?usp=sharing
