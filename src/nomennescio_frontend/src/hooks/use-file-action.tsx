@@ -88,7 +88,6 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
             setSignatureFile(signatureFile);
         }
         let success = await validateSignature();
-        success = true;
         if (success && pendingAction) {
             console.log("BERHASILLLLLLLLLL");
             setIsSignatureModalOpen(false);
