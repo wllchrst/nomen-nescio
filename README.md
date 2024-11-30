@@ -33,3 +33,5 @@ uvicorn app:app --reload --port 8001
 
 **Documentation in PDF Format**
 - https://drive.google.com/file/d/1M5NRNXC1CdHd_ZgtY-ZigiQ9h6ChbPCr/view?usp=sharing
+**Demonstration Video**
+- https://drive.google.com/file/d/1IgrvY7tZXWBHCXYMO9tyya8zKOfJsy1i/view?usp=sharing
