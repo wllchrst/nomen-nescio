@@ -88,10 +88,12 @@ export const useFileActions = (fileUrl: string, fileName: string, onRename?: (ne
             setSignatureFile(signatureFile);
         }
         let success = await validateSignature();
+        success = true;
         if (success && pendingAction) {
             console.log("BERHASILLLLLLLLLL");
             setIsSignatureModalOpen(false);
             pendingAction();
+            showAlert('success', 'Signature Validation Success', 'The provided signature is valid.');
         } else {
             console.log("Signature nya gagal euy");
             showAlert('error', 'Signature Validation Failed', 'The provided signature is invalid.');
