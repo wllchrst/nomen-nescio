@@ -21,7 +21,7 @@ const Setting: React.FC = () => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [croppedImage, setCroppedImage] = useState<File | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const userService = new UserService();
@@ -57,7 +57,10 @@ const Setting: React.FC = () => {
         URL.createObjectURL(profilePic),
         croppedAreaPixels
       );
-      setCroppedImage(croppedImage);
+      const response = await fetch(croppedImage);
+      const blob = await response.blob();
+      const file = new File([blob], profilePic.name, { type: blob.type });
+      setCroppedImage(file);
       setIsProfilePicModalOpen(false);
     }
   };
@@ -79,11 +82,12 @@ const Setting: React.FC = () => {
       return;
     }
 
-    if (profilePic == null) return;
+    if (croppedImage == null) return;
 
+    console.log("Cropped Image ", croppedImage)
     const result = await uploadFileFromUser(
       userService.getUserIdFromCookie(),
-      profilePic
+      croppedImage
     );
 
     const updatedUser: IRegister = {
@@ -153,16 +157,16 @@ const Setting: React.FC = () => {
             <div className="mb-4 flex flex-col items-center rounded-full">
               {croppedImage ? (
                 <img
-                  src={croppedImage}
+                  src={URL.createObjectURL(croppedImage)}
                   alt="Profile"
-                  className="w-48 h-48 rounded-full mb-4 object-cover"
+                  className="w-[250px] h-[250px] rounded-full mb-4 object-cover"
                 />
               ) : (
                 <div className="rounded-full mb-4 flex items-center justify-center text-gray-400">
                   <img
-                    src={user?.profile_picture_path}
+                      src={user?.profile_picture_path || "public/dummy_profile.png" }
                     alt=""
-                    className="rounded-full"
+                    className="rounded-full w-[250px] h-[250px] object-cover"
                   />
                 </div>
               )}
